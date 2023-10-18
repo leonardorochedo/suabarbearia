@@ -6,4 +6,5 @@ import com.suabarbearia.backend.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	// All methods have been push to our interface
+	User findByEmail(String email);
 }
