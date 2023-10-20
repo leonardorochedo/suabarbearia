@@ -1,7 +1,5 @@
 # Sua Barbearia - Agendamento e Gerenciamento
 
-![BarberApp Logo](logo.png)
-
 Sua Barbearia é uma aplicação móvel desenvolvida em React Native para dispositivos Android que permite agendar serviços em barbearias, gerenciar agendamentos e realizar pagamentos automaticamente. A aplicação se integra a um sistema de gerenciamento desenvolvido em Spring Boot para a gestão das barbearias e seus serviços.
 
 ## Funcionalidades
