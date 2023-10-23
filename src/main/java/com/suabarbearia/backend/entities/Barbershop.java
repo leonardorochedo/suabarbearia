@@ -29,6 +29,7 @@ public class Barbershop implements Serializable {
 	private String name;
 	private String email;
 	private String password;
+	private String phone;
 	private String image;
 	private String address;
 	
@@ -48,12 +49,13 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String password, String image, String address) {
+	public Barbershop(Long id, String name, String email, String password, String phone, String image, String address) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.phone = phone;
 		this.image = image;
 		this.address = address;
 	}
@@ -88,6 +90,14 @@ public class Barbershop implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getImage() {

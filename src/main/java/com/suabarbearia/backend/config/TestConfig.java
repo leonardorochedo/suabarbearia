@@ -45,9 +45,9 @@ public class TestConfig implements CommandLineRunner {
 		userRepository.saveAll(Arrays.asList(u1, u2)); // Save a list of users in testdb when initialize app
 		
 		// Barbershops
-		Barbershop b1 = new Barbershop(null, "Moreira Cortes", "moreirabarber@email.com", "123321", null, "123 Main Street");
-		Barbershop b2 = new Barbershop(null, "Oliveira Barbearia", "oliveirabarber@email.com", "123321", null, "500 Main Street");
-		Barbershop b3 = new Barbershop(null, "Ze Lucas", "zelucas@email.com", "123321", null, "10 Main Street");
+		Barbershop b1 = new Barbershop(null, "Moreira Cortes", "moreirabarber@email.com", "123321", "33981111", null, "123 Main Street");
+		Barbershop b2 = new Barbershop(null, "Oliveira Barbearia", "oliveirabarber@email.com", "123321", "33981111", null, "500 Main Street");
+		Barbershop b3 = new Barbershop(null, "Ze Lucas", "zelucas@email.com", "123321", "33981111", null, "10 Main Street");
 		
 		barbershopRepository.saveAll(Arrays.asList(b1, b2, b3));
 
