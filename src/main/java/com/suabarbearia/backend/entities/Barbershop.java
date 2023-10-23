@@ -4,19 +4,20 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_user")
-public class User implements Serializable {
+@Table(name = "tb_barbershop")
+public class Barbershop implements Serializable {
 
 	// Serializable
 	private static final long serialVersionUID = 1L;
@@ -27,32 +28,32 @@ public class User implements Serializable {
 	
 	private String name;
 	private String email;
-	private String password;
-	private String phone;
 	private String image;
+	private String address;
+	
+	@OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL)
+	private Set<Service> services;
 	
 	// Relations
 	@ManyToMany
 	@JoinTable(
 			name = "user_barbershop",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "barbershop_id")
+			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
-	private Set<Barbershop> barbershops;
+	private Set<User> clients;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "barbershop")
 	private Set<Scheduling> schedulings;
 	
-	public User() {}
-	
-	public User(Long id, String name, String email, String password, String phone, String image) {
+	public Barbershop() {}
+
+	public Barbershop(Long id, String name, String email, String image, String address) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.password = password;
-		this.phone = phone;
 		this.image = image;
+		this.address = address;
 	}
 
 	public Long getId() {
@@ -79,22 +80,6 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	public String getImage() {
 		return image;
 	}
@@ -103,12 +88,28 @@ public class User implements Serializable {
 		this.image = image;
 	}
 
-	public Set<Barbershop> getBarbershops() {
-		return barbershops;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setBarbershops(Set<Barbershop> barbershops) {
-		this.barbershops = barbershops;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Set<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(Set<Service> services) {
+		this.services = services;
+	}
+
+	public Set<User> getClients() {
+		return clients;
+	}
+
+	public void setClients(Set<User> clients) {
+		this.clients = clients;
 	}
 
 	public Set<Scheduling> getSchedulings() {
@@ -132,14 +133,14 @@ public class User implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		Barbershop other = (Barbershop) obj;
 		return Objects.equals(email, other.email);
 	}
 
 	@Override
 	public String toString() {
-		return "User id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phone=" + phone
-				+ ", image=" + image;
+		return "Barbershop id=" + id + ", name=" + name + ", email=" + email + ", image=" + image + ", address="
+				+ address + ", services=" + services + ", clients=" + clients + ", schedulings=" + schedulings;
 	}
-	
+
 }
