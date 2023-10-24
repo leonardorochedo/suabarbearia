@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
+import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
@@ -27,7 +28,7 @@ public class BarbershopServiceTest {
 	@Test
 	public void testFindById() {
 		// Arrange
-		Barbershop mockBarbershop = new Barbershop(null, "Fulano Cortes", "fulano@email.com", "123321", "33981111", null, "555 Main Street");
+		Barbershop mockBarbershop = new Barbershop(null, "Barbearia Teste", "fulano@email.com", "123321", "33981111", null, "555 Main Street");
 		barbershopRepository.save(mockBarbershop);
 		
 		// Act
@@ -42,7 +43,7 @@ public class BarbershopServiceTest {
 	@Test
 	public void testSignout() {
 		// Arrange
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Teste Barbearia", "fulano2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		
 		// Act
 		ApiTokenResponse<Barbershop> response = barbershopService.signout(createBarberMock);
@@ -55,7 +56,28 @@ public class BarbershopServiceTest {
 	
 	@Test
 	public void testSignoutWithInvalidPasswords() {
-        assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Teste2 Barbearia", "fulano3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+        assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+	}
+	
+	@Test
+   public void testSignin() {
+      // Arrange
+      CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+      SigninDto signinBarberMock = new SigninDto("fulano3@email.com", "123321");
+      
+      // Act
+      ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+      ApiTokenResponse<Barbershop> response2 = barbershopService.signin(signinBarberMock);
+      
+      // Assert
+      assertNotNull(response2);
+      assertEquals("Barbearia logada com sucesso!", response2.getMessage());
+      assertEquals("fulano3@email.com", response2.getData().getEmail());
+   }
+	
+	@Test
+	public void testSigninWithInvalidPassword() {
+      assertThrows(IllegalArgumentException.class, () -> barbershopService.signin(new SigninDto("fulano@email.com", "123abc")));
 	}
 	
 }

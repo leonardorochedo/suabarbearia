@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
+import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
@@ -52,5 +53,26 @@ public class BarbershopResource {
 	        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
 	    }
 	}
+	
+	@PostMapping(value = "/signin")
+   public ResponseEntity<?> signin(@RequestBody SigninDto barbershop) {
+      try {       
+         ApiTokenResponse<Barbershop> response = barbershopService.signin(barbershop);
+         
+         return ResponseEntity.ok().body(response);
+      } catch (ExistUserException e) {
+           ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+           
+           return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+       } catch (ResourceNotFoundException e) {
+           ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+           
+           return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+       } catch (IllegalArgumentException e) {
+           ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+           
+           return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+       }
+   }
 
 }

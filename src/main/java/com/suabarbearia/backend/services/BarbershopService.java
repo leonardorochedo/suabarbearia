@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
+import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.exceptions.ExistUserException;
+import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
@@ -55,4 +57,25 @@ public class BarbershopService {
 		
 		return response;
 	}
+	
+	public ApiTokenResponse<Barbershop> signin(SigninDto barbershop) {
+	   Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
+      
+      // Check data
+      if (barberFinded == null) {
+         throw new ResourceNotFoundException("Barbearia não existente!");
+      }
+      
+      if (!BCrypt.checkpw(barbershop.getPassword(), barberFinded.getPassword())) {
+         throw new IllegalArgumentException("E-mail ou senha inválidos!");
+      }
+      
+      String token = JwtUtil.generateToken(barbershop.getEmail());
+      
+      // Create a response
+      ApiTokenResponse<Barbershop> response = new ApiTokenResponse<Barbershop>("Barbearia logada com sucesso!", token, barberFinded);
+      
+      return response;
+   }
+	
 }
