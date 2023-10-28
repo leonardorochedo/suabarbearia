@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.suabarbearia.backend.dtos.CreateUserDto;
@@ -18,6 +19,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Value("${fixedsalt}")
+	private String fixedSalt;
 	
 	public User findById(Long id) {
 		Optional<User> user = userRepository.findById(id);
@@ -42,7 +46,6 @@ public class UserService {
 		}
 		
 		// Encypt and hash pass
-		String fixedSalt = "$2a$12$BQfBVhn6AyUbA1QljSUnU.";
 	    String hashedPassword = BCrypt.hashpw(user.getPassword(), fixedSalt);
 	    user.setPassword(hashedPassword);
 	    

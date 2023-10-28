@@ -1,19 +1,11 @@
 package com.suabarbearia.backend.entities;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Objects;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_barbershop")
@@ -30,7 +22,8 @@ public class Barbershop implements Serializable {
 	private String email;
 	private String password;
 	private String phone;
-	private String image;
+	@Column(name = "image", columnDefinition = "BLOB")
+	private byte[] image;
 	private String address;
 	
 	@OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL)
@@ -49,7 +42,7 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String password, String phone, String image, String address) {
+	public Barbershop(Long id, String name, String email, String password, String phone, byte[] image, String address) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -100,11 +93,11 @@ public class Barbershop implements Serializable {
 		this.phone = phone;
 	}
 
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(String image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 
