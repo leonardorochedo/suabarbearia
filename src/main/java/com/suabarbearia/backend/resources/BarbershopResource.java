@@ -2,6 +2,7 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -94,4 +95,16 @@ public class BarbershopResource {
 		}
 	}
 
+	@DeleteMapping(value = "/delete/{id}")
+	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+		try {
+			TextResponse response = barbershopService.delete(authorizationHeader, id);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
 }

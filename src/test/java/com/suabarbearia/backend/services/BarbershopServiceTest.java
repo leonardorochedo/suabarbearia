@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,5 +114,14 @@ public class BarbershopServiceTest {
 		assertEquals("fulano6@email.com", response2.getData().getEmail());
 		assertEquals("101 Av Brasil", response2.getData().getAddress());
 	}
-	
+
+	@Test
+	public void testDelete() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano7@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+
+		TextResponse response2 = barbershopService.delete(response1.getToken(), 1L);
+
+		assertEquals("Barbearia deletada com sucesso!", response2.getMessage());
+	}
 }

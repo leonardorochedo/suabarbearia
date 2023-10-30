@@ -1,10 +1,12 @@
 package com.suabarbearia.backend.services;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,7 +87,7 @@ public class BarbershopService {
 		return response;
 	}
 
-	public ApiResponse<Barbershop> edit(String authorizationHeader, Long id, EditBarbershopDto barbershop, MultipartFile image) throws java.io.IOException, SQLException {
+	public ApiResponse<Barbershop> edit(String authorizationHeader, Long id, EditBarbershopDto barbershop, MultipartFile image) throws SQLException, IOException {
 		JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop editedBarbershop = barbershopRepository.findById(id).get();
@@ -112,6 +114,18 @@ public class BarbershopService {
 		barbershopRepository.save(editedBarbershop);
 
 		ApiResponse<Barbershop> response = new ApiResponse<Barbershop>("Barbearia editada com sucesso!", editedBarbershop);
+
+		return response;
+	}
+
+	public TextResponse delete(String authorizationHeader, Long id) {
+		JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findById(id).get();
+
+		barbershopRepository.deleteById(id);
+
+		TextResponse response = new TextResponse("Barbearia deletada com sucesso!");
 
 		return response;
 	}
