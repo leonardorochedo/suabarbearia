@@ -37,6 +37,16 @@ public class BarbershopService {
 		return barbershop.get();
 	}
 
+	public ApiResponse<Barbershop> profile(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		ApiResponse<Barbershop> response = new ApiResponse<Barbershop>("Perfil carregado!", barbershop);
+
+		return response;
+	}
+
 	public ApiTokenResponse<Barbershop> signout(CreateBarbershopDto barbershop) {
 		Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
 

@@ -34,6 +34,19 @@ public class BarbershopResource {
 		
 		return ResponseEntity.ok().body(barbershop);
 	}
+
+	@GetMapping(value = "/profile")
+	public ResponseEntity<?> profile(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			ApiResponse<Barbershop> barbershop = barbershopService.profile(authorizationHeader);
+
+			return ResponseEntity.ok().body(barbershop);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
 	
 	@PostMapping(value = "/signout")
 	public ResponseEntity<?> signout(@RequestBody CreateBarbershopDto barbershop) {

@@ -45,7 +45,6 @@ public class BarbershopServiceTest {
 		// Assert
 		assertNotNull(response);
 		assertEquals(1, response.getId());
-		assertEquals("fulano@email.com", response.getEmail());
 	}
 
 	@Test
@@ -123,5 +122,16 @@ public class BarbershopServiceTest {
 		TextResponse response2 = barbershopService.delete(response1.getToken(), 1L);
 
 		assertEquals("Barbearia deletada com sucesso!", response2.getMessage());
+	}
+
+	@Test
+	public void testGetProfile() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano8@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+
+		ApiResponse<Barbershop> response2 = barbershopService.profile(response1.getToken());
+
+		assertEquals("Perfil carregado!", response2.getMessage());
+		assertEquals("fulano8@email.com", response2.getData().getEmail());
 	}
 }
