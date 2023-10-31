@@ -40,7 +40,7 @@ public class BarbershopServiceTest {
 	@Test
 	public void testFindById() {
 		// Arrange
-		Barbershop mockBarbershop = new Barbershop(null, "Barbearia Teste", "fulano@email.com", "123321", "33981111", null, "555 Main Street");
+		Barbershop mockBarbershop = new Barbershop(null, "Barbearia Teste", "fulano_barber@email.com", "123321", "33981111", null, "555 Main Street");
 		barbershopRepository.save(mockBarbershop);
 		
 		// Act
@@ -54,7 +54,7 @@ public class BarbershopServiceTest {
 	@Test
 	public void testSignout() {
 		// Arrange
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		
 		// Act
 		ApiTokenResponse<Barbershop> response = barbershopService.signout(createBarberMock);
@@ -62,24 +62,24 @@ public class BarbershopServiceTest {
 		// Assert
 		assertNotNull(response);
 		assertEquals("Barbearia criada com sucesso!", response.getMessage());
-		assertEquals("fulano2@email.com", response.getData().getEmail());
+		assertEquals("fulano_barber2@email.com", response.getData().getEmail());
 	}
 
 	@Test
 	public void testSignoutWithInvalidEmail() {
-		assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+		assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
 	}
 
 	@Test
 	public void testSignoutWithInvalidPasswords() {
-        assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+        assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
 	}
 	
 	@Test
 	public void testSignin() {
 		// Arrange
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-		SigninDto signinBarberMock = new SigninDto("fulano3@email.com", "123321");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		SigninDto signinBarberMock = new SigninDto("fulano_barber3@email.com", "123321");
 
 		// Act
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
@@ -88,28 +88,28 @@ public class BarbershopServiceTest {
 		// Assert
 		assertNotNull(response2);
 		assertEquals("Barbearia logada com sucesso!", response2.getMessage());
-		assertEquals("fulano3@email.com", response2.getData().getEmail());
+		assertEquals("fulano_barber3@email.com", response2.getData().getEmail());
    	}
 	
 	@Test
 	public void testSigninWithInvalidPassword() {
 		// Arrange
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano4@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber4@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		// Act
 		ApiTokenResponse<Barbershop> response = barbershopService.signout(createBarberMock);
 
-		assertThrows(IllegalArgumentException.class, () -> barbershopService.signin(new SigninDto("fulano4@email.com", "123abc")));
+		assertThrows(IllegalArgumentException.class, () -> barbershopService.signin(new SigninDto("fulano_barber4@email.com", "123abc")));
 	}
 
 	@Test
 	public void testEditWithNoImage() throws SQLException, IOException {
 		// Create
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano5@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber5@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
 
 		// Edit
-		EditBarbershopDto editedBarberMock = new EditBarbershopDto(null, "Barbearia Teste", "fulano6@email.com", "123321", "123321", "33981111", "101 Av Brasil");
+		EditBarbershopDto editedBarberMock = new EditBarbershopDto(null, "Barbearia Teste", "fulano_barber6@email.com", "123321", "123321", "33981111", "101 Av Brasil");
 
 		// Image
 		MultipartFile image = Mockito.mock(MultipartFile.class);
@@ -119,13 +119,13 @@ public class BarbershopServiceTest {
 		// Assert
 		assertNotNull(response2);
 		assertEquals("Barbearia editada com sucesso!", response2.getMessage());
-		assertEquals("fulano6@email.com", response2.getData().getEmail());
+		assertEquals("fulano_barber6@email.com", response2.getData().getEmail());
 		assertEquals("101 Av Brasil", response2.getData().getAddress());
 	}
 
 	@Test
 	public void testDelete() {
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano7@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber7@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
 
 		TextResponse response2 = barbershopService.delete(response1.getToken(), 1L);
@@ -135,19 +135,19 @@ public class BarbershopServiceTest {
 
 	@Test
 	public void testGetProfile() {
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano8@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber8@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
 
 		ApiResponse<Barbershop> response2 = barbershopService.profile(response1.getToken());
 
 		assertEquals("Perfil carregado!", response2.getMessage());
-		assertEquals("fulano8@email.com", response2.getData().getEmail());
+		assertEquals("fulano_barber8@email.com", response2.getData().getEmail());
 	}
 
 	@Test
 	public void testGetUsersBarbershop() {
-		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulanocliente@email.com", "123321", "123321", "33981111");
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano9@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber@email.com", "123321", "123321", "33981111");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber9@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
 		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);

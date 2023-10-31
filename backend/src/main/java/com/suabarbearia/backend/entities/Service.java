@@ -3,6 +3,7 @@ package com.suabarbearia.backend.entities;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,7 @@ public class Service implements Serializable {
 	// Relations
 	@ManyToOne
     @JoinColumn(name = "barbershop_id")
+	@JsonIgnore
     private Barbershop barbershop;
 	
 	@OneToMany(mappedBy = "service")
