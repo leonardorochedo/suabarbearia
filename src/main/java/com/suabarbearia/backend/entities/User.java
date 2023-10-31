@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -25,12 +26,13 @@ public class User implements Serializable {
 	private byte[] image;
 	
 	// Relations
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
 	@JoinTable(
 			name = "user_barbershop",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "barbershop_id")
 	)
+	@JsonManagedReference
 	private Set<Barbershop> barbershops;
 	
 	@OneToMany(mappedBy = "user")

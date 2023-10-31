@@ -1,10 +1,8 @@
 package com.suabarbearia.backend.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
@@ -22,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test") // Run in test file
@@ -32,6 +33,9 @@ public class BarbershopServiceTest {
 	
 	@Autowired
 	private BarbershopRepository barbershopRepository;
+
+	@Autowired
+	private UserService userService;
 	
 	@Test
 	public void testFindById() {
@@ -133,5 +137,20 @@ public class BarbershopServiceTest {
 
 		assertEquals("Perfil carregado!", response2.getMessage());
 		assertEquals("fulano8@email.com", response2.getData().getEmail());
+	}
+
+	@Test
+	public void testGetUsersBarbershop() {
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulanocliente@email.com", "123321", "123321", "33981111");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano9@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+
+		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);
+
+		userService.createRelationWithBarbershop(response1.getToken(), 1L);
+
+		Set<User> response3 = barbershopService.getUsersBarbershop(response2.getToken());
+
+		assertEquals(1, response3.size());
 	}
 }

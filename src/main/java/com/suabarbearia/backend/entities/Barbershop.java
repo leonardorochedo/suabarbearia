@@ -5,6 +5,8 @@ import java.sql.Blob;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -30,11 +32,12 @@ public class Barbershop implements Serializable {
 	private Set<Service> services;
 	
 	// Relations
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
 	@JoinTable(
 			name = "user_barbershop",
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
+	@JsonBackReference
 	private Set<User> clients;
 	
 	@OneToMany(mappedBy = "barbershop")

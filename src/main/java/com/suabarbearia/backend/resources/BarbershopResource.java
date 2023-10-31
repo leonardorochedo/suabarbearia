@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/barbershop")
@@ -112,6 +114,19 @@ public class BarbershopResource {
 	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
 		try {
 			TextResponse response = barbershopService.delete(authorizationHeader, id);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
+	@GetMapping(value = "/users")
+	public ResponseEntity<?> getUsersBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			Set<User> response = barbershopService.getUsersBarbershop(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {

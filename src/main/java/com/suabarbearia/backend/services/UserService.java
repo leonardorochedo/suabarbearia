@@ -2,6 +2,9 @@ package com.suabarbearia.backend.services;
 
 import java.util.Optional;
 
+import com.suabarbearia.backend.entities.Barbershop;
+import com.suabarbearia.backend.repositories.BarbershopRepository;
+import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private BarbershopRepository barbershopRepository;
+
 	@Value("${fixedsalt}")
 	private String fixedSalt;
 	
@@ -31,10 +37,11 @@ public class UserService {
 	
 	public ApiTokenResponse<User> signout(CreateUserDto user) {
 		User userFinded = userRepository.findByEmail(user.getEmail());
+		Barbershop barberFinded = barbershopRepository.findByEmail(user.getEmail());
 		
 		// Check data
-		if (userFinded != null) {
-			throw new ExistUserException("Usuário existente!");
+		if (userFinded != null || barberFinded != null) {
+			throw new ExistUserException("Conta existente!");
 		}
 		
 		if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getConfirmpassword() == null || user.getPhone() == null) {
@@ -56,6 +63,22 @@ public class UserService {
 		
 		ApiTokenResponse<User> response = new ApiTokenResponse<User>("Usuário criado com sucesso!", token, newUser);
 		
+		return response;
+	}
+
+	public TextResponse createRelationWithBarbershop(String authorizationHeader, Long id) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Barbershop barbershop = barbershopRepository.findById(id).get();
+
+		user.getBarbershops().add(barbershop);
+
+		userRepository.save(user);
+
+		TextResponse response = new TextResponse(barbershop.getName() + " adicionada aos favoritos!");
+
 		return response;
 	}
 }

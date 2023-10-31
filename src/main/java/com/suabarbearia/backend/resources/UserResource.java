@@ -1,14 +1,11 @@
 package com.suabarbearia.backend.resources;
 
+import com.suabarbearia.backend.responses.TextResponse;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.entities.User;
@@ -51,6 +48,13 @@ public class UserResource {
 	        
 	        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
 	    }
+	}
+
+	@PostMapping(value = "/add/barbershop/{id}")
+	public ResponseEntity<?> createRelationWithBarbershop(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+		TextResponse response = userService.createRelationWithBarbershop(authorizationHeader, id);
+
+		return ResponseEntity.ok().body(response);
 	}
 	
 }

@@ -3,8 +3,11 @@ package com.suabarbearia.backend.services;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.Set;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.entities.User;
+import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
@@ -28,6 +31,9 @@ public class BarbershopService {
 	@Autowired
 	private BarbershopRepository barbershopRepository;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@Value("${fixedsalt}")
 	private String fixedSalt;
 	
@@ -49,10 +55,11 @@ public class BarbershopService {
 
 	public ApiTokenResponse<Barbershop> signout(CreateBarbershopDto barbershop) {
 		Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
+		User userFinded = userRepository.findByEmail(barbershop.getEmail());
 
 		// Check data
-		if (barberFinded != null) {
-			throw new ExistUserException("Barbearia existente!");
+		if (barberFinded != null || userFinded != null) {
+			throw new ExistUserException("Conta existente!");
 		}
 
 		if (barbershop.getName() == null || barbershop.getEmail() == null || barbershop.getPassword() == null || barbershop.getConfirmpassword() == null || barbershop.getPhone() == null || barbershop.getAddress() == null) {
@@ -138,6 +145,14 @@ public class BarbershopService {
 		TextResponse response = new TextResponse("Barbearia deletada com sucesso!");
 
 		return response;
+	}
+
+	public Set<User> getUsersBarbershop(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		return barbershop.getClients();
 	}
 	
 }
