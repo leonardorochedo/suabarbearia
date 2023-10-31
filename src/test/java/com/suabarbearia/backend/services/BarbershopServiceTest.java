@@ -64,7 +64,12 @@ public class BarbershopServiceTest {
 		assertEquals("Barbearia criada com sucesso!", response.getMessage());
 		assertEquals("fulano2@email.com", response.getData().getEmail());
 	}
-	
+
+	@Test
+	public void testSignoutWithInvalidEmail() {
+		assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+	}
+
 	@Test
 	public void testSignoutWithInvalidPasswords() {
         assertThrows(IllegalArgumentException.class, () -> barbershopService.signout(new CreateBarbershopDto("Barbearia Teste", "fulano3@email.com", "123321", "123", "33981111", "555 Av Brasil")));

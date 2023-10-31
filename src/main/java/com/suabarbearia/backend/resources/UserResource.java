@@ -50,9 +50,16 @@ public class UserResource {
 	    }
 	}
 
-	@PostMapping(value = "/add/barbershop/{id}")
+	@PostMapping(value = "/fav/barbershop/{id}")
 	public ResponseEntity<?> createRelationWithBarbershop(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
 		TextResponse response = userService.createRelationWithBarbershop(authorizationHeader, id);
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping(value = "/unfav/barbershop/{id}")
+	public ResponseEntity<?> deleteRelationWithBarbershop(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+		TextResponse response = userService.deleteRelationWithBarbershop(authorizationHeader, id);
 
 		return ResponseEntity.ok().body(response);
 	}

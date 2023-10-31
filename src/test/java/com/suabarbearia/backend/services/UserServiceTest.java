@@ -68,7 +68,7 @@ public class UserServiceTest {
 	@Test
 	public void testFavBarbershop() {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano3@email.com", "123321", "123321", "33981111");
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulanobarbearia@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulanobarbearia1@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
 		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);
@@ -76,6 +76,21 @@ public class UserServiceTest {
 		TextResponse response3 = userService.createRelationWithBarbershop(response1.getToken(), 1L);
 
 		assertEquals("Barbearia Teste adicionada aos favoritos!", response3.getMessage());
+	}
+
+	@Test
+	public void testUnfavBarbershop() {
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano4@email.com", "123321", "123321", "33981111");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulanobarbearia2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+
+		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);
+
+		TextResponse response3 = userService.createRelationWithBarbershop(response1.getToken(), 1L);
+
+		TextResponse response4 = userService.deleteRelationWithBarbershop(response1.getToken(), 1L);
+
+		assertEquals("Barbearia Teste removida dos favoritos!", response4.getMessage());
 	}
 	
 }

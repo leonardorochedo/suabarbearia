@@ -81,4 +81,20 @@ public class UserService {
 
 		return response;
 	}
+
+	public TextResponse deleteRelationWithBarbershop(String authorizationHeader, Long id) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Barbershop barbershop = barbershopRepository.findById(id).get();
+
+		user.getBarbershops().remove(barbershop);
+
+		userRepository.save(user);
+
+		TextResponse response = new TextResponse(barbershop.getName() + " removida dos favoritos!");
+
+		return response;
+	}
 }
