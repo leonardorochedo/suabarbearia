@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/barbershop")
+@RequestMapping(value = "/barbershops")
 public class BarbershopResource {
 	
 	@Autowired

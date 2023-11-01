@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/service")
+@RequestMapping(value = "/services")
 public class ServiceResource {
 
     @Autowired
