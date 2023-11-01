@@ -18,6 +18,13 @@ public class ServiceResource {
     @Autowired
     private ServiceService serviceService;
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Service> findById(@PathVariable Long id) {
+        Service service = serviceService.findById(id);
+
+        return ResponseEntity.ok().body(service);
+    }
+
     @PostMapping(value = "/create")
     public ResponseEntity<?> create (@RequestHeader("Authorization") String authorizationHeader, @RequestBody CreateServiceDto service) {
         try {

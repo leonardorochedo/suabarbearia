@@ -10,6 +10,8 @@ import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 @org.springframework.stereotype.Service
 public class ServiceService {
 
@@ -19,21 +21,27 @@ public class ServiceService {
     @Autowired
     private BarbershopRepository barbershopRepository;
 
+    public Service findById(Long id) {
+        Optional<Service> service = serviceRepository.findById(id);
+
+        return service.get();
+    }
+
     public ApiResponse<Service> create(String authorizationHeader, CreateServiceDto service) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Service serviceFinded = serviceRepository.findByTitle(service.getTitle());
 
+        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
         // Check data
-        if (serviceFinded != null) {
+        if (serviceFinded != null && serviceFinded.getBarbershop().equals(barbershop)) {
             throw new ExistUserException("Serviço existente!");
         }
 
         if (service.getTitle() == null || service.getPrice() == null) {
             throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
-
-        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
         Service newService = serviceRepository.save(new Service(null, service.getTitle(), service.getPrice(), barbershop));
 
