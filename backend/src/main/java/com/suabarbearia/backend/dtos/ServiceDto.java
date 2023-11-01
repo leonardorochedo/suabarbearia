@@ -1,13 +1,13 @@
 package com.suabarbearia.backend.dtos;
 
-public class CreateServiceDto {
+public class ServiceDto {
 
     private String title;
     private Double price;
 
-    public CreateServiceDto() {}
+    public ServiceDto() {}
 
-    public CreateServiceDto(String title, Double price) {
+    public ServiceDto(String title, Double price) {
         super();
         this.title = title;
         this.price = price;

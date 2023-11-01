@@ -1,7 +1,7 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
-import com.suabarbearia.backend.dtos.CreateServiceDto;
+import com.suabarbearia.backend.dtos.ServiceDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -26,7 +26,7 @@ public class ServiceServiceTest {
     @Test
     public void testFindById() {
         CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_service@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-        CreateServiceDto createServiceMock = new CreateServiceDto("Corte Cabelo", 25.0);
+        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo", 25.0);
 
         ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
         ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
@@ -39,12 +39,26 @@ public class ServiceServiceTest {
     @Test
     public void testCreate() {
         CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_service2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-        CreateServiceDto createServiceMock = new CreateServiceDto("Corte Cabelo", 25.0);
+        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo", 25.0);
 
         ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
         ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
 
         assertEquals("Corte Cabelo", response2.getData().getTitle());
         assertEquals("Serviço criado com sucesso!", response2.getMessage());
+    }
+
+    @Test
+    public void testEdit() {
+        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_service3@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo", 25.0);
+        ServiceDto editServiceMock = new ServiceDto("Corte Cabelo e Barba", 50.0);
+
+        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+        ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+        ApiResponse<Service> response3 = serviceService.edit(response1.getToken(), response2.getData().getId(), editServiceMock);
+
+        assertEquals("Corte Cabelo e Barba", response3.getData().getTitle());
+        assertEquals("Serviço editado com sucesso!", response3.getMessage());
     }
 }

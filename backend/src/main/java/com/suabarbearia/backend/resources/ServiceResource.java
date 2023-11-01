@@ -1,6 +1,6 @@
 package com.suabarbearia.backend.resources;
 
-import com.suabarbearia.backend.dtos.CreateServiceDto;
+import com.suabarbearia.backend.dtos.ServiceDto;
 import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -26,7 +26,7 @@ public class ServiceResource {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<?> create (@RequestHeader("Authorization") String authorizationHeader, @RequestBody CreateServiceDto service) {
+    public ResponseEntity<?> create(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ServiceDto service) {
         try {
             ApiResponse<Service> responseService = serviceService.create(authorizationHeader, service);
 
@@ -41,4 +41,18 @@ public class ServiceResource {
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
         }
     }
+
+    @PatchMapping(value = "/edit/{id}")
+    public ResponseEntity<?> edit(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id, @RequestBody ServiceDto service) {
+        try {
+            ApiResponse<Service> responseService = serviceService.edit(authorizationHeader, id, service);
+
+            return ResponseEntity.ok().body(responseService);
+        } catch (IllegalArgumentException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        }
+    }
+
 }

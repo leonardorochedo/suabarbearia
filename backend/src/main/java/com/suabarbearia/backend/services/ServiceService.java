@@ -1,6 +1,6 @@
 package com.suabarbearia.backend.services;
 
-import com.suabarbearia.backend.dtos.CreateServiceDto;
+import com.suabarbearia.backend.dtos.ServiceDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.exceptions.ExistUserException;
@@ -27,7 +27,7 @@ public class ServiceService {
         return service.get();
     }
 
-    public ApiResponse<Service> create(String authorizationHeader, CreateServiceDto service) {
+    public ApiResponse<Service> create(String authorizationHeader, ServiceDto service) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Service serviceFinded = serviceRepository.findByTitle(service.getTitle());
@@ -49,4 +49,27 @@ public class ServiceService {
 
         return response;
     }
+
+    public ApiResponse<Service> edit(String authorizationHeader, Long id, ServiceDto service) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Service editedService = serviceRepository.findById(id).get();
+
+        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+        // Check data
+        if (service.getTitle() == null || service.getPrice() == null) {
+            throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+        }
+
+        editedService.setTitle(service.getTitle());
+        editedService.setPrice(service.getPrice());
+
+        serviceRepository.save(editedService);
+
+        ApiResponse<Service> response = new ApiResponse<>("Serviço editado com sucesso!", editedService);
+
+        return response;
+    }
+
 }
