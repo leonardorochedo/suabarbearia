@@ -128,7 +128,7 @@ public class BarbershopServiceTest {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber7@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
 
-		TextResponse response2 = barbershopService.delete(response1.getToken(), 1L);
+		TextResponse response2 = barbershopService.delete(response1.getToken(), response1.getData().getId());
 
 		assertEquals("Barbearia deletada com sucesso!", response2.getMessage());
 	}
@@ -152,10 +152,11 @@ public class BarbershopServiceTest {
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
 		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);
 
-		userService.createRelationWithBarbershop(response1.getToken(), 1L);
+		userService.createRelationWithBarbershop(response1.getToken(), response2.getData().getId());
 
 		Set<User> response3 = barbershopService.getUsersBarbershop(response2.getToken());
 
 		assertEquals(1, response3.size());
 	}
+
 }

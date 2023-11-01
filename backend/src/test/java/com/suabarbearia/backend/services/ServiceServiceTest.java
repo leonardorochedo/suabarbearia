@@ -6,6 +6,7 @@ import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,4 +62,16 @@ public class ServiceServiceTest {
         assertEquals("Corte Cabelo e Barba", response3.getData().getTitle());
         assertEquals("Serviço editado com sucesso!", response3.getMessage());
     }
+    
+//    public void testDelete() {
+//        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_service4@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+//        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo", 25.0);
+//
+//        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+//        ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+//        TextResponse response3 = serviceService.delete(response1.getToken(), response2.getData().getId());
+//
+//        assertEquals("Serviço deletado com sucesso!", response3.getMessage());
+//    }
+
 }

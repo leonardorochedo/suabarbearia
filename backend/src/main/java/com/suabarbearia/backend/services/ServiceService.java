@@ -7,6 +7,7 @@ import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.ServiceRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -68,6 +69,18 @@ public class ServiceService {
         serviceRepository.save(editedService);
 
         ApiResponse<Service> response = new ApiResponse<>("Serviço editado com sucesso!", editedService);
+
+        return response;
+    }
+
+    public TextResponse delete(String authorizationHeader, Long id) {
+        JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Service findedService = serviceRepository.findById(id).get();
+
+        serviceRepository.deleteById(id);
+
+        TextResponse response = new TextResponse("Serviço deletado com sucesso!");
 
         return response;
     }

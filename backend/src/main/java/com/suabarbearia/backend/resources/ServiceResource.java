@@ -5,6 +5,7 @@ import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.services.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -52,6 +53,19 @@ public class ServiceResource {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        }
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+        try {
+            TextResponse response = serviceService.delete(authorizationHeader, id);
+
+            return ResponseEntity.ok().body(response);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         }
     }
 
