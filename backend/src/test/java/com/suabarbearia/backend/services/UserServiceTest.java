@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.responses.TextResponse;
-import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

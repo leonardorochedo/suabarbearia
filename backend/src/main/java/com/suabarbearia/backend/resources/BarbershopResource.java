@@ -59,7 +59,7 @@ public class BarbershopResource {
 		} catch (ExistUserException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
-	        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+	        return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
 	    } catch (ResourceNotFoundException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
@@ -67,7 +67,7 @@ public class BarbershopResource {
 	    } catch (IllegalArgumentException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
-	        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+	        return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 	    }
 	}
 	
@@ -80,7 +80,7 @@ public class BarbershopResource {
 	  	} catch (ExistUserException e) {
 		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-		   return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		   return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
 	   } catch (ResourceNotFoundException e) {
 		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
@@ -88,7 +88,7 @@ public class BarbershopResource {
 	   } catch (IllegalArgumentException e) {
 		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-		   return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		   return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 	   }
 	}
 
