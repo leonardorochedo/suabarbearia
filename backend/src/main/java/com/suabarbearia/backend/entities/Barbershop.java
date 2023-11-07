@@ -1,13 +1,10 @@
 package com.suabarbearia.backend.entities;
 
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.Objects;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -29,7 +26,7 @@ public class Barbershop implements Serializable {
 	private byte[] image;
 	private String address;
 	
-	@OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "barbershop")
 	@JsonIgnore
 	private Set<Service> services;
 	
