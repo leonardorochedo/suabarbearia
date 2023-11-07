@@ -34,6 +34,7 @@ public class Service implements Serializable {
     private Barbershop barbershop;
 	
 	@OneToMany(mappedBy = "service")
+	@JsonIgnore
 	private Set<Scheduling> schedulings;
 
 	public Service() {}

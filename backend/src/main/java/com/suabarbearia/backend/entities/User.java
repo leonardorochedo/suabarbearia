@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -32,10 +33,11 @@ public class User implements Serializable {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "barbershop_id")
 	)
-	@JsonManagedReference
+	@JsonIgnore
 	private Set<Barbershop> barbershops;
 	
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Set<Scheduling> schedulings;
 	
 	public User() {}

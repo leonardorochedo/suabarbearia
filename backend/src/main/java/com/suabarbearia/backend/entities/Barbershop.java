@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -29,6 +30,7 @@ public class Barbershop implements Serializable {
 	private String address;
 	
 	@OneToMany(mappedBy = "barbershop", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Set<Service> services;
 	
 	// Relations
@@ -37,10 +39,11 @@ public class Barbershop implements Serializable {
 			name = "user_barbershop",
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
-	@JsonBackReference
+	@JsonIgnore
 	private Set<User> clients;
 	
 	@OneToMany(mappedBy = "barbershop")
+	@JsonIgnore
 	private Set<Scheduling> schedulings;
 	
 	public Barbershop() {}
