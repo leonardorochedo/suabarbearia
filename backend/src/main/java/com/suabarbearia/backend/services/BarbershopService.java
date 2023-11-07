@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.entities.Scheduling;
+import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -13,7 +15,6 @@ import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.dtos.SigninDto;
@@ -25,7 +26,7 @@ import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
+@org.springframework.stereotype.Service
 public class BarbershopService {
 	
 	@Autowired
@@ -155,12 +156,20 @@ public class BarbershopService {
 		return barbershop.getClients();
 	}
 
-	public Set<com.suabarbearia.backend.entities.Service> getServicesBarbershop(String authorizationHeader) {
+	public Set<Service> getServicesBarbershop(String authorizationHeader) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		return barbershop.getServices();
+	}
+
+	public Set<Scheduling> getSchedulingsBarbershop(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		return barbershop.getSchedulings();
 	}
 	
 }

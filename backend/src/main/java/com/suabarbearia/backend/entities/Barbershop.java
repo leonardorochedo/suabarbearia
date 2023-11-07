@@ -39,7 +39,7 @@ public class Barbershop implements Serializable {
 	@JsonIgnore
 	private Set<User> clients;
 	
-	@OneToMany(mappedBy = "barbershop")
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
 	

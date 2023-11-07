@@ -62,7 +62,7 @@ public class SchedulingService {
         Scheduling[] userSchedulings = schedulingRepository.findAllByUser(userFinded);
 
         for (Scheduling userScheduling : userSchedulings) {
-            if (userScheduling.getDate().isEqual(scheduling.getDate())) {
+            if (userScheduling.getDate().withHour(0).isEqual(scheduling.getDate().withHour(0))) {
                 throw new IllegalArgumentException("O usuário já possui um agendamento para este dia!");
             }
         }

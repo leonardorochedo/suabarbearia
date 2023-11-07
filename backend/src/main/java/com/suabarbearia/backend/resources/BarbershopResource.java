@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -141,6 +142,19 @@ public class BarbershopResource {
 	public ResponseEntity<?> getServicesBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
 			Set<Service> response = barbershopService.getServicesBarbershop(authorizationHeader);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
+	@GetMapping(value = "/schedulings")
+	public ResponseEntity<?> getSchedulingsBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			Set<Scheduling> response = barbershopService.getSchedulingsBarbershop(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {
