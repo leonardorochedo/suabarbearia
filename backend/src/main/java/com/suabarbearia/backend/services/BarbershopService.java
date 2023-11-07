@@ -154,5 +154,13 @@ public class BarbershopService {
 
 		return barbershop.getClients();
 	}
+
+	public Set<com.suabarbearia.backend.entities.Service> getServicesBarbershop(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		return barbershop.getServices();
+	}
 	
 }

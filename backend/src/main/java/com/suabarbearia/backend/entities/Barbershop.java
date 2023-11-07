@@ -26,7 +26,7 @@ public class Barbershop implements Serializable {
 	private byte[] image;
 	private String address;
 	
-	@OneToMany(mappedBy = "barbershop")
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<Service> services;
 	

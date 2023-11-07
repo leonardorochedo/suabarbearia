@@ -1,7 +1,7 @@
 package com.suabarbearia.backend.services;
 
-import com.suabarbearia.backend.dtos.CreateUserDto;
-import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.dtos.*;
+import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.suabarbearia.backend.dtos.CreateBarbershopDto;
-import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
@@ -36,6 +34,9 @@ public class BarbershopServiceTest {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ServiceService serviceService;
 	
 	@Test
 	public void testFindById() {
@@ -155,6 +156,19 @@ public class BarbershopServiceTest {
 		userService.createRelationWithBarbershop(response1.getToken(), response2.getData().getId());
 
 		Set<User> response3 = barbershopService.getUsersBarbershop(response2.getToken());
+
+		assertEquals(1, response3.size());
+	}
+
+	@Test
+	public void testGetServicesBarbershop() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber10@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo", 25.0);
+
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+
+		Set<Service> response3 = barbershopService.getServicesBarbershop(response1.getToken());
 
 		assertEquals(1, response3.size());
 	}
