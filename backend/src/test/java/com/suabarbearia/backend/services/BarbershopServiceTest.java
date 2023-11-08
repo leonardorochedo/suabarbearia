@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
@@ -198,6 +199,31 @@ public class BarbershopServiceTest {
 		ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
 
 		Set<Scheduling> response5 = barbershopService.getSchedulingsBarbershop(response1.getToken());
+
+		assertEquals(1, response5.size());
+	}
+
+	@Test
+	public void testGetSchedulingsBarbershopWithDate() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber12@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombrancelha", 25.0);
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber3@email.com", "123321", "123321", "33981111");
+
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+		ApiTokenResponse<User> response3 = userService.signout(createUserMock);
+
+		// Scheduling
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalTime hour = LocalTime.of(8, 0, 0);
+
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), tomorrow.with(hour));
+
+		ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
+
+		LocalDate day = LocalDate.now().plusDays(1);
+
+		Set<Scheduling> response5 = barbershopService.getSchedulingsBarbershopWithDate(response1.getToken(), day);
 
 		assertEquals(1, response5.size());
 	}

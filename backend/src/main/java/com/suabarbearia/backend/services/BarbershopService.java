@@ -2,6 +2,8 @@ package com.suabarbearia.backend.services;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.entities.Service;
 import com.suabarbearia.backend.entities.User;
+import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
@@ -34,6 +37,9 @@ public class BarbershopService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private SchedulingRepository schedulingRepository;
 
 	@Value("${fixedsalt}")
 	private String fixedSalt;
@@ -170,6 +176,24 @@ public class BarbershopService {
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		return barbershop.getSchedulings();
+	}
+
+	public Set<Scheduling> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate date) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+
+		Set<Scheduling> schedulingsWithDate = new HashSet<>();
+
+		for (Scheduling scheduling : schedulings) {
+			if (scheduling.getDate().toLocalDate().isEqual(date)) {
+				schedulingsWithDate.add(scheduling);
+			}
+		}
+
+		return schedulingsWithDate;
 	}
 	
 }

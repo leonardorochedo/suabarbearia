@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Set;
 
 @org.springframework.stereotype.Service
 public class SchedulingService {
@@ -59,7 +60,7 @@ public class SchedulingService {
         }
 
         // Check user schedulings
-        Scheduling[] userSchedulings = schedulingRepository.findAllByUser(userFinded);
+        Set<Scheduling> userSchedulings = schedulingRepository.findAllByUser(userFinded);
 
         for (Scheduling userScheduling : userSchedulings) {
             if (userScheduling.getDate().withHour(0).isEqual(scheduling.getDate().withHour(0))) {
@@ -68,7 +69,7 @@ public class SchedulingService {
         }
 
         // Check barbershop schedulings
-        Scheduling[] barbershopSchedulings = schedulingRepository.findAllByBarbershop(barbershopFinded);
+        Set<Scheduling> barbershopSchedulings = schedulingRepository.findAllByBarbershop(barbershopFinded);
 
         for (Scheduling barbershopScheduling : barbershopSchedulings) {
             if (barbershopScheduling.getDate().isEqual(scheduling.getDate())) {

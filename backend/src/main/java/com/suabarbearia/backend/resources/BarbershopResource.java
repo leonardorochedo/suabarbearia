@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Set;
 
 @RestController
@@ -155,6 +156,19 @@ public class BarbershopResource {
 	public ResponseEntity<?> getSchedulingsBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
 			Set<Scheduling> response = barbershopService.getSchedulingsBarbershop(authorizationHeader);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
+	@GetMapping(value = "/schedulings/{date}")
+	public ResponseEntity<?> getSchedulingsBarbershopWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate date) {
+		try {
+			Set<Scheduling> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, date);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {
