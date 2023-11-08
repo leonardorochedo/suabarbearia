@@ -183,7 +183,7 @@ public class BarbershopServiceTest {
 	@Test
 	public void testGetSchedulingsBarbershop() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber11@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba", 25.0);
+		ServiceDto createServiceMock = new ServiceDto("Corte Degradê", 50.0);
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber2@email.com", "123321", "123321", "33981111");
 
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);

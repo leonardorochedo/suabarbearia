@@ -17,6 +17,13 @@ public class SchedulingResource {
     @Autowired
     private SchedulingService schedulingService;
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Scheduling> findById(@PathVariable Long id) {
+        Scheduling scheduling = schedulingService.findById(id);
+
+        return ResponseEntity.ok().body(scheduling);
+    }
+
     @PostMapping(value = "/create")
     public ResponseEntity<?> create(@RequestHeader("Authorization") String authorizationHeader, @RequestBody SchedulingDto scheduling) {
         try {

@@ -37,7 +37,7 @@ public class SchedulingServiceTest {
     private UserService userService;
 
     @Test
-    public void testCreate() {
+    public void testFindById() {
         CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_scheduling@email.com", "123321", "123321", "33981111", "555 Av Brasil");
         ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba", 25.0);
         CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_scheduling@email.com", "123321", "123321", "33981111");
@@ -53,8 +53,30 @@ public class SchedulingServiceTest {
 
         ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
 
+        Scheduling response5 = schedulingService.findById(response4.getData().getId());
+
+        assertEquals(1L, response5.getId());
+        assertEquals("Corte Cabelo + Barba", response5.getService().getTitle());
+    }
+
+    @Test
+    public void testCreate() {
+        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_scheduling2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba", 25.0);
+        CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_scheduling2@email.com", "123321", "123321", "33981111");
+
+        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+        ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+        ApiTokenResponse<User> response3 = userService.signout(createUserMock);
+
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        LocalTime hour = LocalTime.of(8, 0, 0);
+
+        SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), tomorrow.with(hour));
+
+        ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
+
         assertEquals("Agendamento realizado com sucesso!", response4.getMessage());
-        assertEquals(1L, response4.getData().getId());
     }
 
 }

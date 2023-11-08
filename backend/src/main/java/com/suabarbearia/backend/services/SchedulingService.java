@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.Set;
 
 @org.springframework.stereotype.Service
@@ -31,6 +32,12 @@ public class SchedulingService {
 
     @Autowired
     private ServiceRepository serviceRepository;
+
+    public Scheduling findById(Long id) {
+        Optional<Scheduling> scheduling = schedulingRepository.findById(id);
+
+        return scheduling.get();
+    }
 
     public ApiResponse<Scheduling> create(String authorizationHeader, SchedulingDto scheduling) {
         // Entities
