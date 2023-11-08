@@ -52,16 +52,28 @@ public class UserResource {
 
 	@PostMapping(value = "/fav/barbershop/{id}")
 	public ResponseEntity<?> createRelationWithBarbershop(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
-		TextResponse response = userService.createRelationWithBarbershop(authorizationHeader, id);
+		try {
+			TextResponse response = userService.createRelationWithBarbershop(authorizationHeader, id);
 
-		return ResponseEntity.ok().body(response);
+			return ResponseEntity.ok().body(response);
+		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+		}
 	}
 
 	@PostMapping(value = "/unfav/barbershop/{id}")
 	public ResponseEntity<?> deleteRelationWithBarbershop(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
-		TextResponse response = userService.deleteRelationWithBarbershop(authorizationHeader, id);
+		try {
+			TextResponse response = userService.deleteRelationWithBarbershop(authorizationHeader, id);
 
-		return ResponseEntity.ok().body(response);
+			return ResponseEntity.ok().body(response);
+		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+		}
 	}
 	
 }

@@ -228,4 +228,27 @@ public class BarbershopServiceTest {
 		assertEquals(1, response5.size());
 	}
 
+	@Test
+	public void testConcludeScheduling() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber13@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombrancelha", 25.0);
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber4@email.com", "123321", "123321", "33981111");
+
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+		ApiTokenResponse<User> response3 = userService.signout(createUserMock);
+
+		// Scheduling
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalTime hour = LocalTime.of(8, 0, 0);
+
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), tomorrow.with(hour));
+
+		ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
+
+		TextResponse response5 = barbershopService.concludeScheduling(response1.getToken(), response4.getData().getId());
+
+		assertEquals("Agendamento concluído com sucesso!", response5.getMessage());
+	}
+
 }

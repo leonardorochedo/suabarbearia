@@ -195,5 +195,29 @@ public class BarbershopService {
 
 		return schedulingsWithDate;
 	}
+
+	public TextResponse concludeScheduling(String authorizationHeader, Long id) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Scheduling scheduling = schedulingRepository.findById(id).get();
+
+		if (scheduling.isDone()) {
+			throw new RuntimeException("Agendamento já concluído!");
+		}
+
+		if (!scheduling.getBarbershop().equals(barbershop)) {
+			throw new IllegalArgumentException("Token inválido!");
+		}
+
+		scheduling.setDone(true);
+
+		schedulingRepository.save(scheduling);
+
+		TextResponse response = new TextResponse("Agendamento concluído com sucesso!");
+
+		return response;
+	}
 	
 }

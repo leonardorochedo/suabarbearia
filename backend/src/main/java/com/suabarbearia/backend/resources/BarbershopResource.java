@@ -178,4 +178,21 @@ public class BarbershopResource {
 		}
 	}
 
+	@GetMapping(value = "/schedulings/done/{id}")
+	public ResponseEntity<?> concludeScheduling(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+		try {
+			TextResponse response = barbershopService.concludeScheduling(authorizationHeader, id);
+
+			return ResponseEntity.ok().body(response);
+		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+		}
+	}
+
 }

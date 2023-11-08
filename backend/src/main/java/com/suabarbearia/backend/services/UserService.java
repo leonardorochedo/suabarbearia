@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.services;
 
 import java.util.Optional;
+import java.util.Set;
 
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
@@ -73,6 +74,15 @@ public class UserService {
 
 		Barbershop barbershop = barbershopRepository.findById(id).get();
 
+		// Check barbershop
+		Set<Barbershop> userBarbershops = user.getBarbershops();
+
+		for (Barbershop userBarbershop : userBarbershops) {
+			if (userBarbershop.equals(barbershop)) {
+				throw new IllegalArgumentException(barbershop.getName() + " já está favoritada!");
+			}
+		}
+
 		user.getBarbershops().add(barbershop);
 
 		userRepository.save(user);
@@ -88,6 +98,13 @@ public class UserService {
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		Barbershop barbershop = barbershopRepository.findById(id).get();
+
+		// Check barbershop
+		Set<Barbershop> userBarbershops = user.getBarbershops();
+
+		if (!userBarbershops.contains(barbershop)) {
+			throw new IllegalArgumentException(barbershop.getName() + " não está favoritada!");
+		}
 
 		user.getBarbershops().remove(barbershop);
 
