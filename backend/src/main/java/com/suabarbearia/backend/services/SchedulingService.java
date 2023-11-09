@@ -47,7 +47,45 @@ public class SchedulingService {
         Service serviceFinded = serviceRepository.findById(scheduling.getServiceId()).get();
         Barbershop barbershopFinded = barbershopRepository.findById(scheduling.getBarbershopId()).get();
 
-        // Check data
+        // Validations
+        validateScheduling(scheduling, barbershopFinded, userFinded);
+
+        // Create scheduling
+        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, serviceFinded, scheduling.getDate(), false));
+
+        ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento realizado com sucesso!", newScheduling);
+
+        return response;
+    }
+
+    public ApiResponse<Scheduling> edit(String authorizationHeader, Long id, SchedulingDto scheduling) {
+        // Entities
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        User userFinded = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+        Barbershop barbershopFinded = barbershopRepository.findById(scheduling.getBarbershopId()).get();
+        Scheduling schedulingFinded = schedulingRepository.findById(id).get();
+
+        // Validations
+        validateScheduling(scheduling, barbershopFinded, userFinded);
+
+        if (scheduling.getServiceId() != schedulingFinded.getService().getId() || scheduling.getBarbershopId() != schedulingFinded.getBarbershop().getId()) {
+            throw new IllegalArgumentException("Não é possível alterar este campo!");
+        }
+
+        // Update data
+        schedulingFinded.setDate(scheduling.getDate());
+
+        schedulingRepository.save(schedulingFinded);
+
+        ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento alterado com sucesso!", schedulingFinded);
+
+        return response;
+    }
+
+    // Helper
+    private boolean validateScheduling(SchedulingDto scheduling, Barbershop barbershop, User user) {
+
         if (scheduling.getBarbershopId() == null || scheduling.getServiceId() == null || scheduling.getDate() == null) {
             throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
@@ -67,7 +105,7 @@ public class SchedulingService {
         }
 
         // Check user schedulings
-        Set<Scheduling> userSchedulings = schedulingRepository.findAllByUser(userFinded);
+        Set<Scheduling> userSchedulings = schedulingRepository.findAllByUser(user);
 
         for (Scheduling userScheduling : userSchedulings) {
             if (userScheduling.getDate().withHour(0).isEqual(scheduling.getDate().withHour(0))) {
@@ -76,7 +114,7 @@ public class SchedulingService {
         }
 
         // Check barbershop schedulings
-        Set<Scheduling> barbershopSchedulings = schedulingRepository.findAllByBarbershop(barbershopFinded);
+        Set<Scheduling> barbershopSchedulings = schedulingRepository.findAllByBarbershop(barbershop);
 
         for (Scheduling barbershopScheduling : barbershopSchedulings) {
             if (barbershopScheduling.getDate().isEqual(scheduling.getDate())) {
@@ -84,12 +122,7 @@ public class SchedulingService {
             }
         }
 
-        // Create scheduling
-        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, serviceFinded, scheduling.getDate(), false));
-
-        ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento realizado com sucesso!", newScheduling);
-
-        return response;
+        return true;
     }
 
 }
