@@ -59,6 +59,10 @@ public class ServiceService {
         Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
         // Check data
+        if (!editedService.getBarbershop().equals(barbershop)) {
+            throw new RuntimeException("Token inválido para esta barbearia!");
+        }
+
         if (service.getTitle() == null || service.getPrice() == null) {
             throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
@@ -74,9 +78,16 @@ public class ServiceService {
     }
 
     public TextResponse delete(String authorizationHeader, Long id) {
-        JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Service findedService = serviceRepository.findById(id).get();
+
+        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+        // Check owner
+        if (!findedService.getBarbershop().equals(barbershop)) {
+            throw new RuntimeException("Token inválido para esta barbearia!");
+        }
 
         serviceRepository.deleteById(id);
 

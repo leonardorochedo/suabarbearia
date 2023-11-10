@@ -69,6 +69,10 @@ public class SchedulingService {
         // Validations
         validateScheduling(scheduling, barbershopFinded, userFinded);
 
+        if (!schedulingFinded.getUser().equals(userFinded)) {
+            throw new RuntimeException("Token inválido para este usuário!");
+        }
+
         if (scheduling.getServiceId() != schedulingFinded.getService().getId() || scheduling.getBarbershopId() != schedulingFinded.getBarbershop().getId()) {
             throw new IllegalArgumentException("Não é possível alterar este campo!");
         }

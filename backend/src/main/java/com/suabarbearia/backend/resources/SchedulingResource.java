@@ -37,7 +37,7 @@ public class SchedulingResource {
         }
     }
 
-    @PostMapping(value = "/edit/{id}")
+    @PatchMapping(value = "/edit/{id}")
     public ResponseEntity<?> edit(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id, @RequestBody SchedulingDto scheduling) {
         try {
             ApiResponse<Scheduling> response = schedulingService.edit(authorizationHeader, id, scheduling);
@@ -47,6 +47,10 @@ public class SchedulingResource {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         }
     }
 

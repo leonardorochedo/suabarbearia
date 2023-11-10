@@ -112,9 +112,15 @@ public class BarbershopService {
 	}
 
 	public ApiResponse<Barbershop> edit(String authorizationHeader, Long id, EditBarbershopDto barbershop, MultipartFile image) throws SQLException, IOException {
-		JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
+		Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 		Barbershop editedBarbershop = barbershopRepository.findById(id).get();
+
+		// Check barber
+		if (!barbershopToken.equals(editedBarbershop)) {
+			throw new RuntimeException("Token inválido para esta barbearia!");
+		}
 
 		// Verify new data
 		if (barbershop.getName() == null || barbershop.getEmail() == null || barbershop.getPassword() == null || barbershop.getConfirmpassword() == null || barbershop.getPhone() == null || barbershop.getAddress() == null) {
@@ -143,9 +149,15 @@ public class BarbershopService {
 	}
 
 	public TextResponse delete(String authorizationHeader, Long id) {
-		JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
-		Barbershop barbershop = barbershopRepository.findById(id).get();
+		Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+		Barbershop barbershopId = barbershopRepository.findById(id).get();
+
+		// Check barber
+		if (!barbershopToken.equals(barbershopId)) {
+			throw new RuntimeException("Token inválido para esta barbearia!");
+		}
 
 		barbershopRepository.deleteById(id);
 
@@ -203,12 +215,12 @@ public class BarbershopService {
 
 		Scheduling scheduling = schedulingRepository.findById(id).get();
 
-		if (scheduling.isDone()) {
-			throw new RuntimeException("Agendamento já concluído!");
-		}
-
 		if (!scheduling.getBarbershop().equals(barbershop)) {
 			throw new IllegalArgumentException("Token inválido!");
+		}
+
+		if (scheduling.isDone()) {
+			throw new RuntimeException("Agendamento já concluído!");
 		}
 
 		scheduling.setDone(true);

@@ -53,6 +53,10 @@ public class ServiceResource {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         }
     }
 

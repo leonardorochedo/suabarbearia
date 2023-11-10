@@ -122,7 +122,7 @@ public class BarbershopServiceTest {
 		// Image
 		MultipartFile image = Mockito.mock(MultipartFile.class);
 
-		ApiResponse<Barbershop> response2 = barbershopService.edit(response1.getToken(), 1L, editedBarberMock, image);
+		ApiResponse<Barbershop> response2 = barbershopService.edit(response1.getToken(), response1.getData().getId(), editedBarberMock, image);
 
 		// Assert
 		assertNotNull(response2);

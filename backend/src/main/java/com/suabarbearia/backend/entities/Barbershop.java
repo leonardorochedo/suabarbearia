@@ -26,7 +26,7 @@ public class Barbershop implements Serializable {
 	private byte[] image;
 	private String address;
 	
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Service> services;
 	
@@ -39,7 +39,7 @@ public class Barbershop implements Serializable {
 	@JsonIgnore
 	private Set<User> clients;
 	
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
 	
