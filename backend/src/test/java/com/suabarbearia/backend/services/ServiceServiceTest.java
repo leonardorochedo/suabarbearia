@@ -63,18 +63,4 @@ public class ServiceServiceTest {
         assertEquals("Serviço editado com sucesso!", response3.getMessage());
     }
 
-    @Test
-    public void testDelete() {
-        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_service4@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo e Barba", 25.0);
-
-        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
-        ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-        TextResponse response3 = serviceService.delete(response1.getToken(), response2.getData().getId());
-
-        System.out.println(response3);
-
-        assertEquals("Serviço deletado com sucesso!", response3.getMessage());
-    }
-
 }

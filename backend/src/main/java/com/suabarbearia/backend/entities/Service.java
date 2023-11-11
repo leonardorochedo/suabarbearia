@@ -26,6 +26,7 @@ public class Service implements Serializable {
 
 	private String title;
 	private Double price;
+	private boolean enabled;
 	
 	// Relations
 	@ManyToOne
@@ -39,11 +40,12 @@ public class Service implements Serializable {
 
 	public Service() {}
 	
-	public Service(Long id, String title, Double price, Barbershop barbershop) {
+	public Service(Long id, String title, Double price, Boolean enabled, Barbershop barbershop) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.price = price;
+		this.enabled = enabled;
 		this.barbershop = barbershop;
 	}
 
@@ -71,6 +73,14 @@ public class Service implements Serializable {
 		this.price = price;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public Barbershop getBarbershop() {
 		return barbershop;
 	}
@@ -81,7 +91,13 @@ public class Service implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Service id=" + id + ", title=" + title + ", price=" + price + ", barbershop=" + barbershop;
+		return "Service{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", price=" + price +
+				", enabled=" + enabled +
+				", barbershop=" + barbershop +
+				", schedulings=" + schedulings +
+				'}';
 	}
-	
 }

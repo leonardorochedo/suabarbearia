@@ -44,7 +44,7 @@ public class ServiceService {
             throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
-        Service newService = serviceRepository.save(new Service(null, service.getTitle(), service.getPrice(), barbershop));
+        Service newService = serviceRepository.save(new Service(null, service.getTitle(), service.getPrice(), true, barbershop));
 
         ApiResponse<Service> response = new ApiResponse<Service>("Serviço criado com sucesso!", newService);
 
@@ -73,25 +73,6 @@ public class ServiceService {
         serviceRepository.save(editedService);
 
         ApiResponse<Service> response = new ApiResponse<>("Serviço editado com sucesso!", editedService);
-
-        return response;
-    }
-
-    public TextResponse delete(String authorizationHeader, Long id) {
-        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
-
-        Service findedService = serviceRepository.findById(id).get();
-
-        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
-
-        // Check owner
-        if (!findedService.getBarbershop().equals(barbershop)) {
-            throw new RuntimeException("Token inválido para esta barbearia!");
-        }
-
-        serviceRepository.deleteById(id);
-
-        TextResponse response = new TextResponse("Serviço deletado com sucesso!");
 
         return response;
     }
