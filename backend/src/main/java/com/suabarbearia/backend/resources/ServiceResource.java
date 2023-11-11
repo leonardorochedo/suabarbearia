@@ -60,6 +60,23 @@ public class ServiceResource {
         }
     }
 
+    @PostMapping(value = "/enable/{id}")
+    public ResponseEntity<?> enable(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+        try {
+            TextResponse response = serviceService.enable(authorizationHeader, id);
+
+            return ResponseEntity.ok().body(response);
+        } catch (IllegalArgumentException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        }
+    }
+
     @PostMapping(value = "/disable/{id}")
     public ResponseEntity<?> disable(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
         try {
