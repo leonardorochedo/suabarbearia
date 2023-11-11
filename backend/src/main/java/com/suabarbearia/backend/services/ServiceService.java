@@ -77,4 +77,29 @@ public class ServiceService {
         return response;
     }
 
+    public TextResponse disable(String authorizationHeader, Long id) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Service findedService = serviceRepository.findById(id).get();
+
+        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+        // Check data
+        if (!findedService.getBarbershop().equals(barbershop)) {
+            throw new RuntimeException("Token inválido para esta barbearia!");
+        }
+
+        if (!findedService.isEnabled()) {
+            throw new IllegalArgumentException("Serviço " + findedService.getTitle() + " já está desabilitado!");
+        }
+
+        findedService.setEnabled(false);
+
+        serviceRepository.save(findedService);
+
+        TextResponse response = new TextResponse("Serviço " + findedService.getTitle() + " desabiltiado!");
+
+        return response;
+    }
+
 }

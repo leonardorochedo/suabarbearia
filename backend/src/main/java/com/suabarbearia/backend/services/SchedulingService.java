@@ -50,6 +50,10 @@ public class SchedulingService {
         // Validations
         validateScheduling(scheduling, barbershopFinded, userFinded);
 
+        if (!serviceFinded.isEnabled()) {
+            throw new IllegalArgumentException("Serviço " + serviceFinded.getTitle() + " está desabilitado!");
+        }
+
         // Create scheduling
         Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, serviceFinded, scheduling.getDate(), false));
 
