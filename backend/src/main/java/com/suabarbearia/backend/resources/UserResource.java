@@ -1,5 +1,6 @@
 package com.suabarbearia.backend.resources;
 
+import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.responses.TextResponse;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,23 @@ public class UserResource {
 	        
 	        return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 	    }
+	}
+
+	@PostMapping(value = "/signin")
+	public ResponseEntity<?> signin(@RequestBody SigninDto user) {
+		try {
+			ApiTokenResponse<User> response = userService.signin(user);
+
+			return ResponseEntity.ok().body(response);
+		} catch (ResourceNotFoundException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+		}
 	}
 
 	@PostMapping(value = "/fav/barbershop/{id}")

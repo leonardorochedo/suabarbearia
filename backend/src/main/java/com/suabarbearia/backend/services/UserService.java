@@ -3,7 +3,9 @@ package com.suabarbearia.backend.services;
 import java.util.Optional;
 import java.util.Set;
 
+import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
+import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
@@ -64,6 +66,26 @@ public class UserService {
 		
 		ApiTokenResponse<User> response = new ApiTokenResponse<User>("Usuário criado com sucesso!", token, newUser);
 		
+		return response;
+	}
+
+	public ApiTokenResponse<User> signin(SigninDto user) {
+		User userFinded = userRepository.findByEmail(user.getEmail());
+
+		// Check data
+		if (userFinded == null) {
+			throw new ResourceNotFoundException("Usuário não existente!");
+		}
+
+		if (!BCrypt.checkpw(user.getPassword(), userFinded.getPassword())) {
+			throw new IllegalArgumentException("E-mail ou senha inválidos!");
+		}
+
+		String token = JwtUtil.generateToken(userFinded.getEmail());
+
+		// Create a response
+		ApiTokenResponse<User> response = new ApiTokenResponse<User>("Usuário logado com sucesso!", token, userFinded);
+
 		return response;
 	}
 
