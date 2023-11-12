@@ -7,6 +7,7 @@ import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
+import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,17 @@ public class UserService {
 		
 		return user.get();
 	}
-	
+
+	public ApiResponse<User> profile(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		ApiResponse<User> response = new ApiResponse<User>("Perfil carregado!", user);
+
+		return response;
+	}
+
 	public ApiTokenResponse<User> signout(CreateUserDto user) {
 		User userFinded = userRepository.findByEmail(user.getEmail());
 		Barbershop barberFinded = barbershopRepository.findByEmail(user.getEmail());

@@ -1,6 +1,8 @@
 package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.SigninDto;
+import com.suabarbearia.backend.entities.Barbershop;
+import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,20 @@ public class UserResource {
 		
 		return ResponseEntity.ok().body(user);
 	}
-	
+
+	@GetMapping(value = "/profile")
+	public ResponseEntity<?> profile(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			ApiResponse<User> user = userService.profile(authorizationHeader);
+
+			return ResponseEntity.ok().body(user);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
 	@PostMapping(value = "/signout")
 	public ResponseEntity<?> signout(@RequestBody CreateUserDto user) {
 		try {			
