@@ -1,8 +1,11 @@
 package com.suabarbearia.backend.services;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Set;
 
+import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
@@ -20,6 +23,7 @@ import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserService {
@@ -96,6 +100,42 @@ public class UserService {
 
 		// Create a response
 		ApiTokenResponse<User> response = new ApiTokenResponse<User>("Usuário logado com sucesso!", token, userFinded);
+
+		return response;
+	}
+
+	public ApiResponse<User> edit(String authorizationHeader, Long id, EditUserDto user, MultipartFile image) throws SQLException, IOException {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+		User editedUser = userRepository.findById(id).get();
+
+		// Check user
+		if (!userToken.equals(editedUser)) {
+			throw new RuntimeException("Token inválido para este usuário!");
+		}
+
+		// Verify new data
+		if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getConfirmpassword() == null || user.getPhone() == null) {
+			throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+		}
+
+		if (!user.getPassword().equals(user.getConfirmpassword())) {
+			throw new IllegalArgumentException("As senhas não batem!");
+		}
+
+		String hashedPassword = BCrypt.hashpw(user.getPassword(), fixedSalt);
+
+		// Update user
+		editedUser.setImage(image.getBytes());
+		editedUser.setName(user.getName());
+		editedUser.setEmail(user.getEmail());
+		editedUser.setPassword(hashedPassword);
+		editedUser.setPhone(user.getPhone());
+
+		userRepository.save(editedUser);
+
+		ApiResponse<User> response = new ApiResponse<User>("Usuário editado com sucesso!", editedUser);
 
 		return response;
 	}

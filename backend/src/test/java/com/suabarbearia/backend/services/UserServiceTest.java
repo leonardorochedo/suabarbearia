@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
+import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,6 +20,10 @@ import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 @SpringBootTest
 @ActiveProfiles("test") // Run in test file
@@ -93,8 +99,28 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testFavBarbershop() {
+	public void testEditWithNoImage() throws SQLException, IOException {
+		// Create
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client5@email.com", "123321", "123321", "33981111");
+		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+
+		// Edit
+		EditUserDto editedUserMock = new EditUserDto("Moreira Fulano", "fulano_client5@email.com", "123321", "123321", "33981111", null);
+
+		// Image
+		MultipartFile image = Mockito.mock(MultipartFile.class);
+
+		ApiResponse<User> response2 = userService.edit(response1.getToken(), response1.getData().getId(), editedUserMock, image);
+
+		// Assert
+		assertNotNull(response2);
+		assertEquals("Usuário editado com sucesso!", response2.getMessage());
+		assertEquals("fulano_client5@email.com", response2.getData().getEmail());
+	}
+
+	@Test
+	public void testFavBarbershop() {
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client6@email.com", "123321", "123321", "33981111");
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
@@ -107,7 +133,7 @@ public class UserServiceTest {
 
 	@Test
 	public void testUnfavBarbershop() {
-		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client6@email.com", "123321", "123321", "33981111");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client7@email.com", "123321", "123321", "33981111");
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);

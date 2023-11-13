@@ -1,10 +1,9 @@
 package com.suabarbearia.backend.resources;
 
+import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,10 @@ import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.services.UserService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -77,6 +80,24 @@ public class UserResource {
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
 		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+		}
+	}
+
+	@PatchMapping(value = "/edit/{id}")
+	public ResponseEntity<?> edit(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id, @ModelAttribute EditUserDto user, MultipartFile image) throws IOException, IllegalArgumentException, SQLException {
+		// @ModelAttribute to accept multiform/form-data
+		try {
+			ApiResponse<User> response = userService.edit(authorizationHeader, id, user, image);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		} catch (IOException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
