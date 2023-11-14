@@ -119,8 +119,18 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testFavBarbershop() {
+	public void testDelete() {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client6@email.com", "123321", "123321", "33981111");
+		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+
+		TextResponse response2 = userService.delete(response1.getToken(), response1.getData().getId());
+
+		assertEquals("Usuário deletado com sucesso!", response2.getMessage());
+	}
+
+	@Test
+	public void testFavBarbershop() {
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client7@email.com", "123321", "123321", "33981111");
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
@@ -133,7 +143,7 @@ public class UserServiceTest {
 
 	@Test
 	public void testUnfavBarbershop() {
-		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client7@email.com", "123321", "123321", "33981111");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client8@email.com", "123321", "123321", "33981111");
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
 		ApiTokenResponse<User> response1 = userService.signout(createUserMock);

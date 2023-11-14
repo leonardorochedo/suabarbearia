@@ -140,6 +140,24 @@ public class UserService {
 		return response;
 	}
 
+	public TextResponse delete(String authorizationHeader, Long id) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+		User userId = userRepository.findById(id).get();
+
+		// Check barber
+		if (!userToken.equals(userId)) {
+			throw new RuntimeException("Token inválido para este usuário!");
+		}
+
+		userRepository.deleteById(id);
+
+		TextResponse response = new TextResponse("Usuário deletado com sucesso!");
+
+		return response;
+	}
+
 	public TextResponse createRelationWithBarbershop(String authorizationHeader, Long id) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 

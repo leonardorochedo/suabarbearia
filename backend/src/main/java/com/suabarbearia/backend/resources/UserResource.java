@@ -104,6 +104,19 @@ public class UserResource {
 		}
 	}
 
+	@DeleteMapping(value = "/delete/{id}")
+	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+		try {
+			TextResponse response = userService.delete(authorizationHeader, id);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
 	@PostMapping(value = "/fav/barbershop/{id}")
 	public ResponseEntity<?> createRelationWithBarbershop(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
 		try {
