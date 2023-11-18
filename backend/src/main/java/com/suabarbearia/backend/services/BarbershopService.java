@@ -60,7 +60,7 @@ public class BarbershopService {
 		return response;
 	}
 
-	public ApiTokenResponse<Barbershop> signout(CreateBarbershopDto barbershop) {
+	public ApiTokenResponse<Barbershop> signup(CreateBarbershopDto barbershop) {
 		Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
 		User userFinded = userRepository.findByEmail(barbershop.getEmail());
 
@@ -96,11 +96,11 @@ public class BarbershopService {
 
 		// Check data
 		if (barberFinded == null) {
-		 throw new ResourceNotFoundException("Barbearia não existente!");
+			throw new ResourceNotFoundException("Barbearia não existente!");
 		}
 
 		if (!BCrypt.checkpw(barbershop.getPassword(), barberFinded.getPassword())) {
-		 throw new IllegalArgumentException("E-mail ou senha inválidos!");
+			throw new IllegalArgumentException("E-mail ou senha inválidos!");
 		}
 
 		String token = JwtUtil.generateToken(barbershop.getEmail());

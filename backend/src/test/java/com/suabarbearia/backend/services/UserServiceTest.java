@@ -53,12 +53,12 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testSignout() {
+	public void testSignup() {
 		// Arrange
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client2@email.com", "123321", "123321", "33981111");
 		
 		// Act
-		ApiTokenResponse<User> response = userService.signout(createUserMock);
+		ApiTokenResponse<User> response = userService.signup(createUserMock);
 		
 		// Assert
 		assertNotNull(response);
@@ -67,8 +67,8 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testSignoutWithInvalidPasswords() {
-        assertThrows(IllegalArgumentException.class, () -> userService.signout(new CreateUserDto("Fulano Ferreira", "fulano_client3@email.com", "123321", "123", "33981111")));
+	public void testSignupWithInvalidPasswords() {
+        assertThrows(IllegalArgumentException.class, () -> userService.signup(new CreateUserDto("Fulano Ferreira", "fulano_client3@email.com", "123321", "123", "33981111")));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class UserServiceTest {
 		SigninDto signinUserMock = new SigninDto("fulano_client3@email.com", "123321");
 
 		// Act
-		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
 		ApiTokenResponse<User> response2 = userService.signin(signinUserMock);
 
 		// Assert
@@ -91,7 +91,7 @@ public class UserServiceTest {
 	public void testGetProfile() {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client4@email.com", "123321", "123321", "33981111");
 
-		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
 		ApiResponse<User> response2 = userService.profile(response1.getToken());
 
 		assertEquals("Perfil carregado!", response2.getMessage());
@@ -102,7 +102,7 @@ public class UserServiceTest {
 	public void testEditWithNoImage() throws SQLException, IOException {
 		// Create
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client5@email.com", "123321", "123321", "33981111");
-		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
 
 		// Edit
 		EditUserDto editedUserMock = new EditUserDto("Moreira Fulano", "fulano_client5@email.com", "123321", "123321", "33981111", null);
@@ -121,7 +121,7 @@ public class UserServiceTest {
 	@Test
 	public void testDelete() {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client6@email.com", "123321", "123321", "33981111");
-		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
 
 		TextResponse response2 = userService.delete(response1.getToken(), response1.getData().getId());
 
@@ -133,8 +133,8 @@ public class UserServiceTest {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client7@email.com", "123321", "123321", "33981111");
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
-		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
-		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
+		ApiTokenResponse<Barbershop> response2 = barbershopService.signup(createBarberMock);
 
 		TextResponse response3 = userService.createRelationWithBarbershop(response1.getToken(), response2.getData().getId());
 
@@ -146,8 +146,8 @@ public class UserServiceTest {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client8@email.com", "123321", "123321", "33981111");
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 
-		ApiTokenResponse<User> response1 = userService.signout(createUserMock);
-		ApiTokenResponse<Barbershop> response2 = barbershopService.signout(createBarberMock);
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
+		ApiTokenResponse<Barbershop> response2 = barbershopService.signup(createBarberMock);
 
 		TextResponse response3 = userService.createRelationWithBarbershop(response1.getToken(), response2.getData().getId());
 

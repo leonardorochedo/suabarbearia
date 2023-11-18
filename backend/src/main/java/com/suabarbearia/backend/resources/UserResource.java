@@ -48,10 +48,10 @@ public class UserResource {
 		}
 	}
 
-	@PostMapping(value = "/signout")
-	public ResponseEntity<?> signout(@RequestBody CreateUserDto user) {
+	@PostMapping(value = "/signup")
+	public ResponseEntity<?> signup(@RequestBody CreateUserDto user) {
 		try {			
-			ApiTokenResponse<User> response = userService.signout(user);
+			ApiTokenResponse<User> response = userService.signup(user);
 			
 			return ResponseEntity.ok().body(response);
 		} catch (ExistUserException e) {

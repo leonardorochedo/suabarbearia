@@ -53,7 +53,7 @@ public class UserService {
 		return response;
 	}
 
-	public ApiTokenResponse<User> signout(CreateUserDto user) {
+	public ApiTokenResponse<User> signup(CreateUserDto user) {
 		User userFinded = userRepository.findByEmail(user.getEmail());
 		Barbershop barberFinded = barbershopRepository.findByEmail(user.getEmail());
 		

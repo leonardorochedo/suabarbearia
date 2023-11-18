@@ -53,10 +53,10 @@ public class BarbershopResource {
 		}
 	}
 	
-	@PostMapping(value = "/signout")
-	public ResponseEntity<?> signout(@RequestBody CreateBarbershopDto barbershop) {
+	@PostMapping(value = "/signup")
+	public ResponseEntity<?> signup(@RequestBody CreateBarbershopDto barbershop) {
 		try {			
-			ApiTokenResponse<Barbershop> response = barbershopService.signout(barbershop);
+			ApiTokenResponse<Barbershop> response = barbershopService.signup(barbershop);
 			
 			return ResponseEntity.ok().body(response);
 		} catch (ExistUserException e) {

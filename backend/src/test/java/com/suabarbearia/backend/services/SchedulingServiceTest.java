@@ -42,9 +42,9 @@ public class SchedulingServiceTest {
         ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba", 25.0);
         CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_scheduling@email.com", "123321", "123321", "33981111");
 
-        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
         ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-        ApiTokenResponse<User> response3 = userService.signout(createUserMock);
+        ApiTokenResponse<User> response3 = userService.signup(createUserMock);
 
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         LocalTime hour = LocalTime.of(8, 0, 0);
@@ -64,9 +64,9 @@ public class SchedulingServiceTest {
         ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba", 25.0);
         CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_scheduling2@email.com", "123321", "123321", "33981111");
 
-        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
         ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-        ApiTokenResponse<User> response3 = userService.signout(createUserMock);
+        ApiTokenResponse<User> response3 = userService.signup(createUserMock);
 
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         LocalTime hour = LocalTime.of(8, 0, 0);
@@ -84,9 +84,9 @@ public class SchedulingServiceTest {
         ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombracelha", 25.0);
         CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_scheduling3@email.com", "123321", "123321", "33981111");
 
-        ApiTokenResponse<Barbershop> response1 = barbershopService.signout(createBarberMock);
+        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
         ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-        ApiTokenResponse<User> response3 = userService.signout(createUserMock);
+        ApiTokenResponse<User> response3 = userService.signup(createUserMock);
 
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         LocalTime hour = LocalTime.of(8, 0, 0);
