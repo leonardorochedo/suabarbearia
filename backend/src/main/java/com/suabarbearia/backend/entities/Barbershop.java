@@ -42,6 +42,10 @@ public class Barbershop implements Serializable {
 	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
+
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<Employee> employees;
 	
 	public Barbershop() {}
 
