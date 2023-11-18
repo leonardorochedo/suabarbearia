@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.entities;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -159,8 +160,14 @@ public class Barbershop implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Barbershop id=" + id + ", name=" + name + ", email=" + email + ", image=" + image + ", address="
-				+ address + ", services=" + services + ", clients=" + clients + ", schedulings=" + schedulings;
+		return "Barbershop{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", phone='" + phone + '\'' +
+				", image=" + Arrays.toString(image) +
+				", address='" + address + '\'' +
+				'}';
 	}
-
 }

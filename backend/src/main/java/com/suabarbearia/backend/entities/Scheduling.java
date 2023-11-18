@@ -48,10 +48,11 @@ public class Scheduling implements Serializable {
 	
 	public Scheduling() {}
 
-	public Scheduling(User user, Barbershop barbershop, Service service, LocalDateTime date, boolean done) {
+	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, LocalDateTime date, boolean done) {
 		super();
 		this.user = user;
 		this.barbershop = barbershop;
+		this.employee = employee;
 		this.service = service;
 		this.date = date;
 		this.done = done;
@@ -81,6 +82,14 @@ public class Scheduling implements Serializable {
 		this.barbershop = barbershop;
 	}
 
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 	public Service getService() {
 		return service;
 	}
@@ -107,8 +116,15 @@ public class Scheduling implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Scheduling id=" + id + ", user=" + user + ", barbershop=" + barbershop + ", service=" + service
-				+ ", date=" + date + ", done=" + done;
+		return "Scheduling{" +
+				"id=" + id +
+				", user=" + user +
+				", barbershop=" + barbershop +
+				", service=" + service +
+				", date=" + date +
+				", done=" + done +
+				", employee=" + employee +
+				'}';
 	}
 
 }

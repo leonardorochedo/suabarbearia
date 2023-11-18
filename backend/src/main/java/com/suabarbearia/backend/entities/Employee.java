@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -130,5 +131,18 @@ public class Employee implements Serializable {
         return Objects.hash(username);
     }
 
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", image=" + Arrays.toString(image) +
+                ", phone='" + phone + '\'' +
+                ", barbershop=" + barbershop +
+                ", schedulings=" + schedulings +
+                '}';
+    }
 
 }

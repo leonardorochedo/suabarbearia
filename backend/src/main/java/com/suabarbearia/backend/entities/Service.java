@@ -97,7 +97,6 @@ public class Service implements Serializable {
 				", price=" + price +
 				", enabled=" + enabled +
 				", barbershop=" + barbershop +
-				", schedulings=" + schedulings +
 				'}';
 	}
 }

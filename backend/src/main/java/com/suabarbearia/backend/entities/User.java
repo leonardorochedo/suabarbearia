@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.entities;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -134,8 +135,13 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phone=" + phone
-				+ ", image=" + image;
+		return "User{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", phone='" + phone + '\'' +
+				", image=" + Arrays.toString(image) +
+				'}';
 	}
-	
 }
