@@ -6,14 +6,16 @@ public class SchedulingDto {
 
     private Long barbershopId;
     private Long serviceId;
+    private Long employeeId;
     private LocalDateTime date;
 
     public SchedulingDto () {}
 
-    public SchedulingDto(Long barbershopId, Long serviceId, LocalDateTime date) {
+    public SchedulingDto(Long barbershopId, Long serviceId, Long employeeId, LocalDateTime date) {
         super();
         this.barbershopId = barbershopId;
         this.serviceId = serviceId;
+        this.employeeId = employeeId;
         this.date = date;
     }
 
@@ -31,6 +33,14 @@ public class SchedulingDto {
 
     public void setServiceId(Long serviceId) {
         this.serviceId = serviceId;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public LocalDateTime getDate() {

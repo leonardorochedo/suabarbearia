@@ -38,13 +38,14 @@ public class Scheduling implements Serializable {
 	@JsonIgnore
 	private Service service;
 
+	@ManyToOne
+	@JoinColumn(name = "employee_id")
+	@JsonIgnore
+	private Employee employee;
+
 	private LocalDateTime date;
 
 	private boolean done;
-
-	@ManyToOne
-	@JoinColumn(name = "employee_id")
-	private Employee employee;
 	
 	public Scheduling() {}
 

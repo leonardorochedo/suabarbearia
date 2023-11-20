@@ -1,9 +1,7 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.*;
-import com.suabarbearia.backend.entities.Scheduling;
-import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.entities.User;
+import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +38,9 @@ public class BarbershopServiceTest {
 
 	@Autowired
 	private ServiceService serviceService;
+
+	@Autowired
+	private EmployeeService employeeService;
 
 	@Autowired
 	private SchedulingService schedulingService;
@@ -184,71 +184,77 @@ public class BarbershopServiceTest {
 	public void testGetSchedulingsBarbershop() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber11@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ServiceDto createServiceMock = new ServiceDto("Corte Degradê", 50.0);
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber", "123321", "123321", "33983333");
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber2@email.com", "123321", "123321", "33981111");
 
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-		ApiTokenResponse<User> response3 = userService.signup(createUserMock);
+		ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
+		ApiTokenResponse<User> response4 = userService.signup(createUserMock);
 
 		// Scheduling
 		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 		LocalTime hour = LocalTime.of(8, 0, 0);
 
-		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), tomorrow.with(hour));
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
 
-		ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
+		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
-		Set<Scheduling> response5 = barbershopService.getSchedulingsBarbershop(response1.getToken());
+		Set<Scheduling> response6 = barbershopService.getSchedulingsBarbershop(response1.getToken());
 
-		assertEquals(1, response5.size());
+		assertEquals(1, response6.size());
 	}
 
 	@Test
 	public void testGetSchedulingsBarbershopWithDate() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber12@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombrancelha", 25.0);
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber2", "123321", "123321", "33983333");
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber3@email.com", "123321", "123321", "33981111");
 
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-		ApiTokenResponse<User> response3 = userService.signup(createUserMock);
+		ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
+		ApiTokenResponse<User> response4 = userService.signup(createUserMock);
 
 		// Scheduling
 		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 		LocalTime hour = LocalTime.of(8, 0, 0);
 
-		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), tomorrow.with(hour));
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
 
-		ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
+		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
 		LocalDate day = LocalDate.now().plusDays(1);
 
-		Set<Scheduling> response5 = barbershopService.getSchedulingsBarbershopWithDate(response1.getToken(), day);
+		Set<Scheduling> response6 = barbershopService.getSchedulingsBarbershopWithDate(response1.getToken(), day);
 
-		assertEquals(1, response5.size());
+		assertEquals(1, response6.size());
 	}
 
 	@Test
 	public void testConcludeScheduling() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber13@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombrancelha", 25.0);
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber3", "123321", "123321", "33983333");
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber4@email.com", "123321", "123321", "33981111");
 
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-		ApiTokenResponse<User> response3 = userService.signup(createUserMock);
+		ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
+		ApiTokenResponse<User> response4 = userService.signup(createUserMock);
 
 		// Scheduling
 		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 		LocalTime hour = LocalTime.of(8, 0, 0);
 
-		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), tomorrow.with(hour));
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
 
-		ApiResponse<Scheduling> response4 = schedulingService.create(response3.getToken(), schedulingMock);
+		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
-		TextResponse response5 = barbershopService.concludeScheduling(response1.getToken(), response4.getData().getId());
+		TextResponse response6 = barbershopService.concludeScheduling(response1.getToken(), response4.getData().getId());
 
-		assertEquals("Agendamento concluído com sucesso!", response5.getMessage());
+		assertEquals("Agendamento concluído com sucesso!", response6.getMessage());
 	}
 
 }

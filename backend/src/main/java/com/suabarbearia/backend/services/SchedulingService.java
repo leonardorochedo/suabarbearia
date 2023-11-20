@@ -1,14 +1,8 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.SchedulingDto;
-import com.suabarbearia.backend.entities.Barbershop;
-import com.suabarbearia.backend.entities.Scheduling;
-import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.entities.User;
-import com.suabarbearia.backend.repositories.BarbershopRepository;
-import com.suabarbearia.backend.repositories.SchedulingRepository;
-import com.suabarbearia.backend.repositories.ServiceRepository;
-import com.suabarbearia.backend.repositories.UserRepository;
+import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +25,9 @@ public class SchedulingService {
     private BarbershopRepository barbershopRepository;
 
     @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
     private ServiceRepository serviceRepository;
 
     public Scheduling findById(Long id) {
@@ -46,16 +43,17 @@ public class SchedulingService {
         User userFinded = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
         Service serviceFinded = serviceRepository.findById(scheduling.getServiceId()).get();
         Barbershop barbershopFinded = barbershopRepository.findById(scheduling.getBarbershopId()).get();
+        Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, barbershopFinded, userFinded);
+        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
 
         if (!serviceFinded.isEnabled()) {
             throw new IllegalArgumentException("Serviço " + serviceFinded.getTitle() + " está desabilitado!");
         }
 
         // Create scheduling
-        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, serviceFinded, scheduling.getDate(), false));
+        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, employeeFinded, serviceFinded, scheduling.getDate(), false));
 
         ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento realizado com sucesso!", newScheduling);
 
@@ -69,9 +67,10 @@ public class SchedulingService {
         User userFinded = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
         Barbershop barbershopFinded = barbershopRepository.findById(scheduling.getBarbershopId()).get();
         Scheduling schedulingFinded = schedulingRepository.findById(id).get();
+        Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, barbershopFinded, userFinded);
+        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
 
         if (!schedulingFinded.getUser().equals(userFinded)) {
             throw new RuntimeException("Token inválido para este usuário!");
@@ -83,6 +82,7 @@ public class SchedulingService {
 
         // Update data
         schedulingFinded.setDate(scheduling.getDate());
+        schedulingFinded.setEmployee(employeeFinded);
 
         schedulingRepository.save(schedulingFinded);
 
@@ -92,7 +92,7 @@ public class SchedulingService {
     }
 
     // Helper
-    private boolean validateScheduling(SchedulingDto scheduling, Barbershop barbershop, User user) {
+    private boolean validateScheduling(SchedulingDto scheduling, Barbershop barbershop, Employee employee, User user) {
 
         if (scheduling.getBarbershopId() == null || scheduling.getServiceId() == null || scheduling.getDate() == null) {
             throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
@@ -121,12 +121,12 @@ public class SchedulingService {
             }
         }
 
-        // Check barbershop schedulings
-        Set<Scheduling> barbershopSchedulings = schedulingRepository.findAllByBarbershop(barbershop);
+        // Check employee schedulings
+        Set<Scheduling> employeeSchedulings = schedulingRepository.findAllByEmployee(employee);
 
-        for (Scheduling barbershopScheduling : barbershopSchedulings) {
-            if (barbershopScheduling.getDate().isEqual(scheduling.getDate())) {
-                throw new IllegalArgumentException("A barbearia já possui um agendamento neste horário!");
+        for (Scheduling employeeScheduling : employeeSchedulings) {
+            if (employeeScheduling.getDate().isEqual(scheduling.getDate())) {
+                throw new IllegalArgumentException("O barbeiro selecionado já possui um agendamento neste horário!");
             }
         }
 

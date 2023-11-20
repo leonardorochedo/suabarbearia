@@ -43,7 +43,7 @@ public class Employee implements Serializable {
 
     }
 
-    public Employee(Long id, String username, String password, String name, byte[] image, String phone, Barbershop barbershop, Set<Scheduling> schedulings) {
+    public Employee(Long id, String username, String password, String name, byte[] image, String phone, Barbershop barbershop) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -51,7 +51,6 @@ public class Employee implements Serializable {
         this.image = image;
         this.phone = phone;
         this.barbershop = barbershop;
-        this.schedulings = schedulings;
     }
 
     public Long getId() {
