@@ -1,9 +1,17 @@
 package com.suabarbearia.backend.services;
 
+import com.suabarbearia.backend.dtos.CreateBarbershopDto;
+import com.suabarbearia.backend.dtos.CreateEmployeeDto;
+import com.suabarbearia.backend.dtos.CreateUserDto;
+import com.suabarbearia.backend.dtos.ServiceDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Employee;
+import com.suabarbearia.backend.entities.Service;
+import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.EmployeeRepository;
+import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.ApiTokenResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,5 +50,16 @@ public class EmployeeServiceTest {
         // Assert
         assertNotNull(response);
         assertEquals(1, response.getId());
+    }
+
+    @Test
+    public void testCreate() {
+        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_employee2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+        CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee2", "123321", "123321", "33983333");
+
+        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+        ApiResponse<Employee> response2 = employeeService.create(response1.getToken(), createEmployeeMock);
+
+        assertEquals("Funcionário criado com sucesso!", response2.getMessage());
     }
 }
