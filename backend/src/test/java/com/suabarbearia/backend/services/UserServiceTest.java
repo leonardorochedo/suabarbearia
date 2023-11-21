@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
@@ -165,7 +166,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testGetSchedulingsBarbershop() {
+	public void testGetSchedulingsUser() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client3@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ServiceDto createServiceMock = new ServiceDto("Corte Degradê", 50.0);
 		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_client", "123321", "123321", "33983333");
@@ -185,6 +186,34 @@ public class UserServiceTest {
 		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
 		Set<Scheduling> response6 = userService.getSchedulingsUser(response4.getToken());
+
+		assertEquals(1, response6.size());
+	}
+
+	@Test
+	public void testGetSchedulingsUserWithDate() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client4@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ServiceDto createServiceMock = new ServiceDto("Corte Degradê + Barba", 50.0);
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_client2", "123321", "123321", "33983333");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client10@email.com", "123321", "123321", "33981111");
+
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+		ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
+		ApiTokenResponse<User> response4 = userService.signup(createUserMock);
+
+		// Scheduling
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalTime hour = LocalTime.of(8, 0, 0);
+
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
+
+		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
+
+		LocalDate initialDay = LocalDate.now().plusDays(1);
+		LocalDate endDay = LocalDate.now().plusDays(5);
+
+		Set<Scheduling> response6 = userService.getSchedulingsUserWithDate(response4.getToken(), initialDay, endDay);
 
 		assertEquals(1, response6.size());
 	}

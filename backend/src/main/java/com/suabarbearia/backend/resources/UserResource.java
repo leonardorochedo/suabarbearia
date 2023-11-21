@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Set;
 
 @RestController
@@ -151,6 +152,23 @@ public class UserResource {
 			Set<Scheduling> response = userService.getSchedulingsUser(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
+	@GetMapping(value = "/schedulings/{initialDate}/{endDate}")
+	public ResponseEntity<?> getSchedulingsUserWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+		try {
+			Set<Scheduling> response = userService.getSchedulingsUserWithDate(authorizationHeader, initialDate, endDate);
+
+			return ResponseEntity.ok().body(response);
+		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
 		} catch (RuntimeException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 

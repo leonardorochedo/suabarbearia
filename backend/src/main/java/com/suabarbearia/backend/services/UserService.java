@@ -2,6 +2,8 @@ package com.suabarbearia.backend.services;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
+import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.mindrot.jbcrypt.BCrypt;
@@ -34,6 +37,9 @@ public class UserService {
 
 	@Autowired
 	private BarbershopRepository barbershopRepository;
+
+	@Autowired
+	private SchedulingRepository schedulingRepository;
 
 	@Value("${fixedsalt}")
 	private String fixedSalt;
@@ -213,6 +219,32 @@ public class UserService {
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		return user.getSchedulings();
+	}
+
+	public Set<Scheduling> getSchedulingsUserWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Set<Scheduling> schedulings = schedulingRepository.findAllByUser(user);
+
+		// Check date
+		if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
+			throw new IllegalArgumentException("Data inválida!");
+		}
+
+		Set<Scheduling> schedulingsInRange = new HashSet<>();
+
+		for (Scheduling scheduling : schedulings) {
+			LocalDate schedulingDate = scheduling.getDate().toLocalDate();
+
+			if ((schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+					(schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) {
+				schedulingsInRange.add(scheduling);
+			}
+		}
+
+		return schedulingsInRange;
 	}
 
 }
