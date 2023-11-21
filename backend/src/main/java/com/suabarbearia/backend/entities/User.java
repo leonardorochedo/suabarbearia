@@ -36,7 +36,7 @@ public class User implements Serializable {
 	@JsonIgnore
 	private Set<Barbershop> barbershops;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
 	

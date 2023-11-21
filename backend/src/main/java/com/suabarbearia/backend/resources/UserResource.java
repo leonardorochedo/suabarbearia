@@ -2,6 +2,7 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
+import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -142,5 +144,18 @@ public class UserResource {
 			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
 		}
 	}
-	
+
+	@GetMapping(value = "/schedulings")
+	public ResponseEntity<?> getSchedulingsUser(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			Set<Scheduling> response = userService.getSchedulingsUser(authorizationHeader);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
 }

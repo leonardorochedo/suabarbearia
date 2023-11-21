@@ -4,10 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.suabarbearia.backend.dtos.CreateBarbershopDto;
-import com.suabarbearia.backend.dtos.EditUserDto;
-import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.entities.Barbershop;
+import com.suabarbearia.backend.dtos.*;
+import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
@@ -16,14 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.suabarbearia.backend.dtos.CreateUserDto;
-import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Set;
 
 @SpringBootTest
 @ActiveProfiles("test") // Run in test file
@@ -37,6 +36,15 @@ public class UserServiceTest {
 
 	@Autowired
 	private BarbershopService barbershopService;
+
+	@Autowired
+	private ServiceService serviceService;
+
+	@Autowired
+	private EmployeeService employeeService;
+
+	@Autowired
+	private SchedulingService schedulingService;
 	
 	@Test
 	public void testFindById() {
@@ -154,6 +162,31 @@ public class UserServiceTest {
 		TextResponse response4 = userService.deleteRelationWithBarbershop(response1.getToken(), response2.getData().getId());
 
 		assertEquals("Barbearia Teste removida dos favoritos!", response4.getMessage());
+	}
+
+	@Test
+	public void testGetSchedulingsBarbershop() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client3@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ServiceDto createServiceMock = new ServiceDto("Corte Degradê", 50.0);
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_client", "123321", "123321", "33983333");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client9@email.com", "123321", "123321", "33981111");
+
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+		ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
+		ApiTokenResponse<User> response4 = userService.signup(createUserMock);
+
+		// Scheduling
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalTime hour = LocalTime.of(8, 0, 0);
+
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
+
+		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
+
+		Set<Scheduling> response6 = userService.getSchedulingsUser(response4.getToken());
+
+		assertEquals(1, response6.size());
 	}
 	
 }

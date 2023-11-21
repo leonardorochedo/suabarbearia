@@ -8,6 +8,7 @@ import java.util.Set;
 import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
+import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -205,4 +206,13 @@ public class UserService {
 
 		return response;
 	}
+
+	public Set<Scheduling> getSchedulingsUser(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		return user.getSchedulings();
+	}
+
 }
