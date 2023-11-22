@@ -265,5 +265,29 @@ public class BarbershopService {
 
 		return response;
 	}
+
+	public TextResponse getEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+
+		double totalEarnings = 0.0;
+
+		for (Scheduling scheduling : schedulings) {
+			LocalDate schedulingDate = scheduling.getDate().toLocalDate();
+
+			if (scheduling.isDone() && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+					(schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) { // only done schedulings and is btwn dates
+				double servicePrice = scheduling.getService().getPrice();
+				totalEarnings += servicePrice;
+			}
+		}
+
+		TextResponse response = new TextResponse(String.format("Total de faturamento deste intervalo de dias: R$%.2f", totalEarnings));
+
+		return response;
+	}
 	
 }

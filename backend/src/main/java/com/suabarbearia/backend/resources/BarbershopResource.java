@@ -222,4 +222,17 @@ public class BarbershopResource {
 		}
 	}
 
+	@GetMapping(value = "/earnings/{initialDate}/{endDate}")
+	public ResponseEntity<?> getEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+		try {
+			TextResponse response = barbershopService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+		}
+	}
+
 }
