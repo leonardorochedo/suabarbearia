@@ -226,12 +226,12 @@ public class UserService {
 
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
-		Set<Scheduling> schedulings = schedulingRepository.findAllByUser(user);
-
 		// Check date
 		if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
 			throw new IllegalArgumentException("Data inválida!");
 		}
+
+		Set<Scheduling> schedulings = schedulingRepository.findAllByUser(user);
 
 		Set<Scheduling> schedulingsInRange = new HashSet<>();
 

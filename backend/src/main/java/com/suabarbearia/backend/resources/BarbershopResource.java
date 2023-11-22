@@ -165,12 +165,16 @@ public class BarbershopResource {
 		}
 	}
 
-	@GetMapping(value = "/schedulings/{date}")
-	public ResponseEntity<?> getSchedulingsBarbershopWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate date) {
+	@GetMapping(value = "/schedulings/{initialDate}/{endDate}")
+	public ResponseEntity<?> getSchedulingsBarbershopWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
 		try {
-			Set<Scheduling> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, date);
+			Set<Scheduling> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
+		} catch (IllegalArgumentException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
 		} catch (RuntimeException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 

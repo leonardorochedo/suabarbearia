@@ -225,9 +225,10 @@ public class BarbershopServiceTest {
 
 		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
-		LocalDate day = LocalDate.now().plusDays(1);
+		LocalDate initialDay = LocalDate.now().plusDays(1);
+		LocalDate endDay = LocalDate.now().plusDays(5);
 
-		Set<Scheduling> response6 = barbershopService.getSchedulingsBarbershopWithDate(response1.getToken(), day);
+		Set<Scheduling> response6 = barbershopService.getSchedulingsBarbershopWithDate(response1.getToken(), initialDay, endDay);
 
 		assertEquals(1, response6.size());
 	}

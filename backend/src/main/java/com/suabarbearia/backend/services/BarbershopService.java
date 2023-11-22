@@ -190,22 +190,30 @@ public class BarbershopService {
 		return barbershop.getSchedulings();
 	}
 
-	public Set<Scheduling> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate date) {
+	public Set<Scheduling> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
+		// Check date
+		if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
+			throw new IllegalArgumentException("Data inválida!");
+		}
+
 		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
 
-		Set<Scheduling> schedulingsWithDate = new HashSet<>();
+		Set<Scheduling> schedulingsInRange = new HashSet<>();
 
 		for (Scheduling scheduling : schedulings) {
-			if (scheduling.getDate().toLocalDate().isEqual(date)) {
-				schedulingsWithDate.add(scheduling);
+			LocalDate schedulingDate = scheduling.getDate().toLocalDate();
+
+			if ((schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+					(schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) {
+				schedulingsInRange.add(scheduling);
 			}
 		}
 
-		return schedulingsWithDate;
+		return schedulingsInRange;
 	}
 
 	public TextResponse concludeScheduling(String authorizationHeader, Long id) {
