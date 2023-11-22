@@ -244,5 +244,26 @@ public class BarbershopService {
 
 		return response;
 	}
+
+	public TextResponse getEarnings(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+
+		double totalEarnings = 0.0;
+
+		for (Scheduling scheduling : schedulings) {
+			if (scheduling.isDone()) { // only done schedulings
+				double servicePrice = scheduling.getService().getPrice();
+				totalEarnings += servicePrice;
+			}
+		}
+
+		TextResponse response = new TextResponse(String.format("Total de faturamento: R$%.2f", totalEarnings));
+
+		return response;
+	}
 	
 }

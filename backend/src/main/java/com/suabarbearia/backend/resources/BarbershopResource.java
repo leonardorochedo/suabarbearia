@@ -209,4 +209,17 @@ public class BarbershopResource {
 		}
 	}
 
+	@GetMapping(value = "/earnings/total")
+	public ResponseEntity<?> getEarnings(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			TextResponse response = barbershopService.getEarnings(authorizationHeader);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+		}
+	}
+
 }
