@@ -2,6 +2,7 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
+import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
@@ -169,6 +170,19 @@ public class UserResource {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
+	@GetMapping(value = "/barbershops")
+	public ResponseEntity<?> getBarbershopsUser(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			Set<Barbershop> response = userService.getBarbershopsUser(authorizationHeader);
+
+			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 

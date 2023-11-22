@@ -247,4 +247,12 @@ public class UserService {
 		return schedulingsInRange;
 	}
 
+	public Set<Barbershop> getBarbershopsUser(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		return user.getBarbershops();
+	}
+
 }

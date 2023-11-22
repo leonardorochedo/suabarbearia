@@ -217,5 +217,21 @@ public class UserServiceTest {
 
 		assertEquals(1, response6.size());
 	}
-	
+
+	@Test
+	public void testGetBarbershops() {
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client11@email.com", "123321", "123321", "33981111");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_client5@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
+		ApiTokenResponse<Barbershop> response2 = barbershopService.signup(createBarberMock);
+
+		TextResponse response3 = userService.createRelationWithBarbershop(response1.getToken(), response2.getData().getId());
+
+		Set<Barbershop> response4 = userService.getBarbershopsUser(response1.getToken());
+
+		assertEquals("Barbearia Teste adicionada aos favoritos!", response3.getMessage());
+		assertEquals(1, response4.size());
+	}
+
 }
