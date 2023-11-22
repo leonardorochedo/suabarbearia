@@ -1,9 +1,7 @@
 package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
-import com.suabarbearia.backend.entities.Scheduling;
-import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.entities.User;
+import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
@@ -130,6 +127,19 @@ public class BarbershopResource {
 	public ResponseEntity<?> getUsersBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
 			Set<User> response = barbershopService.getUsersBarbershop(authorizationHeader);
+
+			return ResponseEntity.ok().body(response);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		}
+	}
+
+	@GetMapping(value = "/employees")
+	public ResponseEntity<?> getEmployeesBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
+		try {
+			Set<Employee> response = barbershopService.getEmployeesBarbershop(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {

@@ -8,9 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
-import com.suabarbearia.backend.entities.Scheduling;
-import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.entities.User;
+import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
@@ -172,6 +169,14 @@ public class BarbershopService {
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		return barbershop.getClients();
+	}
+
+	public Set<Employee> getEmployeesBarbershop(String authorizationHeader) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		return barbershop.getEmployees();
 	}
 
 	public Set<Service> getServicesBarbershop(String authorizationHeader) {
