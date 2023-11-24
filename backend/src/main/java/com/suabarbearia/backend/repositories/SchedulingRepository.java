@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.suabarbearia.backend.entities.Scheduling;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
@@ -18,4 +18,5 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
 
     Set<Scheduling> findAllByEmployee(Employee employee);
 
+    List<Scheduling> findTopByUserAndBarbershopOrderByDateDesc(User user, Barbershop barbershop);
 }

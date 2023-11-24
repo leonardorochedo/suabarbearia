@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -46,10 +47,16 @@ public class SchedulingService {
         Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
+        validateScheduling(scheduling, employeeFinded, userFinded);
 
-        if (!serviceFinded.isEnabled()) {
-            throw new IllegalArgumentException("Serviço " + serviceFinded.getTitle() + " está desabilitado!");
+        List<Scheduling> lastUserScheduling = schedulingRepository.findTopByUserAndBarbershopOrderByDateDesc(userFinded, barbershopFinded);
+
+        if (!lastUserScheduling.isEmpty()) { // verify if las user scdlng is done
+            Scheduling lastScheduling = lastUserScheduling.get(0);
+
+            if (!lastScheduling.isDone()) {
+                throw new IllegalArgumentException("O último agendamento do usuário ainda não foi concluído!");
+            }
         }
 
         // Create scheduling
@@ -70,7 +77,7 @@ public class SchedulingService {
         Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
+        validateScheduling(scheduling, employeeFinded, userFinded);
 
         if (!schedulingFinded.getUser().equals(userFinded)) {
             throw new RuntimeException("Token inválido para este usuário!");
@@ -92,10 +99,17 @@ public class SchedulingService {
     }
 
     // Helper
-    private boolean validateScheduling(SchedulingDto scheduling, Barbershop barbershop, Employee employee, User user) {
+    private boolean validateScheduling(SchedulingDto scheduling, Employee employee, User user) {
 
         if (scheduling.getBarbershopId() == null || scheduling.getServiceId() == null || scheduling.getDate() == null) {
             throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+        }
+
+        // Check service
+        Service service = serviceRepository.findById(scheduling.getServiceId()).get();
+
+        if (!service.isEnabled()) {
+            throw new IllegalArgumentException("Serviço " + service.getTitle() + " está desabilitado!");
         }
 
         // Check date and hour
@@ -125,7 +139,19 @@ public class SchedulingService {
         Set<Scheduling> employeeSchedulings = schedulingRepository.findAllByEmployee(employee);
 
         for (Scheduling employeeScheduling : employeeSchedulings) {
-            if (employeeScheduling.getDate().isEqual(scheduling.getDate())) {
+            LocalDateTime employeeSchedulingStartTime = employeeScheduling.getDate();
+            LocalDateTime employeeSchedulingEndTime = employeeSchedulingStartTime.plusMinutes(30);
+
+            LocalDateTime schedulingStartTime = scheduling.getDate();
+            LocalDateTime schedulingEndTime = schedulingStartTime.plusMinutes(30);
+
+            // Verificar se o novo agendamento começa dentro de 30 minutos após um agendamento existente
+            if ((schedulingStartTime.isEqual(employeeSchedulingStartTime) || schedulingStartTime.isAfter(employeeSchedulingStartTime)) &&
+                    schedulingStartTime.isBefore(employeeSchedulingEndTime)) {
+                throw new IllegalArgumentException("O barbeiro selecionado já possui um agendamento neste horário!");
+            }
+
+            if (schedulingStartTime.isBefore(employeeSchedulingEndTime) && schedulingEndTime.isAfter(employeeSchedulingEndTime)) {
                 throw new IllegalArgumentException("O barbeiro selecionado já possui um agendamento neste horário!");
             }
         }
