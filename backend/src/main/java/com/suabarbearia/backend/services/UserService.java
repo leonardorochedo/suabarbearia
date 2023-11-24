@@ -158,7 +158,14 @@ public class UserService {
 			throw new RuntimeException("Token inválido para este usuário!");
 		}
 
-		userRepository.deleteById(id);
+		// Att data
+		userId.setName("Usuário excluído!");
+		userId.setEmail("");
+		userId.setPassword("");
+		userId.setPhone("");
+		userId.setImage(null);
+
+		userRepository.save(userId);
 
 		TextResponse response = new TextResponse("Usuário deletado com sucesso!");
 

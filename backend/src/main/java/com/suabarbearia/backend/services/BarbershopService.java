@@ -156,7 +156,14 @@ public class BarbershopService {
 			throw new RuntimeException("Token inválido para esta barbearia!");
 		}
 
-		barbershopRepository.deleteById(id);
+		barbershopId.setName("Barbearia excluída!");
+		barbershopId.setEmail("");
+		barbershopId.setPassword("");
+		barbershopId.setPhone("");
+		barbershopId.setImage(null);
+		barbershopId.setAddress("");
+
+		barbershopRepository.save(barbershopId);
 
 		TextResponse response = new TextResponse("Barbearia deletada com sucesso!");
 
