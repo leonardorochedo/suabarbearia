@@ -3,7 +3,9 @@ package com.suabarbearia.backend.services;
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Employee;
-import com.suabarbearia.backend.exceptions.ExistUserException;
+import com.suabarbearia.backend.exceptions.ExistDataException;
+import com.suabarbearia.backend.exceptions.FieldsAreNullException;
+import com.suabarbearia.backend.exceptions.PasswordDontMatchException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.EmployeeRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -41,15 +43,15 @@ public class EmployeeService {
 
         // Check data
         if (employeeFinded != null && employeeFinded.getBarbershop().equals(barbershop)) {
-            throw new ExistUserException("Funcionário existente!");
+            throw new ExistDataException("Funcionário existente!");
         }
 
         if (employee.getName() == null || employee.getUsername() == null || employee.getPassword() == null || employee.getConfirmpassword() == null || employee.getPhone() == null) {
-            throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
         if (!employee.getPassword().equals(employee.getConfirmpassword())) {
-            throw new IllegalArgumentException("As senhas não batem!");
+            throw new PasswordDontMatchException("As senhas não batem!");
         }
 
         // Encypt and hash pass

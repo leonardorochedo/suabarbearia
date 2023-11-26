@@ -2,6 +2,9 @@ package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.*;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.exceptions.ExistDataException;
+import com.suabarbearia.backend.exceptions.InvalidDataException;
+import com.suabarbearia.backend.exceptions.PasswordDontMatchException;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
@@ -74,13 +77,15 @@ public class BarbershopServiceTest {
 	}
 
 	@Test
-	public void testSignupWithInvalidEmail() {
-		assertThrows(IllegalArgumentException.class, () -> barbershopService.signup(new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+	public void testSignupWithExistsEmail() {
+		barbershopService.signup(new CreateBarbershopDto("teste3", "teste3@email.com", "123321", "123321", "33981111", "555 Av Brasil"));
+		assertThrows(ExistDataException.class, () -> barbershopService.signup(new CreateBarbershopDto("Barbearia Teste", "teste3@email.com", "123321", "123321", "33981111", "555 Av Brasil")));
+
 	}
 
 	@Test
 	public void testSignupWithInvalidPasswords() {
-        assertThrows(IllegalArgumentException.class, () -> barbershopService.signup(new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
+        assertThrows(PasswordDontMatchException.class, () -> barbershopService.signup(new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "123321", "123", "33981111", "555 Av Brasil")));
 	}
 	
 	@Test
@@ -107,7 +112,7 @@ public class BarbershopServiceTest {
 		// Act
 		ApiTokenResponse<Barbershop> response = barbershopService.signup(createBarberMock);
 
-		assertThrows(IllegalArgumentException.class, () -> barbershopService.signin(new SigninDto("fulano_barber4@email.com", "123abc")));
+		assertThrows(InvalidDataException.class, () -> barbershopService.signin(new SigninDto("fulano_barber4@email.com", "123abc")));
 	}
 
 	@Test

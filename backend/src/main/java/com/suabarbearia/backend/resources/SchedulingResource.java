@@ -2,6 +2,9 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.SchedulingDto;
 import com.suabarbearia.backend.entities.Scheduling;
+import com.suabarbearia.backend.exceptions.InvalidTokenException;
+import com.suabarbearia.backend.exceptions.LastSchedulingNotDoneException;
+import com.suabarbearia.backend.exceptions.NoPermissionException;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.services.SchedulingService;
@@ -30,7 +33,7 @@ public class SchedulingResource {
             ApiResponse<Scheduling> response = schedulingService.create(authorizationHeader, scheduling);
 
             return ResponseEntity.ok().body(response);
-        } catch (IllegalArgumentException e) {
+        } catch (LastSchedulingNotDoneException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
@@ -43,11 +46,11 @@ public class SchedulingResource {
             ApiResponse<Scheduling> response = schedulingService.edit(authorizationHeader, id, scheduling);
 
             return ResponseEntity.ok().body(response);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-        } catch (RuntimeException e) {
+        } catch (NoPermissionException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);

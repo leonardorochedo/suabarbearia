@@ -3,7 +3,7 @@ package com.suabarbearia.backend.services;
 import com.suabarbearia.backend.dtos.ServiceDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.exceptions.ExistUserException;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.ServiceRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -37,11 +37,11 @@ public class ServiceService {
 
         // Check data
         if (serviceFinded != null && serviceFinded.getBarbershop().equals(barbershop)) {
-            throw new ExistUserException("Serviço existente!");
+            throw new ExistDataException("Serviço existente!");
         }
 
         if (service.getTitle() == null || service.getPrice() == null) {
-            throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
         Service newService = serviceRepository.save(new Service(null, service.getTitle(), service.getPrice(), true, barbershop));
@@ -60,11 +60,11 @@ public class ServiceService {
 
         // Check data
         if (!editedService.getBarbershop().equals(barbershop)) {
-            throw new RuntimeException("Token inválido para esta barbearia!");
+            throw new InvalidTokenException("Token inválido para esta barbearia!");
         }
 
         if (service.getTitle() == null || service.getPrice() == null) {
-            throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
         editedService.setTitle(service.getTitle());
@@ -86,11 +86,11 @@ public class ServiceService {
 
         // Check data
         if (!findedService.getBarbershop().equals(barbershop)) {
-            throw new RuntimeException("Token inválido para esta barbearia!");
+            throw new InvalidTokenException("Token inválido para esta barbearia!");
         }
 
         if (findedService.isEnabled()) {
-            throw new IllegalArgumentException("Serviço " + findedService.getTitle() + " já está habilitado!");
+            throw new AlreadySelectedDataException("Serviço " + findedService.getTitle() + " já está habilitado!");
         }
 
         findedService.setEnabled(true);
@@ -111,11 +111,11 @@ public class ServiceService {
 
         // Check data
         if (!findedService.getBarbershop().equals(barbershop)) {
-            throw new RuntimeException("Token inválido para esta barbearia!");
+            throw new InvalidTokenException("Token inválido para esta barbearia!");
         }
 
         if (!findedService.isEnabled()) {
-            throw new IllegalArgumentException("Serviço " + findedService.getTitle() + " já está desabilitado!");
+            throw new DisabledDataException("Serviço " + findedService.getTitle() + " já está desabilitado!");
         }
 
         findedService.setEnabled(false);

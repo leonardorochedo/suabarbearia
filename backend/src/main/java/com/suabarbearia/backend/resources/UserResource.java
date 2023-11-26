@@ -4,6 +4,7 @@ import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Scheduling;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.entities.User;
-import com.suabarbearia.backend.exceptions.ExistUserException;
-import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.services.UserService;
@@ -58,15 +57,11 @@ public class UserResource {
 			ApiTokenResponse<User> response = userService.signup(user);
 			
 			return ResponseEntity.ok().body(response);
-		} catch (ExistUserException e) {
+		} catch (ExistDataException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
 	        return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-	    } catch (ResourceNotFoundException e) {
-	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-	        
-	        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-	    } catch (IllegalArgumentException e) {
+	    } catch (PasswordDontMatchException | FieldsAreNullException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
 	        return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -83,7 +78,7 @@ public class UserResource {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-		} catch (IllegalArgumentException e) {
+		} catch (InvalidDataException | FieldsAreNullException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -97,11 +92,11 @@ public class UserResource {
 			ApiResponse<User> response = userService.edit(authorizationHeader, id, user, image);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (InvalidTokenException | PasswordDontMatchException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (IOException e) {
+		} catch (FieldsAreNullException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -114,7 +109,7 @@ public class UserResource {
 			TextResponse response = userService.delete(authorizationHeader, id);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (InvalidTokenException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
@@ -127,7 +122,7 @@ public class UserResource {
 			TextResponse response = userService.createRelationWithBarbershop(authorizationHeader, id);
 
 			return ResponseEntity.ok().body(response);
-		} catch (IllegalArgumentException e) {
+		} catch (AlreadySelectedDataException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
@@ -140,7 +135,7 @@ public class UserResource {
 			TextResponse response = userService.deleteRelationWithBarbershop(authorizationHeader, id);
 
 			return ResponseEntity.ok().body(response);
-		} catch (IllegalArgumentException e) {
+		} catch (DisabledDataException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
@@ -166,11 +161,7 @@ public class UserResource {
 			Set<Scheduling> response = userService.getSchedulingsUserWithDate(authorizationHeader, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
-		} catch (IllegalArgumentException e) {
-			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-
-			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (RuntimeException e) {
+		} catch (InvalidDataException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);

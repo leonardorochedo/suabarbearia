@@ -2,7 +2,9 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
 import com.suabarbearia.backend.entities.Employee;
-import com.suabarbearia.backend.exceptions.ExistUserException;
+import com.suabarbearia.backend.exceptions.ExistDataException;
+import com.suabarbearia.backend.exceptions.FieldsAreNullException;
+import com.suabarbearia.backend.exceptions.PasswordDontMatchException;
 import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
@@ -32,15 +34,15 @@ public class EmployeeResources {
             ApiResponse<Employee> response = employeeService.create(authorizationHeader, employee);
 
             return ResponseEntity.ok().body(response);
-        } catch (ExistUserException e) {
+        } catch (ExistDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-        } catch (ResourceNotFoundException e) {
+        } catch (FieldsAreNullException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-        } catch (IllegalArgumentException e) {
+        } catch (PasswordDontMatchException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);

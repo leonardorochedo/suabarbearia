@@ -2,6 +2,7 @@ package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.SchedulingDto;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
@@ -55,7 +56,7 @@ public class SchedulingService {
             Scheduling lastScheduling = lastUserScheduling.get(0);
 
             if (!lastScheduling.isDone()) {
-                throw new IllegalArgumentException("O último agendamento do usuário ainda não foi concluído!");
+                throw new LastSchedulingNotDoneException("O último agendamento do usuário ainda não foi concluído!");
             }
         }
 
@@ -80,11 +81,11 @@ public class SchedulingService {
         validateScheduling(scheduling, employeeFinded, userFinded);
 
         if (!schedulingFinded.getUser().equals(userFinded)) {
-            throw new RuntimeException("Token inválido para este usuário!");
+            throw new InvalidTokenException("Token inválido para este usuário!");
         }
 
         if (scheduling.getServiceId() != schedulingFinded.getService().getId() || scheduling.getBarbershopId() != schedulingFinded.getBarbershop().getId()) {
-            throw new IllegalArgumentException("Não é possível alterar este campo!");
+            throw new NoPermissionException("Não é possível alterar este campo!");
         }
 
         // Update data
@@ -102,19 +103,19 @@ public class SchedulingService {
     private boolean validateScheduling(SchedulingDto scheduling, Employee employee, User user) {
 
         if (scheduling.getBarbershopId() == null || scheduling.getServiceId() == null || scheduling.getDate() == null) {
-            throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
         // Check service
         Service service = serviceRepository.findById(scheduling.getServiceId()).get();
 
         if (!service.isEnabled()) {
-            throw new IllegalArgumentException("Serviço " + service.getTitle() + " está desabilitado!");
+            throw new DisabledDataException("Serviço " + service.getTitle() + " está desabilitado!");
         }
 
         // Check date and hour
         if (scheduling.getDate().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Data inválida!");
+            throw new InvalidDataException("Data inválida!");
         }
 
         // Check if hour is within barbershop's opening hours
@@ -123,7 +124,7 @@ public class SchedulingService {
         LocalTime closingHour = LocalTime.of(18, 0);
 
         if (hourActual.isBefore(openingHour) || hourActual.isAfter(closingHour)) {
-            throw new IllegalArgumentException("O horário do agendamento deve estar dentro do horário de funcionamento da barbearia!");
+            throw new TimeException("O horário do agendamento deve estar dentro do horário de funcionamento da barbearia!");
         }
 
         // Check user schedulings
@@ -131,7 +132,7 @@ public class SchedulingService {
 
         for (Scheduling userScheduling : userSchedulings) {
             if (userScheduling.getDate().withHour(0).isEqual(scheduling.getDate().withHour(0))) {
-                throw new IllegalArgumentException("O usuário já possui um agendamento para este dia!");
+                throw new AlreadySelectedDataException("O usuário já possui um agendamento para este dia!");
             }
         }
 
@@ -148,11 +149,11 @@ public class SchedulingService {
             // Verificar se o novo agendamento começa dentro de 30 minutos após um agendamento existente
             if ((schedulingStartTime.isEqual(employeeSchedulingStartTime) || schedulingStartTime.isAfter(employeeSchedulingStartTime)) &&
                     schedulingStartTime.isBefore(employeeSchedulingEndTime)) {
-                throw new IllegalArgumentException("O barbeiro selecionado já possui um agendamento neste horário!");
+                throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
             }
 
             if (schedulingStartTime.isBefore(employeeSchedulingEndTime) && schedulingEndTime.isAfter(employeeSchedulingEndTime)) {
-                throw new IllegalArgumentException("O barbeiro selecionado já possui um agendamento neste horário!");
+                throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
             }
         }
 

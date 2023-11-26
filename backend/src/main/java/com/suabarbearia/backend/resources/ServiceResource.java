@@ -2,7 +2,7 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.ServiceDto;
 import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.exceptions.ExistUserException;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.responses.TextResponse;
@@ -32,11 +32,11 @@ public class ServiceResource {
             ApiResponse<Service> responseService = serviceService.create(authorizationHeader, service);
 
             return ResponseEntity.ok().body(responseService);
-        } catch (ExistUserException e) {
+        } catch (ExistDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-        } catch (IllegalArgumentException e) {
+        } catch (FieldsAreNullException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -49,11 +49,11 @@ public class ServiceResource {
             ApiResponse<Service> responseService = serviceService.edit(authorizationHeader, id, service);
 
             return ResponseEntity.ok().body(responseService);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
-        } catch (RuntimeException e) {
+        } catch (FieldsAreNullException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
@@ -66,11 +66,11 @@ public class ServiceResource {
             TextResponse response = serviceService.enable(authorizationHeader, id);
 
             return ResponseEntity.ok().body(response);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-        } catch (RuntimeException e) {
+        } catch (AlreadySelectedDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
@@ -83,11 +83,11 @@ public class ServiceResource {
             TextResponse response = serviceService.disable(authorizationHeader, id);
 
             return ResponseEntity.ok().body(response);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-        } catch (RuntimeException e) {
+        } catch (DisabledDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);

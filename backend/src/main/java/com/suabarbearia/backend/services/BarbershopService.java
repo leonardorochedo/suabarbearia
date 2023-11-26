@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -19,8 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.exceptions.ExistUserException;
-import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
@@ -58,20 +57,20 @@ public class BarbershopService {
 	}
 
 	public ApiTokenResponse<Barbershop> signup(CreateBarbershopDto barbershop) {
+		if (barbershop.getName().isEmpty() || barbershop.getEmail().isEmpty() || barbershop.getPassword().isEmpty() || barbershop.getConfirmpassword().isEmpty() || barbershop.getPhone().isEmpty() || barbershop.getAddress().isEmpty()) {
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+		}
+
 		Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
 		User userFinded = userRepository.findByEmail(barbershop.getEmail());
 
 		// Check data
 		if (barberFinded != null || userFinded != null) {
-			throw new ExistUserException("Conta existente!");
-		}
-
-		if (barbershop.getName() == null || barbershop.getEmail() == null || barbershop.getPassword() == null || barbershop.getConfirmpassword() == null || barbershop.getPhone() == null || barbershop.getAddress() == null) {
-			throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+			throw new ExistDataException("Conta existente!");
 		}
 
 		if (!barbershop.getPassword().equals(barbershop.getConfirmpassword())) {
-			throw new IllegalArgumentException("As senhas não batem!");
+			throw new PasswordDontMatchException("As senhas não batem!");
 		}
 
 		// Encypt and hash pass
@@ -89,6 +88,10 @@ public class BarbershopService {
 	}
 
 	public ApiTokenResponse<Barbershop> signin(SigninDto barbershop) {
+		if (barbershop.getEmail().isEmpty() || barbershop.getPassword().isEmpty()) {
+			throw new FieldsAreNullException("E-mail ou senha não exitente!");
+		}
+
 		Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
 
 		// Check data
@@ -97,7 +100,7 @@ public class BarbershopService {
 		}
 
 		if (!BCrypt.checkpw(barbershop.getPassword(), barberFinded.getPassword())) {
-			throw new IllegalArgumentException("E-mail ou senha inválidos!");
+			throw new InvalidDataException("E-mail ou senha inválidos!");
 		}
 
 		String token = JwtUtil.generateToken(barbershop.getEmail());
@@ -116,16 +119,16 @@ public class BarbershopService {
 
 		// Check barber
 		if (!barbershopToken.equals(editedBarbershop)) {
-			throw new RuntimeException("Token inválido para esta barbearia!");
+			throw new InvalidTokenException("Token inválido para esta barbearia!");
 		}
 
 		// Verify new data
 		if (barbershop.getName() == null || barbershop.getEmail() == null || barbershop.getPassword() == null || barbershop.getConfirmpassword() == null || barbershop.getPhone() == null || barbershop.getAddress() == null) {
-			throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
 		if (!barbershop.getPassword().equals(barbershop.getConfirmpassword())) {
-			throw new IllegalArgumentException("As senhas não batem!");
+			throw new PasswordDontMatchException("As senhas não batem!");
 		}
 
 		String hashedPassword = BCrypt.hashpw(barbershop.getPassword(), fixedSalt);
@@ -153,7 +156,7 @@ public class BarbershopService {
 
 		// Check barber
 		if (!barbershopToken.equals(barbershopId)) {
-			throw new RuntimeException("Token inválido para esta barbearia!");
+			throw new InvalidTokenException("Token inválido para esta barbearia!");
 		}
 
 		barbershopId.setName("Barbearia excluída!");
@@ -209,7 +212,7 @@ public class BarbershopService {
 
 		// Check date
 		if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
-			throw new IllegalArgumentException("Data inválida!");
+			throw new InvalidDataException("Data inválida!");
 		}
 
 		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
@@ -236,11 +239,11 @@ public class BarbershopService {
 		Scheduling scheduling = schedulingRepository.findById(id).get();
 
 		if (!scheduling.getBarbershop().equals(barbershop)) {
-			throw new IllegalArgumentException("Token inválido!");
+			throw new InvalidTokenException("Token inválido!");
 		}
 
 		if (scheduling.isDone()) {
-			throw new RuntimeException("Agendamento já concluído!");
+			throw new SchedulingAlreadyDoneException("Agendamento já concluído!");
 		}
 
 		scheduling.setDone(true);

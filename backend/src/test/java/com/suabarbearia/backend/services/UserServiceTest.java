@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.suabarbearia.backend.dtos.*;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.exceptions.PasswordDontMatchException;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.junit.jupiter.api.Test;
@@ -77,7 +78,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void testSignupWithInvalidPasswords() {
-        assertThrows(IllegalArgumentException.class, () -> userService.signup(new CreateUserDto("Fulano Ferreira", "fulano_client3@email.com", "123321", "123", "33981111")));
+        assertThrows(PasswordDontMatchException.class, () -> userService.signup(new CreateUserDto("Fulano Ferreira", "fulano_client3@email.com", "123321", "123", "33981111")));
 	}
 
 	@Test

@@ -1,10 +1,10 @@
 package com.suabarbearia.backend.exceptions;
 
-public class ExistUserException extends RuntimeException {
+public class InvalidTokenException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ExistUserException(String text) {
+	public InvalidTokenException(String text) {
 		super(text);
 	}
 

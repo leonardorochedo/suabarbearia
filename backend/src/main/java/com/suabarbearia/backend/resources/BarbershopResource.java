@@ -2,6 +2,7 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.exceptions.ExistUserException;
-import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.services.BarbershopService;
@@ -56,15 +55,11 @@ public class BarbershopResource {
 			ApiTokenResponse<Barbershop> response = barbershopService.signup(barbershop);
 			
 			return ResponseEntity.ok().body(response);
-		} catch (ExistUserException e) {
+		} catch (ExistDataException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
 	        return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-	    } catch (ResourceNotFoundException e) {
-	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-	        
-	        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-	    } catch (IllegalArgumentException e) {
+	    } catch (PasswordDontMatchException | FieldsAreNullException e) {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 	        
 	        return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -77,19 +72,15 @@ public class BarbershopResource {
 	 		ApiTokenResponse<Barbershop> response = barbershopService.signin(barbershop);
 
 	 		return ResponseEntity.ok().body(response);
-	  	} catch (ExistUserException e) {
-		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+	  	} catch (InvalidDataException | FieldsAreNullException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-		   return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-	   } catch (ResourceNotFoundException e) {
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+		} catch (ResourceNotFoundException e) {
 		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 		   return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-	   } catch (IllegalArgumentException e) {
-		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-
-		   return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
-	   }
+	    }
 	}
 
 	@PatchMapping(value = "/edit/{id}")
@@ -99,16 +90,16 @@ public class BarbershopResource {
 			ApiResponse<Barbershop> response = barbershopService.edit(authorizationHeader, id, barbershop, image);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (InvalidTokenException | PasswordDontMatchException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (IOException e) {
+		} catch (FieldsAreNullException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		}
-	}
+    }
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
@@ -116,7 +107,7 @@ public class BarbershopResource {
 			TextResponse response = barbershopService.delete(authorizationHeader, id);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (InvalidTokenException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
@@ -168,7 +159,7 @@ public class BarbershopResource {
 			Set<Scheduling> response = barbershopService.getSchedulingsBarbershop(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (InvalidDataException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
@@ -198,11 +189,11 @@ public class BarbershopResource {
 			TextResponse response = barbershopService.concludeScheduling(authorizationHeader, id);
 
 			return ResponseEntity.ok().body(response);
-		} catch (IllegalArgumentException e) {
+		} catch (InvalidTokenException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (RuntimeException e) {
+		} catch (SchedulingAlreadyDoneException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);

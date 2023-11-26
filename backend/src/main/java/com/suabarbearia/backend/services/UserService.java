@@ -11,7 +11,7 @@ import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Scheduling;
-import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.entities.User;
-import com.suabarbearia.backend.exceptions.ExistUserException;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
@@ -61,20 +60,20 @@ public class UserService {
 	}
 
 	public ApiTokenResponse<User> signup(CreateUserDto user) {
+		if (user.getName().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getConfirmpassword().isEmpty() || user.getPhone().isEmpty()) {
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+		}
+
 		User userFinded = userRepository.findByEmail(user.getEmail());
 		Barbershop barberFinded = barbershopRepository.findByEmail(user.getEmail());
 		
 		// Check data
 		if (userFinded != null || barberFinded != null) {
-			throw new ExistUserException("Conta existente!");
-		}
-		
-		if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getConfirmpassword() == null || user.getPhone() == null) {
-		    throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+			throw new ExistDataException("Conta existente!");
 		}
 		
 		if (!user.getPassword().equals(user.getConfirmpassword())) {
-			throw new IllegalArgumentException("As senhas não batem!");
+			throw new PasswordDontMatchException("As senhas não batem!");
 		}
 		
 		// Encypt and hash pass
@@ -92,6 +91,10 @@ public class UserService {
 	}
 
 	public ApiTokenResponse<User> signin(SigninDto user) {
+		if (user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
+			throw new FieldsAreNullException("E-mail ou senha não existente!");
+		}
+
 		User userFinded = userRepository.findByEmail(user.getEmail());
 
 		// Check data
@@ -100,7 +103,7 @@ public class UserService {
 		}
 
 		if (!BCrypt.checkpw(user.getPassword(), userFinded.getPassword())) {
-			throw new IllegalArgumentException("E-mail ou senha inválidos!");
+			throw new InvalidDataException("E-mail ou senha inválidos!");
 		}
 
 		String token = JwtUtil.generateToken(userFinded.getEmail());
@@ -119,16 +122,16 @@ public class UserService {
 
 		// Check user
 		if (!userToken.equals(editedUser)) {
-			throw new RuntimeException("Token inválido para este usuário!");
+			throw new InvalidTokenException("Token inválido para este usuário!");
 		}
 
 		// Verify new data
 		if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getConfirmpassword() == null || user.getPhone() == null) {
-			throw new IllegalArgumentException("Um ou mais campos obrigatórios não estão preenchidos!");
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
 		if (!user.getPassword().equals(user.getConfirmpassword())) {
-			throw new IllegalArgumentException("As senhas não batem!");
+			throw new PasswordDontMatchException("As senhas não batem!");
 		}
 
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), fixedSalt);
@@ -155,7 +158,7 @@ public class UserService {
 
 		// Check barber
 		if (!userToken.equals(userId)) {
-			throw new RuntimeException("Token inválido para este usuário!");
+			throw new InvalidTokenException("Token inválido para este usuário!");
 		}
 
 		// Att data
@@ -184,7 +187,7 @@ public class UserService {
 
 		for (Barbershop userBarbershop : userBarbershops) {
 			if (userBarbershop.equals(barbershop)) {
-				throw new IllegalArgumentException(barbershop.getName() + " já está favoritada!");
+				throw new AlreadySelectedDataException(barbershop.getName() + " já está favoritada!");
 			}
 		}
 
@@ -208,7 +211,7 @@ public class UserService {
 		Set<Barbershop> userBarbershops = user.getBarbershops();
 
 		if (!userBarbershops.contains(barbershop)) {
-			throw new IllegalArgumentException(barbershop.getName() + " não está favoritada!");
+			throw new DisabledDataException(barbershop.getName() + " não está favoritada!");
 		}
 
 		user.getBarbershops().remove(barbershop);
@@ -235,7 +238,7 @@ public class UserService {
 
 		// Check date
 		if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
-			throw new IllegalArgumentException("Data inválida!");
+			throw new InvalidDataException("Data inválida!");
 		}
 
 		Set<Scheduling> schedulings = schedulingRepository.findAllByUser(user);
