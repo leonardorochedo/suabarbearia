@@ -38,11 +38,7 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
-        } catch (FieldsAreNullException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-        } catch (PasswordDontMatchException e) {
+        } catch (FieldsAreNullException | PasswordDontMatchException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);

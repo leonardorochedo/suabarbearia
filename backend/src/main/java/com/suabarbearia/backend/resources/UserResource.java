@@ -92,11 +92,11 @@ public class UserResource {
 			ApiResponse<User> response = userService.edit(authorizationHeader, id, user, image);
 
 			return ResponseEntity.ok().body(response);
-		} catch (InvalidTokenException | PasswordDontMatchException e) {
+		} catch (InvalidTokenException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (FieldsAreNullException e) {
+		} catch (FieldsAreNullException | PasswordDontMatchException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -164,7 +164,7 @@ public class UserResource {
 		} catch (InvalidDataException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		}
 	}
 

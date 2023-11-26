@@ -52,11 +52,11 @@ public class ServiceResource {
         } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         } catch (FieldsAreNullException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
         }
     }
 
@@ -69,11 +69,11 @@ public class ServiceResource {
         } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         } catch (AlreadySelectedDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
         }
     }
 
@@ -86,11 +86,11 @@ public class ServiceResource {
         } catch (InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         } catch (DisabledDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
         }
     }
 

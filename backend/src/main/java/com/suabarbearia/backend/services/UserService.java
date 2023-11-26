@@ -60,14 +60,15 @@ public class UserService {
 	}
 
 	public ApiTokenResponse<User> signup(CreateUserDto user) {
+
+		// Check data
 		if (user.getName().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getConfirmpassword().isEmpty() || user.getPhone().isEmpty()) {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
 		User userFinded = userRepository.findByEmail(user.getEmail());
 		Barbershop barberFinded = barbershopRepository.findByEmail(user.getEmail());
-		
-		// Check data
+
 		if (userFinded != null || barberFinded != null) {
 			throw new ExistDataException("Conta existente!");
 		}
@@ -91,13 +92,14 @@ public class UserService {
 	}
 
 	public ApiTokenResponse<User> signin(SigninDto user) {
+
+		// Check data
 		if (user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
 			throw new FieldsAreNullException("E-mail ou senha não existente!");
 		}
 
 		User userFinded = userRepository.findByEmail(user.getEmail());
 
-		// Check data
 		if (userFinded == null) {
 			throw new ResourceNotFoundException("Usuário não existente!");
 		}

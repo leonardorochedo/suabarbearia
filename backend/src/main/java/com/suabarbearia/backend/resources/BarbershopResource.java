@@ -90,11 +90,11 @@ public class BarbershopResource {
 			ApiResponse<Barbershop> response = barbershopService.edit(authorizationHeader, id, barbershop, image);
 
 			return ResponseEntity.ok().body(response);
-		} catch (InvalidTokenException | PasswordDontMatchException e) {
+		} catch (InvalidTokenException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (FieldsAreNullException e) {
+		} catch (FieldsAreNullException | PasswordDontMatchException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
@@ -172,14 +172,10 @@ public class BarbershopResource {
 			Set<Scheduling> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
-		} catch (IllegalArgumentException e) {
+		} catch (InvalidDataException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-		} catch (RuntimeException e) {
-			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-
-			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		}
 	}
 
