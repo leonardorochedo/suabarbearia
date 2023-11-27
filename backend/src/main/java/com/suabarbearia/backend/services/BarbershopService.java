@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.repositories.UserRepository;
@@ -242,11 +243,11 @@ public class BarbershopService {
 			throw new InvalidTokenException("Token inválido!");
 		}
 
-		if (scheduling.isDone()) {
+		if (scheduling.getStatus() == Status.FINISHED) {
 			throw new SchedulingAlreadyDoneException("Agendamento já concluído!");
 		}
 
-		scheduling.setDone(true);
+		scheduling.setStatus(Status.FINISHED);
 
 		schedulingRepository.save(scheduling);
 
@@ -265,7 +266,7 @@ public class BarbershopService {
 		double totalEarnings = 0.0;
 
 		for (Scheduling scheduling : schedulings) {
-			if (scheduling.isDone()) { // only done schedulings
+			if (scheduling.getStatus() == Status.FINISHED) { // only done schedulings
 				double servicePrice = scheduling.getService().getPrice();
 				totalEarnings += servicePrice;
 			}
@@ -288,7 +289,7 @@ public class BarbershopService {
 		for (Scheduling scheduling : schedulings) {
 			LocalDate schedulingDate = scheduling.getDate().toLocalDate();
 
-			if (scheduling.isDone() && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+			if (scheduling.getStatus() == Status.FINISHED && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
 					(schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) { // only done schedulings and is btwn dates
 				double servicePrice = scheduling.getService().getPrice();
 				totalEarnings += servicePrice;

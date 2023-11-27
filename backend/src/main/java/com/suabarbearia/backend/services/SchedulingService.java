@@ -2,6 +2,7 @@ package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.SchedulingDto;
 import com.suabarbearia.backend.entities.*;
+import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -55,13 +57,22 @@ public class SchedulingService {
         if (!lastUserScheduling.isEmpty()) { // verify if las user scdlng is done
             Scheduling lastScheduling = lastUserScheduling.get(0);
 
-            if (!lastScheduling.isDone()) {
+            if (lastScheduling.getStatus() == Status.FOUL) { // if scdlng is canceled, user has been multed
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime canceledTime = lastScheduling.getDate();
+
+                long daysBetween = ChronoUnit.DAYS.between(canceledTime, now);
+
+                if (daysBetween <= 2) {
+                    throw new LastSchedulingNotDoneException("O usuário não compareceu em seu último agendamento, agendamento será liberado em 2 dias!");
+                }
+            } else if (lastScheduling.getStatus() == Status.WAITING) {
                 throw new LastSchedulingNotDoneException("O último agendamento do usuário ainda não foi concluído!");
             }
         }
 
         // Create scheduling
-        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, employeeFinded, serviceFinded, scheduling.getDate(), false));
+        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, employeeFinded, serviceFinded, scheduling.getDate(), Status.WAITING));
 
         ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento realizado com sucesso!", newScheduling);
 

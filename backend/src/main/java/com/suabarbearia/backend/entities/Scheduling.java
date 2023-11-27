@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.suabarbearia.backend.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class Scheduling implements Serializable {
 
 	// Serializable
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -45,18 +46,18 @@ public class Scheduling implements Serializable {
 
 	private LocalDateTime date;
 
-	private boolean done;
+	private Status status;
 	
 	public Scheduling() {}
 
-	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, LocalDateTime date, boolean done) {
+	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, LocalDateTime date, Status status) {
 		super();
 		this.user = user;
 		this.barbershop = barbershop;
 		this.employee = employee;
 		this.service = service;
 		this.date = date;
-		this.done = done;
+		this.status = status;
 	}
 
 	public Long getId() {
@@ -107,12 +108,12 @@ public class Scheduling implements Serializable {
 		this.date = date;
 	}
 
-	public boolean isDone() {
-		return done;
+	public Status getStatus() {
+		return status;
 	}
 
-	public void setDone(boolean done) {
-		this.done = done;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override
@@ -122,10 +123,9 @@ public class Scheduling implements Serializable {
 				", user=" + user +
 				", barbershop=" + barbershop +
 				", service=" + service +
-				", date=" + date +
-				", done=" + done +
 				", employee=" + employee +
+				", date=" + date +
+				", status=" + status +
 				'}';
 	}
-
 }

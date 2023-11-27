@@ -179,7 +179,7 @@ public class BarbershopResource {
 		}
 	}
 
-	@GetMapping(value = "/schedulings/done/{id}")
+	@PostMapping(value = "/schedulings/finish/{id}")
 	public ResponseEntity<?> concludeScheduling(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
 		try {
 			TextResponse response = barbershopService.concludeScheduling(authorizationHeader, id);
