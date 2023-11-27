@@ -52,7 +52,7 @@ public class SchedulingServiceTest {
 
         ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
-        Scheduling response6 = schedulingService.findById(response4.getData().getId());
+        Scheduling response6 = schedulingService.findById(response5.getData().getId());
 
         assertEquals("Corte Cabelo + Barba", response6.getService().getTitle());
     }
