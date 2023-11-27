@@ -226,7 +226,7 @@ public class BarbershopServiceTest {
 	@Test
 	public void testGetSchedulingsBarbershopWithDate() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber13@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombrancelha", 25.0);
+		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo e Barba", 50.0);
 		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber3", "123321", "123321", "33983333");
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber3@email.com", "123321", "123321", "33981111");
 
@@ -277,11 +277,36 @@ public class BarbershopServiceTest {
 	}
 
 	@Test
-	public void testGetEarnings() {
+	public void testMarkFoulScheduling() {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber15@email.com", "123321", "123321", "33981111", "555 Av Brasil");
-		ServiceDto createServiceMock = new ServiceDto("Corte Degradê + Barba + Sombrancelha", 50.0);
+		ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombrancelha", 25.0);
 		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber5", "123321", "123321", "33983333");
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber5@email.com", "123321", "123321", "33981111");
+
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
+		ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
+		ApiTokenResponse<User> response4 = userService.signup(createUserMock);
+
+		// Scheduling
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalTime hour = LocalTime.of(8, 0, 0);
+
+		SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
+
+		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
+
+		TextResponse response6 = barbershopService.markFoulScheduling(response1.getToken(), response4.getData().getId());
+
+		assertEquals("Operação realizada com sucesso!", response6.getMessage());
+	}
+
+	@Test
+	public void testGetEarnings() {
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber16@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		ServiceDto createServiceMock = new ServiceDto("Corte Degradê + Barba + Sombrancelha", 50.0);
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber6", "123321", "123321", "33983333");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber6@email.com", "123321", "123321", "33981111");
 
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
@@ -305,10 +330,10 @@ public class BarbershopServiceTest {
 
 	@Test
 	public void testGetEarningsWithDate() {
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber16@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber17@email.com", "123321", "123321", "33981111", "555 Av Brasil");
 		ServiceDto createServiceMock = new ServiceDto("Corte Degradê + Barba + Sombrancelha", 50.0);
-		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber6", "123321", "123321", "33983333");
-		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber6@email.com", "123321", "123321", "33981111");
+		CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_barber7", "123321", "123321", "33983333");
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_barber7@email.com", "123321", "123321", "33981111");
 
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);

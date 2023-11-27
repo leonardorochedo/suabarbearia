@@ -243,8 +243,8 @@ public class BarbershopService {
 			throw new InvalidTokenException("Token inválido!");
 		}
 
-		if (scheduling.getStatus() == Status.FINISHED) {
-			throw new SchedulingAlreadyDoneException("Agendamento já concluído!");
+		if (scheduling.getStatus() == Status.FINISHED || scheduling.getStatus() == Status.CANCELED || scheduling.getStatus() == Status.FOUL) {
+			throw new SchedulingAlreadyDoneException("Não foi possível realizar esta operação!");
 		}
 
 		scheduling.setStatus(Status.FINISHED);
@@ -252,6 +252,30 @@ public class BarbershopService {
 		schedulingRepository.save(scheduling);
 
 		TextResponse response = new TextResponse("Agendamento concluído com sucesso!");
+
+		return response;
+	}
+
+	public TextResponse markFoulScheduling(String authorizationHeader, Long id) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		Scheduling scheduling = schedulingRepository.findById(id).get();
+
+		if (!scheduling.getBarbershop().equals(barbershop)) {
+			throw new InvalidTokenException("Token inválido!");
+		}
+
+		if (scheduling.getStatus() == Status.FINISHED || scheduling.getStatus() == Status.CANCELED || scheduling.getStatus() == Status.FOUL) {
+			throw new SchedulingAlreadyDoneException("Não foi possível realizar esta operação!");
+		}
+
+		scheduling.setStatus(Status.FOUL);
+
+		schedulingRepository.save(scheduling);
+
+		TextResponse response = new TextResponse("Operação realizada com sucesso!");
 
 		return response;
 	}

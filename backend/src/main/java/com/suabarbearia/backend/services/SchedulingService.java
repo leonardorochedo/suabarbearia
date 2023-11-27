@@ -58,13 +58,13 @@ public class SchedulingService {
             Scheduling lastScheduling = lastUserScheduling.get(0);
 
             if (lastScheduling.getStatus() == Status.FOUL) { // if scdlng is canceled, user has been multed
-                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime newTime = scheduling.getDate();
                 LocalDateTime canceledTime = lastScheduling.getDate();
 
-                long daysBetween = ChronoUnit.DAYS.between(canceledTime, now);
+                long daysBetween = ChronoUnit.DAYS.between(canceledTime, newTime);
 
                 if (daysBetween <= 2) {
-                    throw new LastSchedulingNotDoneException("O usuário não compareceu em seu último agendamento, agendamento será liberado em 2 dias!");
+                    throw new LastSchedulingNotDoneException("O usuário faltou em seu último agendamento, será liberado em 2 dias!");
                 }
             } else if (lastScheduling.getStatus() == Status.WAITING) {
                 throw new LastSchedulingNotDoneException("O último agendamento do usuário ainda não foi concluído!");

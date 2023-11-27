@@ -196,6 +196,23 @@ public class BarbershopResource {
 		}
 	}
 
+	@PostMapping(value = "/schedulings/foul/{id}")
+	public ResponseEntity<?> markFoulScheduling(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+		try {
+			TextResponse response = barbershopService.markFoulScheduling(authorizationHeader, id);
+
+			return ResponseEntity.ok().body(response);
+		} catch (InvalidTokenException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		} catch (SchedulingAlreadyDoneException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+		}
+	}
+
 	@GetMapping(value = "/earnings/total")
 	public ResponseEntity<?> getEarnings(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
