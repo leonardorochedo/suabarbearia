@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -36,10 +38,13 @@ public class EmployeeServiceTest {
     @Autowired
     private BarbershopRepository barbershopRepository;
 
+    public LocalTime openTime = LocalTime.of(8, 0);
+    public LocalTime closeTime = LocalTime.of(18, 0);
+
     @Test
     public void testFindById() {
         // Arrange
-        Barbershop mockBarbershop = new Barbershop(null, "Barbearia Teste", "fulano_barber_employee@email.com", "123321", "33981111", null, "555 Main Street");
+        Barbershop mockBarbershop = new Barbershop(null, "Barbearia Teste", "fulano_barber_employee@email.com", "123321", "33981111", null, "555 Main Street", "86000-000", openTime, closeTime);
         Employee mockEmployee = new Employee(null, "employee", "123321", "Funcionario Teste", null, "33983333", mockBarbershop);
         barbershopRepository.save(mockBarbershop);
         employeeRepository.save(mockEmployee);
@@ -54,7 +59,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void testCreate() {
-        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_employee2@email.com", "123321", "123321", "33981111", "555 Av Brasil");
+        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_employee2@email.com", "123321", "123321", "33981111", "555 Av Brasil", "86000-000", openTime, closeTime);
         CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee2", "123321", "123321", "33983333");
 
         ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);

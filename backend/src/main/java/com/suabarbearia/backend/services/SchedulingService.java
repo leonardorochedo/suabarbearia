@@ -50,7 +50,7 @@ public class SchedulingService {
         Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, employeeFinded, userFinded);
+        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
 
         List<Scheduling> lastUserScheduling = schedulingRepository.findTopByUserAndBarbershopOrderByDateDesc(userFinded, barbershopFinded);
 
@@ -89,7 +89,7 @@ public class SchedulingService {
         Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, employeeFinded, userFinded);
+        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
 
         if (!schedulingFinded.getUser().equals(userFinded)) {
             throw new InvalidTokenException("Token inválido para este usuário!");
@@ -111,7 +111,7 @@ public class SchedulingService {
     }
 
     // Helper
-    private boolean validateScheduling(SchedulingDto scheduling, Employee employee, User user) {
+    private boolean validateScheduling(SchedulingDto scheduling, Barbershop barbershop, Employee employee, User user) {
 
         if (scheduling.getBarbershopId() == null || scheduling.getServiceId() == null || scheduling.getDate() == null) {
             throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
@@ -131,10 +131,8 @@ public class SchedulingService {
 
         // Check if hour is within barbershop's opening hours
         LocalTime hourActual = scheduling.getDate().toLocalTime();
-        LocalTime openingHour = LocalTime.of(8, 0);
-        LocalTime closingHour = LocalTime.of(18, 0);
 
-        if (hourActual.isBefore(openingHour) || hourActual.isAfter(closingHour)) {
+        if (hourActual.isBefore(barbershop.getOpenTime()) || hourActual.isAfter(barbershop.getCloseTime())) {
             throw new TimeException("O horário do agendamento deve estar dentro do horário de funcionamento da barbearia!");
         }
 

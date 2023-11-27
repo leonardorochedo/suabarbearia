@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.entities;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
@@ -26,6 +27,9 @@ public class Barbershop implements Serializable {
 	@Column(name = "image", columnDefinition = "BLOB")
 	private byte[] image;
 	private String address;
+	private String cep;
+	private LocalTime openTime;
+	private LocalTime closeTime;
 	
 	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
@@ -50,7 +54,7 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String password, String phone, byte[] image, String address) {
+	public Barbershop(Long id, String name, String email, String password, String phone, byte[] image, String address, String cep, LocalTime openTime, LocalTime closeTime) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -59,6 +63,9 @@ public class Barbershop implements Serializable {
 		this.phone = phone;
 		this.image = image;
 		this.address = address;
+		this.cep = cep;
+		this.openTime = openTime;
+		this.closeTime = closeTime;
 	}
 
 	public Long getId() {
@@ -115,6 +122,30 @@ public class Barbershop implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public LocalTime getOpenTime() {
+		return openTime;
+	}
+
+	public void setOpenTime(LocalTime openTime) {
+		this.openTime = openTime;
+	}
+
+	public LocalTime getCloseTime() {
+		return closeTime;
+	}
+
+	public void setCloseTime(LocalTime closeTime) {
+		this.closeTime = closeTime;
 	}
 
 	public Set<Service> getServices() {

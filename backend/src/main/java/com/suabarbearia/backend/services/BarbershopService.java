@@ -58,14 +58,15 @@ public class BarbershopService {
 	}
 
 	public ApiTokenResponse<Barbershop> signup(CreateBarbershopDto barbershop) {
-		if (barbershop.getName().isEmpty() || barbershop.getEmail().isEmpty() || barbershop.getPassword().isEmpty() || barbershop.getConfirmpassword().isEmpty() || barbershop.getPhone().isEmpty() || barbershop.getAddress().isEmpty()) {
+
+		// Check data
+		if (barbershop.getName().isEmpty() || barbershop.getEmail().isEmpty() || barbershop.getPassword().isEmpty() || barbershop.getConfirmpassword().isEmpty() || barbershop.getPhone().isEmpty() || barbershop.getAddress().isEmpty() || barbershop.getCep().isEmpty() || barbershop.getOpenTime() == null || barbershop.getCloseTime() == null) {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
 		Barbershop barberFinded = barbershopRepository.findByEmail(barbershop.getEmail());
 		User userFinded = userRepository.findByEmail(barbershop.getEmail());
 
-		// Check data
 		if (barberFinded != null || userFinded != null) {
 			throw new ExistDataException("Conta existente!");
 		}
@@ -79,7 +80,7 @@ public class BarbershopService {
 		barbershop.setPassword(hashedPassword);
 
 		// Storage
-		Barbershop newBarbershop = barbershopRepository.save(new Barbershop(null, barbershop.getName(), barbershop.getEmail(), barbershop.getPassword(), barbershop.getPhone(), null, barbershop.getAddress()));
+		Barbershop newBarbershop = barbershopRepository.save(new Barbershop(null, barbershop.getName(), barbershop.getEmail(), barbershop.getPassword(), barbershop.getPhone(), null, barbershop.getAddress(), barbershop.getCep(), barbershop.getOpenTime(), barbershop.getCloseTime()));
 
 		String token = JwtUtil.generateToken(newBarbershop.getEmail());
 
@@ -124,7 +125,7 @@ public class BarbershopService {
 		}
 
 		// Verify new data
-		if (barbershop.getName() == null || barbershop.getEmail() == null || barbershop.getPassword() == null || barbershop.getConfirmpassword() == null || barbershop.getPhone() == null || barbershop.getAddress() == null) {
+		if (barbershop.getName().isEmpty() || barbershop.getEmail().isEmpty() || barbershop.getPassword().isEmpty() || barbershop.getConfirmpassword().isEmpty() || barbershop.getPhone().isEmpty() || barbershop.getAddress().isEmpty() || barbershop.getCep().isEmpty() || barbershop.getOpenTime() == null || barbershop.getCloseTime() == null) {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
@@ -141,6 +142,9 @@ public class BarbershopService {
 		editedBarbershop.setPassword(hashedPassword);
 		editedBarbershop.setPhone(barbershop.getPhone());
 		editedBarbershop.setAddress(barbershop.getAddress());
+		editedBarbershop.setCep(barbershop.getCep());
+		editedBarbershop.setOpenTime(barbershop.getOpenTime());
+		editedBarbershop.setCloseTime(barbershop.getCloseTime());
 
 		barbershopRepository.save(editedBarbershop);
 
@@ -166,6 +170,9 @@ public class BarbershopService {
 		barbershopId.setPhone("");
 		barbershopId.setImage(null);
 		barbershopId.setAddress("");
+		barbershopId.setCep("");
+		barbershopId.setOpenTime(null);
+		barbershopId.setCloseTime(null);
 
 		barbershopRepository.save(barbershopId);
 

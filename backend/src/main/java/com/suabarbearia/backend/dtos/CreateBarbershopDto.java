@@ -1,5 +1,7 @@
 package com.suabarbearia.backend.dtos;
 
+import java.time.LocalTime;
+
 public class CreateBarbershopDto {
 
 	private String name;
@@ -8,10 +10,13 @@ public class CreateBarbershopDto {
 	private String confirmpassword;
 	private String phone;
 	private String address;
+	private String cep;
+	private LocalTime openTime;
+	private LocalTime closeTime;
 	
 	public CreateBarbershopDto() {}
 
-	public CreateBarbershopDto(String name, String email, String password, String confirmpassword, String phone, String address) {
+	public CreateBarbershopDto(String name, String email, String password, String confirmpassword, String phone, String address, String cep, LocalTime openTime, LocalTime closeTime) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -19,6 +24,9 @@ public class CreateBarbershopDto {
 		this.confirmpassword = confirmpassword;
 		this.phone = phone;
 		this.address = address;
+		this.cep = cep;
+		this.openTime = openTime;
+		this.closeTime = closeTime;
 	}
 
 	public String getName() {
@@ -67,6 +75,30 @@ public class CreateBarbershopDto {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public LocalTime getOpenTime() {
+		return openTime;
+	}
+
+	public void setOpenTime(LocalTime openTime) {
+		this.openTime = openTime;
+	}
+
+	public LocalTime getCloseTime() {
+		return closeTime;
+	}
+
+	public void setCloseTime(LocalTime closeTime) {
+		this.closeTime = closeTime;
 	}
 	
 }
