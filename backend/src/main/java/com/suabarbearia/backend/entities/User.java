@@ -25,6 +25,8 @@ public class User implements Serializable {
 	private String phone;
 	@Column(name = "image", columnDefinition = "BLOB")
 	private byte[] image;
+	private String address;
+	private String cep;
 	
 	// Relations
 	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
@@ -42,7 +44,7 @@ public class User implements Serializable {
 	
 	public User() {}
 	
-	public User(Long id, String name, String email, String password, String phone, byte[] image) {
+	public User(Long id, String name, String email, String password, String phone, byte[] image, String address, String cep) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -50,6 +52,8 @@ public class User implements Serializable {
 		this.password = password;
 		this.phone = phone;
 		this.image = image;
+		this.address = address;
+		this.cep = cep;
 	}
 
 	public Long getId() {
@@ -100,6 +104,22 @@ public class User implements Serializable {
 		this.image = image;
 	}
 
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
 	public Set<Barbershop> getBarbershops() {
 		return barbershops;
 	}
@@ -142,6 +162,8 @@ public class User implements Serializable {
 				", password='" + password + '\'' +
 				", phone='" + phone + '\'' +
 				", image=" + Arrays.toString(image) +
+				", address='" + address + '\'' +
+				", cep='" + cep + '\'' +
 				'}';
 	}
 }

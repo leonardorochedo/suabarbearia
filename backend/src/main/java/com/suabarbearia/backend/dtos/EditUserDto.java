@@ -9,17 +9,21 @@ public class EditUserDto {
     private String password;
     private String confirmpassword;
     private String phone;
+    private String address;
+    private String cep;
     private MultipartFile image;
 
     public EditUserDto() {}
 
-    public EditUserDto(String name, String email, String password, String confirmpassword, String phone, MultipartFile image) {
+    public EditUserDto(String name, String email, String password, String confirmpassword, String phone, String address, String cep, MultipartFile image) {
         super();
         this.name = name;
         this.email = email;
         this.password = password;
         this.confirmpassword = confirmpassword;
         this.phone = phone;
+        this.address = address;
+        this.cep = cep;
         this.image = image;
     }
 
@@ -61,6 +65,22 @@ public class EditUserDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 
     public MultipartFile getImage() {

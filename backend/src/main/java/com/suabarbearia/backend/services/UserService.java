@@ -62,7 +62,7 @@ public class UserService {
 	public ApiTokenResponse<User> signup(CreateUserDto user) {
 
 		// Check data
-		if (user.getName().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getConfirmpassword().isEmpty() || user.getPhone().isEmpty()) {
+		if (user.getName().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getConfirmpassword().isEmpty() || user.getPhone().isEmpty() || user.getAddress().isEmpty() || user.getCep().isEmpty()) {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
@@ -82,7 +82,7 @@ public class UserService {
 	    user.setPassword(hashedPassword);
 	    
 	    // Storage
-	    User newUser = userRepository.save(new User(null, user.getName(), user.getEmail(), user.getPassword(), user.getPhone(), null));
+	    User newUser = userRepository.save(new User(null, user.getName(), user.getEmail(), user.getPassword(), user.getPhone(), null, user.getAddress(), user.getCep()));
 		
 		String token = JwtUtil.generateToken(newUser.getEmail());
 		
@@ -128,7 +128,7 @@ public class UserService {
 		}
 
 		// Verify new data
-		if (user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getConfirmpassword() == null || user.getPhone() == null) {
+		if (user.getName().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty() || user.getConfirmpassword().isEmpty() || user.getPhone().isEmpty() || user.getAddress().isEmpty() || user.getCep().isEmpty()) {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
@@ -144,6 +144,8 @@ public class UserService {
 		editedUser.setEmail(user.getEmail());
 		editedUser.setPassword(hashedPassword);
 		editedUser.setPhone(user.getPhone());
+		editedUser.setAddress(user.getAddress());
+		editedUser.setCep(user.getCep());
 
 		userRepository.save(editedUser);
 
@@ -168,6 +170,8 @@ public class UserService {
 		userId.setEmail("");
 		userId.setPassword("");
 		userId.setPhone("");
+		userId.setAddress("");
+		userId.setCep("");
 		userId.setImage(null);
 
 		userRepository.save(userId);
