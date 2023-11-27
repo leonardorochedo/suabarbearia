@@ -72,7 +72,7 @@ public class SchedulingServiceTest {
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         LocalTime hour = LocalTime.of(8, 0, 0);
 
-        SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
+        SchedulingDto schedulingMock = new SchedulingDto(response4.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
 
         ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
