@@ -6,6 +6,7 @@ import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -89,11 +90,12 @@ public class SchedulingService {
         Employee employeeFinded = employeeRepository.findById(scheduling.getEmployeeId()).get();
 
         // Validations
-        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
-
         if (!schedulingFinded.getUser().equals(userFinded)) {
             throw new InvalidTokenException("Token inválido para este usuário!");
         }
+
+        validateScheduling(scheduling, barbershopFinded, employeeFinded, userFinded);
+        validateDaysToScheduling(schedulingFinded);
 
         if (scheduling.getServiceId() != schedulingFinded.getService().getId() || scheduling.getBarbershopId() != schedulingFinded.getBarbershop().getId()) {
             throw new NoPermissionException("Não é possível alterar este campo!");
@@ -106,6 +108,36 @@ public class SchedulingService {
         schedulingRepository.save(schedulingFinded);
 
         ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento alterado com sucesso!", schedulingFinded);
+
+        return response;
+    }
+
+    public TextResponse cancel(String authorizationHeader, Long id) {
+        // Entities
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        User userFinded = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+        Scheduling schedulingFinded = schedulingRepository.findById(id).get();
+
+        // Validations
+        if (!schedulingFinded.getUser().equals(userFinded)) {
+            throw new InvalidTokenException("Token inválido para este usuário!");
+        }
+
+        validateDaysToScheduling(schedulingFinded);
+
+        if (schedulingFinded.getStatus() == Status.CANCELED) {
+            throw new AlreadySelectedDataException("Agendamento já está cancelado!");
+        }
+
+        /* Some logic here to repayment user with mult */
+
+        // Update data
+        schedulingFinded.setStatus(Status.CANCELED);
+
+        schedulingRepository.save(schedulingFinded);
+
+        TextResponse response = new TextResponse("Agendamento cancelado com sucesso!");
 
         return response;
     }
@@ -164,6 +196,19 @@ public class SchedulingService {
             if (schedulingStartTime.isBefore(employeeSchedulingEndTime) && schedulingEndTime.isAfter(employeeSchedulingEndTime)) {
                 throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
             }
+        }
+
+        return true;
+    }
+
+    private boolean validateDaysToScheduling(Scheduling scheduling) {
+        LocalDateTime dateScheduling = scheduling.getDate();
+        LocalDateTime dateNow = LocalDateTime.now();
+
+        long daysBetween = ChronoUnit.DAYS.between(dateNow, dateScheduling);
+
+        if (daysBetween < 2) {
+            throw new LastSchedulingNotDoneException("Não é possível alterar o agendamento 2 dias antes!");
         }
 
         return true;

@@ -5,6 +5,7 @@ import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.services.SchedulingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -46,6 +47,27 @@ public class SchedulingResource {
     public ResponseEntity<?> edit(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id, @RequestBody SchedulingDto scheduling) {
         try {
             ApiResponse<Scheduling> response = schedulingService.edit(authorizationHeader, id, scheduling);
+
+            return ResponseEntity.ok().body(response);
+        } catch (InvalidTokenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        } catch (FieldsAreNullException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (DisabledDataException | InvalidDataException | TimeException | AlreadySelectedDataException | LastSchedulingNotDoneException | NoPermissionException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        }
+    }
+
+    @PostMapping(value = "/cancel/{id}")
+    public ResponseEntity<?> cancel(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+        try {
+            TextResponse response = schedulingService.cancel(authorizationHeader, id);
 
             return ResponseEntity.ok().body(response);
         } catch (InvalidTokenException e) {
