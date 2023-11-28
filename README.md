@@ -66,7 +66,6 @@ GET /barbershops/earnings/{initialDate}/{endDate}: Ganhos da barbearia em um per
 
 ### Funcionários
 ```
-GET /employee: Lista de todos os funcionários.
 GET /employee/{id}: Detalhes de um funcionário específico.
 POST /employee/create: Cadastro de novos funcionários.
 POST /employee/signin: Autenticação de funcionários.

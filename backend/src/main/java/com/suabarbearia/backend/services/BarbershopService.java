@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,7 +41,13 @@ public class BarbershopService {
 
 	@Value("${fixedsalt}")
 	private String fixedSalt;
-	
+
+	public List<Barbershop> findAll() {
+		List<Barbershop> barbershops = barbershopRepository.findAll();
+
+		return barbershops;
+	}
+
 	public Barbershop findById(Long id) {
 		Optional<Barbershop> barbershop = barbershopRepository.findById(id);
 		
