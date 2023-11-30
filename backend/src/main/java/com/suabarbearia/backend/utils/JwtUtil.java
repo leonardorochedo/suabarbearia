@@ -30,6 +30,19 @@ public class JwtUtil {
                 .compact();
     }
 
+    public static String generateTokenWhenForgotPassword(String username) {
+        // Expiration time
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + 3600000); // 1 hour
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
     public static boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()

@@ -69,7 +69,13 @@
 		    <artifactId>jbcrypt</artifactId>
 		    <version>0.4</version>
 		</dependency>
-		
+
+		<!--JAVA SEND EMAIL-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!--TEST-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -16,6 +16,7 @@ import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
+import com.suabarbearia.backend.utils.EmailService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,9 @@ public class UserService {
 
 	@Autowired
 	private SchedulingRepository schedulingRepository;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Value("${fixedsalt}")
 	private String fixedSalt;
@@ -151,6 +155,37 @@ public class UserService {
 		userRepository.save(editedUser);
 
 		ApiResponse<User> response = new ApiResponse<User>("Usuário editado com sucesso!", editedUser);
+
+		return response;
+	}
+
+	public TextResponse sendEmailPassword(String email) {
+
+		// Get user and token
+		User recipient = userRepository.findByEmail(email);
+
+		if (recipient == null) {
+			throw new ResourceNotFoundException("Usuário não encontrado!");
+		}
+
+		String token = JwtUtil.generateTokenWhenForgotPassword(recipient.getEmail());
+
+		// Send email
+		String subject = "Recuperação de Senha - Sua Barbearia";
+		String body = String.format(
+				"Olá %s,\n\n"
+				+ "Recebemos uma solicitação de recuperação de senha para a sua conta na Sua Barbearia. "
+				+ "Se você não fez essa solicitação, ignore este e-mail. Caso contrário, clique no link abaixo para "
+				+ "redefinir sua senha:\n\n"
+				+ "Link para recuperação de senha: https://www.suabarbearia.com.br/users/forgotpassword?token=%s\n\n"
+				+ "Este link é válido por 1 hora.\n\n"
+				+ "Atenciosamente,\n"
+				+ "Equipe Sua Barbearia",
+				recipient.getName(), token);
+
+		String emailResponse = emailService.sendEmail(email, subject, body);
+
+		TextResponse response = new TextResponse(emailResponse);
 
 		return response;
 	}
