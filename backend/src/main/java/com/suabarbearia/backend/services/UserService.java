@@ -132,17 +132,18 @@ public class UserService {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
+		if(!BCrypt.checkpw(user.getPassword(), editedUser.getPassword())) {
+			throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
+		}
+
 		if (!user.getPassword().equals(user.getConfirmpassword())) {
 			throw new PasswordDontMatchException("As senhas não batem!");
 		}
-
-		String hashedPassword = BCrypt.hashpw(user.getPassword(), fixedSalt);
 
 		// Update user
 		editedUser.setImage(image.getBytes());
 		editedUser.setName(user.getName());
 		editedUser.setEmail(user.getEmail());
-		editedUser.setPassword(hashedPassword);
 		editedUser.setPhone(user.getPhone());
 		editedUser.setAddress(user.getAddress());
 		editedUser.setCep(user.getCep());

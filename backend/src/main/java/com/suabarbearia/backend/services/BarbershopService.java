@@ -136,17 +136,18 @@ public class BarbershopService {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
+		if(!BCrypt.checkpw(barbershop.getPassword(), editedBarbershop.getPassword())) {
+			throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
+		}
+
 		if (!barbershop.getPassword().equals(barbershop.getConfirmpassword())) {
 			throw new PasswordDontMatchException("As senhas não batem!");
 		}
-
-		String hashedPassword = BCrypt.hashpw(barbershop.getPassword(), fixedSalt);
 
 		// Update barbershop
 		editedBarbershop.setImage(image.getBytes());
 		editedBarbershop.setName(barbershop.getName());
 		editedBarbershop.setEmail(barbershop.getEmail());
-		editedBarbershop.setPassword(hashedPassword);
 		editedBarbershop.setPhone(barbershop.getPhone());
 		editedBarbershop.setAddress(barbershop.getAddress());
 		editedBarbershop.setCep(barbershop.getCep());
