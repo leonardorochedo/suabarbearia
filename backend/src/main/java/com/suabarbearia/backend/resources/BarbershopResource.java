@@ -1,5 +1,6 @@
 package com.suabarbearia.backend.resources;
 
+import com.suabarbearia.backend.dtos.ChangePasswordDto;
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.exceptions.*;
@@ -124,6 +125,19 @@ public class BarbershopResource {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		}
+	}
+
+	@PatchMapping(value = "/changepassword")
+	public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ChangePasswordDto passwords) {
+		try {
+			TextResponse response = barbershopService.changePassword(authorizationHeader, passwords);
+
+			return ResponseEntity.ok().body(response);
+		} catch (FieldsAreNullException | PasswordDontMatchException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		}
 	}
 

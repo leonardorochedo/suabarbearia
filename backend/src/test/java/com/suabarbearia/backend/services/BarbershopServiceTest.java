@@ -362,4 +362,19 @@ public class BarbershopServiceTest {
 		assertEquals("Total de faturamento deste intervalo de dias: R$50,00", response7.getMessage());
 	}
 
+	@Test
+	public void testChangePassword() {
+		// Create
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber18@email.com", "123321", "123321", "33981111", "555 Av Brasil", "86000-000", openTime, closeTime);
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+
+		// Change
+		ChangePasswordDto changePasswordMock = new ChangePasswordDto("123456", "123456");
+		TextResponse response2 = barbershopService.changePassword(response1.getToken(), changePasswordMock);
+
+		// Assert
+		assertNotNull(response2);
+		assertEquals("Senha alterada com sucesso!", response2.getMessage());
+	}
+
 }
