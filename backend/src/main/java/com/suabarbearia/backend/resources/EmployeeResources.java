@@ -1,12 +1,11 @@
 package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
+import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Employee;
-import com.suabarbearia.backend.exceptions.ExistDataException;
-import com.suabarbearia.backend.exceptions.FieldsAreNullException;
-import com.suabarbearia.backend.exceptions.PasswordDontMatchException;
-import com.suabarbearia.backend.exceptions.ResourceNotFoundException;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,10 @@ public class EmployeeResources {
             ApiResponse<Employee> response = employeeService.create(authorizationHeader, employee);
 
             return ResponseEntity.ok().body(response);
+        }catch (NoPermissionException | InvalidTokenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         } catch (ExistDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
@@ -42,6 +45,23 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        }
+    }
+
+    @PostMapping(value = "/signin")
+    public ResponseEntity<?> signin(@RequestBody SigninEmployeeDto employee) {
+        try {
+            ApiTokenResponse<Employee> response = employeeService.signin(employee);
+
+            return ResponseEntity.ok().body(response);
+        } catch (InvalidDataException | FieldsAreNullException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (ResourceNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
         }
     }
 

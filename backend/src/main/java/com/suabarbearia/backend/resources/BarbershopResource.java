@@ -77,19 +77,19 @@ public class BarbershopResource {
 	
 	@PostMapping(value = "/signin")
 	public ResponseEntity<?> signin(@RequestBody SigninDto barbershop) {
-  		try {
-	 		ApiTokenResponse<Barbershop> response = barbershopService.signin(barbershop);
+		try {
+			ApiTokenResponse<Barbershop> response = barbershopService.signin(barbershop);
 
-	 		return ResponseEntity.ok().body(response);
-	  	} catch (InvalidDataException | FieldsAreNullException e) {
+			return ResponseEntity.ok().body(response);
+		} catch (InvalidDataException | FieldsAreNullException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		} catch (ResourceNotFoundException e) {
-		   ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-		   return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
-	    }
+			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		}
 	}
 
 	@PatchMapping(value = "/edit/{id}")

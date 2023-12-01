@@ -1,14 +1,14 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
+import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Employee;
-import com.suabarbearia.backend.exceptions.ExistDataException;
-import com.suabarbearia.backend.exceptions.FieldsAreNullException;
-import com.suabarbearia.backend.exceptions.PasswordDontMatchException;
+import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.EmployeeRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
+import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,8 @@ public class EmployeeService {
 
         Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
+        if (barbershop == null) throw new NoPermissionException("Não autorizado! Precisa ser barbearia!");
+
         // Check data
         if (employeeFinded != null && employeeFinded.getBarbershop().equals(barbershop)) {
             throw new ExistDataException("Funcionário existente!");
@@ -64,4 +66,30 @@ public class EmployeeService {
 
         return response;
     }
+
+    public ApiTokenResponse<Employee> signin(SigninEmployeeDto employee) {
+        if (employee.getUsername().isEmpty() || employee.getPassword().isEmpty()) {
+            throw new FieldsAreNullException("Usuário ou senha não exitente!");
+        }
+
+        Employee employeeFinded = employeeRepository.findByUsername(employee.getUsername());
+
+        // Check data
+        if (employeeFinded == null) {
+            throw new ResourceNotFoundException("Funcionário não existente!");
+        }
+
+
+        if (!BCrypt.checkpw(employee.getPassword(), employeeFinded.getPassword())) {
+            throw new InvalidDataException("Usuário ou senha inválidos!");
+        }
+
+        String token = JwtUtil.generateToken(employee.getUsername());
+
+        // Create a response
+        ApiTokenResponse<Employee> response = new ApiTokenResponse<Employee>("Funcionário logado com sucesso!", token, employeeFinded);
+
+        return response;
+    }
+
 }

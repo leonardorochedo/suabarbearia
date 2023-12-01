@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import com.suabarbearia.backend.exceptions.InvalidTokenException;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -73,7 +74,7 @@ public class JwtUtil {
  		boolean isValidToken = JwtUtil.validateToken(token);
 
          if (!isValidToken) {
-             throw new RuntimeException("Token inválido!");
+             throw new InvalidTokenException("Token inválido!");
          }
          
          return token;
