@@ -8,6 +8,7 @@ import com.suabarbearia.backend.responses.TextResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
@@ -108,6 +109,23 @@ public class BarbershopResource {
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		}
     }
+
+	@PostMapping(value = "/sendemailpassword/{email}")
+	public ResponseEntity<?> sendEmailPassword(@PathVariable String email) {
+		try {
+			TextResponse response = barbershopService.sendEmailPassword(email);
+
+			return ResponseEntity.ok().body(response);
+		} catch (MailException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
+		} catch (ResourceNotFoundException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		}
+	}
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
