@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.suabarbearia.backend.dtos.ChangePasswordDto;
 import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
@@ -125,6 +126,7 @@ public class UserService {
 
 		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 		User editedUser = userRepository.findById(id).get();
+		User userNewEmail = userRepository.findByEmail(user.getEmail());
 
 		// Check user
 		if (!userToken.equals(editedUser)) {
@@ -136,7 +138,11 @@ public class UserService {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
-		if(!BCrypt.checkpw(user.getPassword(), editedUser.getPassword())) {
+		if (!userToken.getEmail().equals(user.getEmail()) && userNewEmail != null) {
+			throw new ExistDataException("E-mail em uso!");
+		}
+
+		if (!BCrypt.checkpw(user.getPassword(), editedUser.getPassword())) {
 			throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
 		}
 
@@ -186,6 +192,35 @@ public class UserService {
 		String emailResponse = emailService.sendEmail(email, subject, body);
 
 		TextResponse response = new TextResponse(emailResponse);
+
+		return response;
+	}
+
+	public TextResponse changePassword(String authorizationHeader, ChangePasswordDto passwords) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		// Check data
+		if (passwords.getPassword().isEmpty() || passwords.getConfirmpassword().isEmpty()) {
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+		}
+
+		if (!passwords.getPassword().equals(passwords.getConfirmpassword())) {
+			throw new PasswordDontMatchException("As senhas não batem!");
+		}
+
+		if(BCrypt.checkpw(passwords.getPassword(), userToken.getPassword())) {
+			throw new PasswordDontMatchException("A senha não pode ser igual a anterior!");
+		}
+
+		// Encypt and hash pass
+		String hashedPassword = BCrypt.hashpw(passwords.getPassword(), fixedSalt);
+		userToken.setPassword(hashedPassword);
+
+		userRepository.save(userToken);
+
+		TextResponse response = new TextResponse("Senha alterada com sucesso!");
 
 		return response;
 	}

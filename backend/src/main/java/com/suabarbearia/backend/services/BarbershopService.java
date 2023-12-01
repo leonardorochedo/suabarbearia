@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.suabarbearia.backend.dtos.ChangePasswordDto;
 import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.enums.Status;
@@ -129,6 +130,7 @@ public class BarbershopService {
 
 		Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 		Barbershop editedBarbershop = barbershopRepository.findById(id).get();
+		Barbershop barbershopNewEmail = barbershopRepository.findByEmail(barbershop.getEmail());
 
 		// Check barber
 		if (!barbershopToken.equals(editedBarbershop)) {
@@ -140,7 +142,11 @@ public class BarbershopService {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
-		if(!BCrypt.checkpw(barbershop.getPassword(), editedBarbershop.getPassword())) {
+		if (!barbershopToken.getEmail().equals(barbershop.getEmail()) && barbershopNewEmail != null) {
+			throw new ExistDataException("E-mail em uso!");
+		}
+
+		if (!BCrypt.checkpw(barbershop.getPassword(), editedBarbershop.getPassword())) {
 			throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
 		}
 
@@ -192,6 +198,35 @@ public class BarbershopService {
 		String emailResponse = emailService.sendEmail(email, subject, body);
 
 		TextResponse response = new TextResponse(emailResponse);
+
+		return response;
+	}
+
+	public TextResponse changePassword(String authorizationHeader, ChangePasswordDto passwords) {
+		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+		Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+
+		// Check data
+		if (passwords.getPassword().isEmpty() || passwords.getConfirmpassword().isEmpty()) {
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+		}
+
+		if (!passwords.getPassword().equals(passwords.getConfirmpassword())) {
+			throw new PasswordDontMatchException("As senhas não batem!");
+		}
+
+		if(BCrypt.checkpw(passwords.getPassword(), barbershopToken.getPassword())) {
+			throw new PasswordDontMatchException("A senha não pode ser igual a anterior!");
+		}
+
+		// Encypt and hash pass
+		String hashedPassword = BCrypt.hashpw(passwords.getPassword(), fixedSalt);
+		barbershopToken.setPassword(hashedPassword);
+
+		barbershopRepository.save(barbershopToken);
+
+		TextResponse response = new TextResponse("Senha alterada com sucesso!");
 
 		return response;
 	}

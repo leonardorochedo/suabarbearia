@@ -238,4 +238,19 @@ public class UserServiceTest {
 		assertEquals(1, response4.size());
 	}
 
+	@Test
+	public void testChangePassword() {
+		// Create
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client12@email.com", "123321", "123321", "33981111", "Av. Brasil 111", "86000-000");
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
+
+		// Change
+		ChangePasswordDto changePasswordMock = new ChangePasswordDto("123456", "123456");
+		TextResponse response2 = userService.changePassword(response1.getToken(), changePasswordMock);
+
+		// Assert
+		assertNotNull(response2);
+		assertEquals("Senha alterada com sucesso!", response2.getMessage());
+	}
+
 }
