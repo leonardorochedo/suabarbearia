@@ -130,6 +130,7 @@ public class BarbershopService {
 
 		Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 		Barbershop editedBarbershop = barbershopRepository.findById(id).get();
+		Barbershop barbershopNewEmail = barbershopRepository.findByEmail(barbershop.getEmail());
 
 		// Check barber
 		if (!barbershopToken.equals(editedBarbershop)) {
@@ -141,7 +142,11 @@ public class BarbershopService {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
-		if(!BCrypt.checkpw(barbershop.getPassword(), editedBarbershop.getPassword())) {
+		if (!barbershopToken.getEmail().equals(barbershop.getEmail()) && barbershopNewEmail != null) {
+			throw new ExistDataException("E-mail em uso!");
+		}
+
+		if (!BCrypt.checkpw(barbershop.getPassword(), editedBarbershop.getPassword())) {
 			throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
 		}
 

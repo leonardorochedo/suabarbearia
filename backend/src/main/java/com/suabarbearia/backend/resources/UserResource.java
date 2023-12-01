@@ -102,6 +102,10 @@ public class UserResource {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+		} catch (ExistDataException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
 		}
 	}
 

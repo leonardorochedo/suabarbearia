@@ -126,6 +126,7 @@ public class UserService {
 
 		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 		User editedUser = userRepository.findById(id).get();
+		User userNewEmail = userRepository.findByEmail(user.getEmail());
 
 		// Check user
 		if (!userToken.equals(editedUser)) {
@@ -137,7 +138,11 @@ public class UserService {
 			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
-		if(!BCrypt.checkpw(user.getPassword(), editedUser.getPassword())) {
+		if (!userToken.getEmail().equals(user.getEmail()) && userNewEmail != null) {
+			throw new ExistDataException("E-mail em uso!");
+		}
+
+		if (!BCrypt.checkpw(user.getPassword(), editedUser.getPassword())) {
 			throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
 		}
 
