@@ -1,5 +1,6 @@
 package com.suabarbearia.backend.resources;
 
+import com.suabarbearia.backend.dtos.ChangePasswordDto;
 import com.suabarbearia.backend.dtos.EditUserDto;
 import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.entities.Barbershop;
@@ -118,6 +119,19 @@ public class UserResource {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		}
+	}
+
+	@PatchMapping(value = "/changepassword")
+	public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ChangePasswordDto passwords) {
+		try {
+			TextResponse response = userService.changePassword(authorizationHeader, passwords);
+
+			return ResponseEntity.ok().body(response);
+		} catch (FieldsAreNullException | PasswordDontMatchException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
 		}
 	}
 
