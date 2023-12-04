@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.suabarbearia.backend.utils.EfiPix;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +36,9 @@ public class TestConfig implements CommandLineRunner {
 	
 	@Autowired
 	private SchedulingRepository schedulingRepository;
+
+	@Autowired
+	private Credentials credentials;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -78,6 +83,18 @@ public class TestConfig implements CommandLineRunner {
 //		scheduling.setDate(date);
 //		
 //		schedulingRepository.save(scheduling);
+
+//		String debtorName = "Fulano de Tal";
+//		String debtorCPF = "11164655906";
+//		String receiverPixKey = "c7a80bf8-c39e-4cad-8389-96142fca65a3";
+//		String chargeAmount = "100.00";
+//		String description = "Cobrança de serviço";
+//
+//		EfiPix efipix = new EfiPix();
+//
+//		JSONObject response = efipix.generatePix(credentials, debtorName, debtorCPF, receiverPixKey, chargeAmount, description);
+//
+//		System.out.println(response);
 
 	}
 

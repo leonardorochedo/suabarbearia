@@ -76,6 +76,13 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<!--EFI PAY-->
+		<dependency>
+			<groupId>br.com.efipay.efisdk</groupId>
+			<artifactId>sdk-java-apis-efi</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
 		<!--TEST-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
