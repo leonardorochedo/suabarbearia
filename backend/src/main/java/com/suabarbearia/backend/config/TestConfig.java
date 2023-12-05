@@ -100,9 +100,9 @@ public class TestConfig implements CommandLineRunner {
 		JSONObject response2 = efipix.generateQRCode(credentials, getLoc.get("id").toString());
 
 		// Get transaction by txid
-		JSONObject response3 = efipix.detailPix(credentials, "65c1e18c6d854d279412a165b698d0a0");
+		JSONObject response3 = efipix.detailPix(credentials, response1.get("txid").toString());
 
-		JSONObject response4 = efipix.refundPix(credentials, "E18236120202312051612s06299ffc3b", "10", "0.99");
+		// JSONObject response4 = efipix.refundPix(credentials, "E18236120202312051612s06299ffc3b", "10", "0.99");
 	}
 
 }
