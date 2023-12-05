@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.utils;
 
 import br.com.efi.efisdk.EfiPay;
+import br.com.efi.efisdk.exceptions.EfiPayException;
 import com.suabarbearia.backend.config.Credentials;
 import org.json.JSONObject;
 
@@ -38,10 +39,85 @@ public class EfiPix {
         body.put("chave", receiverPixKey); // Changed to receiverPixKey
         body.put("solicitacaoPagador", description);
 
-        // Generate pixCharge
-        EfiPay efi = new EfiPay(options);
+        try {
+            EfiPay efi = new EfiPay(options);
+            JSONObject response = efi.call("pixCreateCharge", params, body);
+            System.out.println(response);
 
-        return efi.call("pixCreateCharge", params, body);
+            return response;
+        } catch (EfiPayException e){
+            System.out.println(e.getError());
+            System.out.println(e.getErrorDescription());
+
+            throw e;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            throw e;
+        }
+    }
+
+    public JSONObject generateQRCode(Credentials credentials, String id) throws Exception {
+
+        // Get credentials set in options payment
+        JSONObject options = new JSONObject();
+        options.put("client_id", credentials.getClientId());
+        options.put("client_secret", credentials.getClientSecret());
+        options.put("certificate", credentials.getCertificate());
+        options.put("sandbox", credentials.isSandbox());
+
+        // Create a param and set txid
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("id", id);
+
+        try {
+            EfiPay efi= new EfiPay(options);
+            JSONObject response = efi.call("pixGenerateQRCode", params, new JSONObject());
+            System.out.println(response);
+
+            return response;
+        } catch (EfiPayException e){
+            System.out.println(e.getError());
+            System.out.println(e.getErrorDescription());
+
+            throw e;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            throw e;
+        }
+    }
+
+    public JSONObject detailPix(Credentials credentials, String txid) throws Exception {
+
+        // Get credentials set in options payment
+        JSONObject options = new JSONObject();
+        options.put("client_id", credentials.getClientId());
+        options.put("client_secret", credentials.getClientSecret());
+        options.put("certificate", credentials.getCertificate());
+        options.put("sandbox", credentials.isSandbox());
+
+        // Create a param and set txid
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("txid", txid);
+
+        try {
+            EfiPay efi = new EfiPay(options);
+            JSONObject response = efi.call("pixDetailCharge", params, new JSONObject());
+
+            System.out.println(response);
+
+            return response;
+        } catch (EfiPayException e){
+            System.out.println(e.getError());
+            System.out.println(e.getErrorDescription());
+
+            throw e;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            throw e;
+        }
     }
 
 }

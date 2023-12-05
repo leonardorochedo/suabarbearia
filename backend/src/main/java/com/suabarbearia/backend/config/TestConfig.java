@@ -84,18 +84,23 @@ public class TestConfig implements CommandLineRunner {
 //		
 //		schedulingRepository.save(scheduling);
 
-//		String debtorName = "Fulano de Tal";
-//		String debtorCPF = "11164655906";
-//		String receiverPixKey = "c7a80bf8-c39e-4cad-8389-96142fca65a3";
-//		String chargeAmount = "100.00";
-//		String description = "Cobrança de serviço";
-//
-//		EfiPix efipix = new EfiPix();
-//
-//		JSONObject response = efipix.generatePix(credentials, debtorName, debtorCPF, receiverPixKey, chargeAmount, description);
-//
-//		System.out.println(response);
+		String debtorName = "Fulano de Tal";
+		String debtorCPF = "11164655906";
+		String receiverPixKey = "c7a80bf8-c39e-4cad-8389-96142fca65a3";
+		String chargeAmount = "100.00";
+		String description = "Cobrança de serviço";
 
+		EfiPix efipix = new EfiPix();
+
+		// Generate PIX
+		JSONObject response1 = efipix.generatePix(credentials, debtorName, debtorCPF, receiverPixKey, chargeAmount, description);
+
+		// Generate QRCode
+		JSONObject getLoc = response1.getJSONObject("loc");
+		JSONObject response2 = efipix.generateQRCode(credentials, getLoc.get("id").toString());
+
+		// Get transaction by txid
+		JSONObject response3 = efipix.detailPix(credentials, response1.get("txid").toString());
 	}
 
 }
