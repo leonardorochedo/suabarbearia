@@ -87,7 +87,7 @@ public class TestConfig implements CommandLineRunner {
 		String debtorName = "Fulano de Tal";
 		String debtorCPF = "11164655906";
 		String receiverPixKey = "c7a80bf8-c39e-4cad-8389-96142fca65a3";
-		String chargeAmount = "100.00";
+		String chargeAmount = "1.00";
 		String description = "Cobrança de serviço";
 
 		EfiPix efipix = new EfiPix();
@@ -100,7 +100,9 @@ public class TestConfig implements CommandLineRunner {
 		JSONObject response2 = efipix.generateQRCode(credentials, getLoc.get("id").toString());
 
 		// Get transaction by txid
-		JSONObject response3 = efipix.detailPix(credentials, response1.get("txid").toString());
+		JSONObject response3 = efipix.detailPix(credentials, "65c1e18c6d854d279412a165b698d0a0");
+
+		JSONObject response4 = efipix.refundPix(credentials, "E18236120202312051612s06299ffc3b", "10", "0.99");
 	}
 
 }

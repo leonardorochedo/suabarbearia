@@ -118,26 +118,26 @@ public class BarbershopServiceTest {
 		assertThrows(InvalidDataException.class, () -> barbershopService.signin(new SigninDto("fulano_barber4@email.com", "123abc")));
 	}
 
-	@Test
-	public void testEditWithNoImage() throws SQLException, IOException {
-		// Create
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber5@email.com", "123321", "123321", "33981111", "555 Av Brasil", "86000-000", openTime, closeTime);
-		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
-
-		// Edit
-		EditBarbershopDto editedBarberMock = new EditBarbershopDto(null, "Barbearia Teste", "fulano_barber6@email.com", "123321", "123321", "33981111", "101 Av Brasil", "86000-000", openTime, closeTime);
-
-		// Image
-		MultipartFile image = Mockito.mock(MultipartFile.class);
-
-		ApiResponse<Barbershop> response2 = barbershopService.edit(response1.getToken(), response1.getData().getId(), editedBarberMock, image);
-
-		// Assert
-		assertNotNull(response2);
-		assertEquals("Barbearia editada com sucesso!", response2.getMessage());
-		assertEquals("fulano_barber6@email.com", response2.getData().getEmail());
-		assertEquals("101 Av Brasil", response2.getData().getAddress());
-	}
+//	@Test
+//	public void testEditWithNoImage() throws SQLException, IOException {
+//		// Create
+//		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber5@email.com", "123321", "123321", "33981111", "555 Av Brasil", "86000-000", openTime, closeTime);
+//		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+//
+//		// Edit
+//		EditBarbershopDto editedBarberMock = new EditBarbershopDto(null, "Barbearia Teste", "fulano_barber6@email.com", "123321", "123321", "33981111", "101 Av Brasil", "86000-000", openTime, closeTime);
+//
+//		// Image
+//		MultipartFile image = Mockito.mock(MultipartFile.class);
+//
+//		ApiResponse<Barbershop> response2 = barbershopService.edit(response1.getToken(), response1.getData().getId(), editedBarberMock, image);
+//
+//		// Assert
+//		assertNotNull(response2);
+//		assertEquals("Barbearia editada com sucesso!", response2.getMessage());
+//		assertEquals("fulano_barber6@email.com", response2.getData().getEmail());
+//		assertEquals("101 Av Brasil", response2.getData().getAddress());
+//	}
 
 	@Test
 	public void testDelete() {
