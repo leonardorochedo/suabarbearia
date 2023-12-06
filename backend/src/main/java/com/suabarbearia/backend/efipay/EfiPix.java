@@ -138,6 +138,7 @@ public class EfiPix {
         }
     }
 
+    // Webhook PIX
     public JSONObject configureWebhook(Credentials credentials, String receiverPixKey, String webhookUrl) throws Exception {
 
         // Get credentials set in options payment
