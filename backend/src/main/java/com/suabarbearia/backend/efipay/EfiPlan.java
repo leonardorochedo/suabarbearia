@@ -8,64 +8,25 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class EfiCreditCard {
+public class EfiPlan {
 
-    public EfiCreditCard() {
+    public EfiPlan() {
     }
 
-    public JSONObject createCardCharge(Credentials credentials, String paymentToken, String productName, Integer productValue, String name, String cpf, String phoneNumber, String email, String birthDate, String address, Integer number, String neighborhood, String cep, String city, String state, String notificationUrl) throws Exception {
+    // Plans
+    public JSONObject createPlan(Credentials credentials, String name, Integer interval, Integer repeats) throws Exception {
 
         // Get credentials set in options payment
         JSONObject options = buildOptions(credentials);
 
-        // items
-        JSONArray items = new JSONArray();
-        JSONObject item1 = new JSONObject();
-        item1.put("name", productName);
-        item1.put("amount", 1);
-        item1.put("value", productValue); // 5990 => 59,90
-        items.put(item1);
-
-        // customer (if cnpj exist change logic here)
-        JSONObject customer = new JSONObject();
-        customer.put("name", name);
-        customer.put("cpf", cpf);
-        customer.put("phone_number", phoneNumber);
-        customer.put("email", email);
-        customer.put("birth", birthDate); // 1990-05-04
-
-        // address
-        JSONObject billingAddress = new JSONObject();
-        billingAddress.put("street", address);
-        billingAddress.put("number", number);
-        billingAddress.put("neighborhood", neighborhood);
-        billingAddress.put("zipcode", cep);
-        billingAddress.put("city", city);
-        billingAddress.put("state", state);
-
-        // notification URL (webhook url)
-        JSONObject metadata = new JSONObject();
-        metadata.put("notification_url", notificationUrl);
-        // metadata.put("custom_id", "");
-
-        // credit card
-        JSONObject creditCard = new JSONObject();
-        creditCard.put("installments", 1); // parcelas
-        creditCard.put("billing_address", billingAddress);
-        creditCard.put("payment_token", paymentToken);
-        creditCard.put("customer", customer);
-
-        JSONObject payment = new JSONObject();
-        payment.put("credit_card", creditCard);
-
         JSONObject body = new JSONObject();
-        body.put("payment", payment);
-        body.put("items", items);
-        body.put("metadata", metadata);
+        body.put("name", name);
+        body.put("interval", interval);
+        body.put("repeats", repeats);
 
         try {
             EfiPay efi = new EfiPay(options);
-            JSONObject response = efi.call("createOneStepCharge", new HashMap<String,String>(), body);
+            JSONObject response = efi.call("createPlan", new HashMap<String,String>(), body);
             System.out.println(response);
 
             return response;
@@ -82,7 +43,7 @@ public class EfiCreditCard {
         }
     }
 
-    public JSONObject detailCharge(Credentials credentials, String id) throws Exception {
+    public JSONObject deletePlan(Credentials credentials, String id) throws Exception {
 
         // Get credentials set in options payment
         JSONObject options = buildOptions(credentials);
@@ -92,7 +53,7 @@ public class EfiCreditCard {
 
         try {
             EfiPay efi = new EfiPay(options);
-            JSONObject response = efi.call("detailCharge", params, new JSONObject());
+            JSONObject response = efi.call("deletePlan", params, new JSONObject());
             System.out.println(response);
 
             return response;
@@ -103,6 +64,105 @@ public class EfiCreditCard {
 
             throw e;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            throw e;
+        }
+    }
+
+    // Signatures / subscriptions
+    public JSONObject createSubscription(Credentials credentials, String idPlan, String paymentToken, String planName, Integer planValue, String name, String cpf, String phoneNumber, String email, String birthDate, String address, Integer number, String neighborhood, String cep, String city, String state, String notificationUrl) throws Exception {
+
+        // Get credentials set in options payment
+        JSONObject options = buildOptions(credentials);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("id", idPlan);
+
+        // items
+        JSONArray items = new JSONArray();
+        JSONObject item1 = new JSONObject();
+        item1.put("name", planName);
+        item1.put("amount", 1);
+        item1.put("value", planValue);
+        items.put(item1);
+
+        //customer
+        JSONObject customer = new JSONObject();
+        customer.put("name", name);
+        customer.put("cpf", cpf);
+        customer.put("phone_number", phoneNumber);
+        customer.put("email", email);
+        customer.put("birth", birthDate); // 1990-05-04
+
+        //address
+        JSONObject billingAddress = new JSONObject();
+        billingAddress.put("street", address);
+        billingAddress.put("number", number);
+        billingAddress.put("neighborhood", neighborhood);
+        billingAddress.put("zipcode", cep);
+        billingAddress.put("city", city);
+        billingAddress.put("state", state);
+
+        //notification URL
+        JSONObject metadata = new JSONObject();
+        metadata.put("notification_url", notificationUrl);
+        // metadata.put("custom_id", "");
+
+        JSONObject creditCard = new JSONObject();
+        creditCard.put("installments", 1); // parcelas
+        creditCard.put("billing_address", billingAddress);
+        creditCard.put("payment_token", paymentToken);
+        creditCard.put("customer", customer);
+
+        JSONObject payment = new JSONObject();
+        payment.put("credit_card", creditCard);
+
+        JSONObject body = new JSONObject();
+        body.put("payment", payment);
+        body.put("items", items);
+        body.put("metadata", metadata);
+
+        try {
+            EfiPay efi = new EfiPay(options);
+            JSONObject response = efi.call("createOneStepSubscription", params, body);
+            System.out.println(response);
+
+            return response;
+        } catch (EfiPayException e){
+            System.out.println(e.getCode());
+            System.out.println(e.getError());
+            System.out.println(e.getErrorDescription());
+
+            throw e;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            throw e;
+        }
+    }
+
+    public JSONObject detailSubscription(Credentials credentials, String id) throws Exception {
+
+        // Get credentials set in options payment
+        JSONObject options = buildOptions(credentials);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("id", id);
+
+        try {
+            EfiPay efi = new EfiPay(options);
+            JSONObject response = efi.call("detailSubscription", params, new JSONObject());
+            System.out.println(response);
+
+            return response;
+        }catch (EfiPayException e){
+            System.out.println(e.getCode());
+            System.out.println(e.getError());
+            System.out.println(e.getErrorDescription());
+
+            throw e;
+        }catch (Exception e) {
             System.out.println(e.getMessage());
 
             throw e;
