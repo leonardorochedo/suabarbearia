@@ -33,6 +33,11 @@ public class Service implements Serializable {
     @JoinColumn(name = "barbershop_id")
 	@JsonIgnore
     private Barbershop barbershop;
+
+	@ManyToOne
+	@JoinColumn(name = "monthlyplan_id")
+	@JsonIgnore
+	private MonthlyPlan monthlyplan;
 	
 	@OneToMany(mappedBy = "service")
 	@JsonIgnore

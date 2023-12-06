@@ -40,6 +40,11 @@ public class Scheduling implements Serializable {
 	private Service service;
 
 	@ManyToOne
+	@JoinColumn(name = "monthlyplan_id")
+	@JsonIgnore
+	private MonthlyPlan monthlyplan;
+
+	@ManyToOne
 	@JoinColumn(name = "employee_id")
 	@JsonIgnore
 	private Employee employee;
@@ -50,12 +55,13 @@ public class Scheduling implements Serializable {
 	
 	public Scheduling() {}
 
-	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, LocalDateTime date, Status status) {
+	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, MonthlyPlan monthlyplan, LocalDateTime date, Status status) {
 		super();
 		this.user = user;
 		this.barbershop = barbershop;
 		this.employee = employee;
 		this.service = service;
+		this.monthlyplan = monthlyplan;
 		this.date = date;
 		this.status = status;
 	}
@@ -123,6 +129,7 @@ public class Scheduling implements Serializable {
 				", user=" + user +
 				", barbershop=" + barbershop +
 				", service=" + service +
+				", monthlyplan=" + monthlyplan +
 				", employee=" + employee +
 				", date=" + date +
 				", status=" + status +

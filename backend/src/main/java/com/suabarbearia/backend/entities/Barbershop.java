@@ -23,17 +23,27 @@ public class Barbershop implements Serializable {
 	private String name;
 	private String email;
 	private String password;
+	private String document;
+	private String birth;
 	private String phone;
 	@Column(name = "image", columnDefinition = "BLOB")
 	private byte[] image;
-	private String address;
-	private String cep;
+	private Address address;
 	private LocalTime openTime;
 	private LocalTime closeTime;
+	private String efiPixKey;
 	
 	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Service> services;
+
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<MonthlyPlan> monthlyplans;
+
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<Subscription> subscriptions;
 	
 	// Relations
 	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
@@ -54,18 +64,20 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String password, String phone, byte[] image, String address, String cep, LocalTime openTime, LocalTime closeTime) {
+	public Barbershop(Long id, String name, String email, String password, String document, String birth, String phone, byte[] image, Address address, LocalTime openTime, LocalTime closeTime, String efiPixKey) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.document = document;
+		this.birth = birth;
 		this.phone = phone;
 		this.image = image;
 		this.address = address;
-		this.cep = cep;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
+		this.efiPixKey= efiPixKey;
 	}
 
 	public Long getId() {
@@ -100,6 +112,22 @@ public class Barbershop implements Serializable {
 		this.password = password;
 	}
 
+	public String getDocument() {
+		return document;
+	}
+
+	public void setDocument(String document) {
+		this.document = document;
+	}
+
+	public String getBirth() {
+		return birth;
+	}
+
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+
 	public String getPhone() {
 		return phone;
 	}
@@ -116,20 +144,12 @@ public class Barbershop implements Serializable {
 		this.image = image;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
 	}
 
 	public LocalTime getOpenTime() {
@@ -148,12 +168,36 @@ public class Barbershop implements Serializable {
 		this.closeTime = closeTime;
 	}
 
+	public String getEfiPixKey() {
+		return efiPixKey;
+	}
+
+	public void setEfiPixKey(String efiPixKey) {
+		this.efiPixKey = efiPixKey;
+	}
+
 	public Set<Service> getServices() {
 		return services;
 	}
 
 	public void setServices(Set<Service> services) {
 		this.services = services;
+	}
+
+	public Set<MonthlyPlan> getMonthlyplans() {
+		return monthlyplans;
+	}
+
+	public void setMonthlyplans(Set<MonthlyPlan> monthlyplans) {
+		this.monthlyplans = monthlyplans;
+	}
+
+	public Set<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(Set<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 
 	public Set<User> getClients() {
@@ -204,9 +248,14 @@ public class Barbershop implements Serializable {
 				", name='" + name + '\'' +
 				", email='" + email + '\'' +
 				", password='" + password + '\'' +
+				", document='" + document + '\'' +
+				", birth='" + birth + '\'' +
 				", phone='" + phone + '\'' +
 				", image=" + Arrays.toString(image) +
-				", address='" + address + '\'' +
+				", address=" + address +
+				", openTime=" + openTime +
+				", closeTime=" + closeTime +
+				", efiPixKey='" + efiPixKey + '\'' +
 				'}';
 	}
 }

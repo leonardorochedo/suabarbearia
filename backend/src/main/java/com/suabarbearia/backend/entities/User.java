@@ -22,11 +22,12 @@ public class User implements Serializable {
 	private String name;
 	private String email;
 	private String password;
+	private String cpf;
+	private String birth;
 	private String phone;
 	@Column(name = "image", columnDefinition = "BLOB")
 	private byte[] image;
-	private String address;
-	private String cep;
+	private Address address;
 	
 	// Relations
 	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
@@ -41,19 +42,24 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private Set<Subscription> subscriptions;
 	
 	public User() {}
 	
-	public User(Long id, String name, String email, String password, String phone, byte[] image, String address, String cep) {
+	public User(Long id, String name, String email, String password, String cpf, String birth, String phone, byte[] image, Address address) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.cpf = cpf;
+		this.birth = birth;
 		this.phone = phone;
 		this.image = image;
 		this.address = address;
-		this.cep = cep;
 	}
 
 	public Long getId() {
@@ -88,6 +94,22 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getBirth() {
+		return birth;
+	}
+
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+
 	public String getPhone() {
 		return phone;
 	}
@@ -104,20 +126,12 @@ public class User implements Serializable {
 		this.image = image;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
 	}
 
 	public Set<Barbershop> getBarbershops() {
@@ -134,6 +148,14 @@ public class User implements Serializable {
 
 	public void setSchedulings(Set<Scheduling> schedulings) {
 		this.schedulings = schedulings;
+	}
+
+	public Set<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(Set<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 
 	@Override
@@ -160,10 +182,12 @@ public class User implements Serializable {
 				", name='" + name + '\'' +
 				", email='" + email + '\'' +
 				", password='" + password + '\'' +
+				", cpf='" + cpf + '\'' +
+				", birth='" + birth + '\'' +
 				", phone='" + phone + '\'' +
 				", image=" + Arrays.toString(image) +
-				", address='" + address + '\'' +
-				", cep='" + cep + '\'' +
+				", address=" + address +
 				'}';
 	}
+
 }
