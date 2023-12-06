@@ -1,21 +1,12 @@
 package com.suabarbearia.backend.config;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.suabarbearia.backend.utils.EfiPix;
+import com.suabarbearia.backend.efipay.EfiPix;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.suabarbearia.backend.entities.Barbershop;
-import com.suabarbearia.backend.entities.Scheduling;
-import com.suabarbearia.backend.entities.Service;
-import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.repositories.ServiceRepository;

@@ -1,7 +1,7 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.config.Credentials;
-import com.suabarbearia.backend.utils.EfiPix;
+import com.suabarbearia.backend.efipay.EfiPix;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

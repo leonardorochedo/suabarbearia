@@ -1,4 +1,4 @@
-package com.suabarbearia.backend.utils;
+package com.suabarbearia.backend.efipay;
 
 import br.com.efi.efisdk.EfiPay;
 import br.com.efi.efisdk.exceptions.EfiPayException;
@@ -142,6 +142,7 @@ public class EfiPix {
 
         // Get credentials set in options payment
         JSONObject options = buildOptions(credentials);
+        options.put("x-skip-mtls-checking", "true");
 
         // Create a param and set chave (pixKey)
         HashMap<String, String> params = new HashMap<>();
