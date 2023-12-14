@@ -31,7 +31,7 @@ public class Barbershop implements Serializable {
 	private Address address;
 	private LocalTime openTime;
 	private LocalTime closeTime;
-	private String efiPixKey;
+	private Double chargeAmount;
 	
 	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
@@ -64,7 +64,7 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String password, String document, String birth, String phone, byte[] image, Address address, LocalTime openTime, LocalTime closeTime, String efiPixKey) {
+	public Barbershop(Long id, String name, String email, String password, String document, String birth, String phone, byte[] image, Address address, LocalTime openTime, LocalTime closeTime) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -77,7 +77,7 @@ public class Barbershop implements Serializable {
 		this.address = address;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
-		this.efiPixKey= efiPixKey;
+		this.chargeAmount= 0.0;
 	}
 
 	public Long getId() {
@@ -168,12 +168,16 @@ public class Barbershop implements Serializable {
 		this.closeTime = closeTime;
 	}
 
-	public String getEfiPixKey() {
-		return efiPixKey;
+	public Double getChargeAmount() {
+		return chargeAmount;
 	}
 
-	public void setEfiPixKey(String efiPixKey) {
-		this.efiPixKey = efiPixKey;
+	public void increaseChargeAmount(Double chargeAmount) {
+		this.chargeAmount += chargeAmount;
+	}
+
+	public void removeChargeAmount(Double chargeAmount) {
+		this.chargeAmount -= chargeAmount;
 	}
 
 	public Set<Service> getServices() {
@@ -255,7 +259,7 @@ public class Barbershop implements Serializable {
 				", address=" + address +
 				", openTime=" + openTime +
 				", closeTime=" + closeTime +
-				", efiPixKey='" + efiPixKey + '\'' +
+				", chargeAmount=" + chargeAmount +
 				'}';
 	}
 }
