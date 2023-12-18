@@ -41,8 +41,9 @@ public class MonthlyPlan implements Serializable {
 
     public MonthlyPlan() {}
 
-    public MonthlyPlan(Long idPlan, String title, Double price, Barbershop barbershop, Set<Service> servicesAllowed) {
+    public MonthlyPlan(Long id, Long idPlan, String title, Double price, Barbershop barbershop, Set<Service> servicesAllowed) {
         super();
+        this.id = id;
         this.idPlan = idPlan;
         this.title = title;
         this.price = price;
