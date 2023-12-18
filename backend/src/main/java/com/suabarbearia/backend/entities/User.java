@@ -49,17 +49,17 @@ public class User implements Serializable {
 	
 	public User() {}
 	
-	public User(Long id, String name, String email, String password, String cpf, String birth, String phone, byte[] image, Address address) {
+	public User(Long id, String name, String email, String cpf, String birth, String phone, byte[] image, Address address, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.password = password;
 		this.cpf = cpf;
 		this.birth = birth;
 		this.phone = phone;
 		this.image = image;
 		this.address = address;
+		this.password = password;
 	}
 
 	public Long getId() {
@@ -84,14 +84,6 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getCpf() {
@@ -132,6 +124,14 @@ public class User implements Serializable {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Set<Barbershop> getBarbershops() {

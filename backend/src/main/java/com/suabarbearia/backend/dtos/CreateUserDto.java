@@ -1,29 +1,32 @@
 package com.suabarbearia.backend.dtos;
 
+import com.suabarbearia.backend.entities.Address;
+
 public class CreateUserDto {
 
 	private String name;
 	private String email;
+	private String cpf;
+	private String birth;
+	private String phone;
+	private Address address;
 	private String password;
 	private String confirmpassword;
-	private String phone;
-	private String address;
-	private String cep;
 
 	
 	public CreateUserDto() {}
-	
-	public CreateUserDto(String name, String email, String password, String confirmpassword, String phone, String address, String cep) {
-		super();
+
+	public CreateUserDto(String name, String email, String cpf, String birth, String phone, Address address, String password, String confirmpassword) {
 		this.name = name;
 		this.email = email;
-		this.password = password;
-		this.confirmpassword = confirmpassword;
+		this.cpf = cpf;
+		this.birth = birth;
 		this.phone = phone;
 		this.address = address;
-		this.cep = cep;
+		this.password = password;
+		this.confirmpassword = confirmpassword;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -40,20 +43,20 @@ public class CreateUserDto {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getConfirmpassword() {
-		return confirmpassword;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
-	public void setConfirmpassword(String confirmpassword) {
-		this.confirmpassword = confirmpassword;
+	public String getBirth() {
+		return birth;
+	}
+
+	public void setBirth(String birth) {
+		this.birth = birth;
 	}
 
 	public String getPhone() {
@@ -64,19 +67,28 @@ public class CreateUserDto {
 		this.phone = phone;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 
-	public String getCep() {
-		return cep;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setCep(String cep) {
-		this.cep = cep;
+	public void setPassword(String password) {
+		this.password = password;
 	}
+
+	public String getConfirmpassword() {
+		return confirmpassword;
+	}
+
+	public void setConfirmpassword(String confirmpassword) {
+		this.confirmpassword = confirmpassword;
+	}
+
 }
