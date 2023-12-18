@@ -30,7 +30,7 @@ public class User implements Serializable {
 	private Address address;
 	
 	// Relations
-	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
+	@ManyToMany(fetch = FetchType.LAZY) // Load all info in relation one to one
 	@JoinTable(
 			name = "user_barbershop",
 			joinColumns = @JoinColumn(name = "user_id"),
@@ -39,11 +39,11 @@ public class User implements Serializable {
 	@JsonIgnore
 	private Set<Barbershop> barbershops;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Subscription> subscriptions;
 	
