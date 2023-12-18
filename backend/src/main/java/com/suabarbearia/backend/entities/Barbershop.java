@@ -33,20 +33,20 @@ public class Barbershop implements Serializable {
 	private LocalTime closeTime;
 	private Double chargeAmount;
 	
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Service> services;
 
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<MonthlyPlan> monthlyplans;
 
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Subscription> subscriptions;
 	
 	// Relations
-	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
+	@ManyToMany(fetch = FetchType.LAZY) // Load all info in relation one to one
 	@JoinTable(
 			name = "user_barbershop",
 			inverseJoinColumns = @JoinColumn(name = "user_id")
@@ -54,11 +54,11 @@ public class Barbershop implements Serializable {
 	@JsonIgnore
 	private Set<User> clients;
 	
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Scheduling> schedulings;
 
-	@OneToMany(mappedBy = "barbershop", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "barbershop", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private Set<Employee> employees;
 	
