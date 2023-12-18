@@ -4,43 +4,51 @@ import java.time.LocalDateTime;
 
 public class SchedulingDto {
 
-    private Long barbershopId;
-    private Long serviceId;
-    private Long employeeId;
+    private Long idBarbershop;
+    private Long idService;
+    private Long idMonthlyPlan;
+    private Long idEmployee;
     private LocalDateTime date;
 
     public SchedulingDto () {}
 
-    public SchedulingDto(Long barbershopId, Long serviceId, Long employeeId, LocalDateTime date) {
-        super();
-        this.barbershopId = barbershopId;
-        this.serviceId = serviceId;
-        this.employeeId = employeeId;
+    public SchedulingDto(Long idBarbershop, Long idService, Long idEmployee, LocalDateTime date) {
+        this.idBarbershop = idBarbershop;
+        this.idService = idService;
+        this.idEmployee = idEmployee;
         this.date = date;
     }
 
-    public Long getBarbershopId() {
-        return barbershopId;
+    public Long getIdBarbershop() {
+        return idBarbershop;
     }
 
-    public void setBarbershopId(Long barbershopId) {
-        this.barbershopId = barbershopId;
+    public void setIdBarbershop(Long idBarbershop) {
+        this.idBarbershop = idBarbershop;
     }
 
-    public Long getServiceId() {
-        return serviceId;
+    public Long getIdService() {
+        return idService;
     }
 
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
+    public void setIdService(Long idService) {
+        this.idService = idService;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public Long getIdMonthlyPlan() {
+        return idMonthlyPlan;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setIdMonthlyPlan(Long idMonthlyPlan) {
+        this.idMonthlyPlan = idMonthlyPlan;
+    }
+
+    public Long getIdEmployee() {
+        return idEmployee;
+    }
+
+    public void setIdEmployee(Long idEmployee) {
+        this.idEmployee = idEmployee;
     }
 
     public LocalDateTime getDate() {

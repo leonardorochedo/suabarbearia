@@ -55,13 +55,12 @@ public class Scheduling implements Serializable {
 	
 	public Scheduling() {}
 
-	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, MonthlyPlan monthlyplan, LocalDateTime date, Status status) {
+	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, LocalDateTime date, Status status) {
 		super();
 		this.user = user;
 		this.barbershop = barbershop;
 		this.employee = employee;
 		this.service = service;
-		this.monthlyplan = monthlyplan;
 		this.date = date;
 		this.status = status;
 	}
@@ -104,6 +103,14 @@ public class Scheduling implements Serializable {
 
 	public void setService(Service service) {
 		this.service = service;
+	}
+
+	public MonthlyPlan getMonthlyplan() {
+		return monthlyplan;
+	}
+
+	public void setMonthlyplan(MonthlyPlan monthlyplan) {
+		this.monthlyplan = monthlyplan;
 	}
 
 	public LocalDateTime getDate() {
