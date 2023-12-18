@@ -39,15 +39,6 @@ public class Subscription implements Serializable {
 
     public Subscription() {}
 
-    public Subscription(Long idSubscription, MonthlyPlan monthlyplan, User user, String title, Double price, String status) {
-        this.idSubscription = idSubscription;
-        this.monthlyplan = monthlyplan;
-        this.user = user;
-        this.title = title;
-        this.price = price;
-        this.status = status;
-    }
-
     public Long getId() {
         return id;
     }

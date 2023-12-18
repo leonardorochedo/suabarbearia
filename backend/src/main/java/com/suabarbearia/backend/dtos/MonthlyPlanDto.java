@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class MonthlyPlanDto {
 
-    private Long idPlan;
+    private Long idPlan; // efi
     private String title;
     private Double price;
     private Set<Service> servicesAllowed;
