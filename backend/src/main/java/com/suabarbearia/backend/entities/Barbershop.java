@@ -64,12 +64,11 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String password, String document, String birth, String phone, byte[] image, Address address, LocalTime openTime, LocalTime closeTime) {
+	public Barbershop(Long id, String name, String email, String document, String birth, String phone, byte[] image, Address address, LocalTime openTime, LocalTime closeTime, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.password = password;
 		this.document = document;
 		this.birth = birth;
 		this.phone = phone;
@@ -77,6 +76,7 @@ public class Barbershop implements Serializable {
 		this.address = address;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
+		this.password = password;
 		this.chargeAmount= 0.0;
 	}
 
