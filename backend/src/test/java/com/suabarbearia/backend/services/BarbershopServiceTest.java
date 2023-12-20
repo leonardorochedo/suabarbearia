@@ -96,14 +96,14 @@ public class BarbershopServiceTest {
 
 	@Test
 	public void testSignupWithInvalidPasswords() {
-        assertThrows(PasswordDontMatchException.class, () -> barbershopService.signup(new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321")));
+        assertThrows(PasswordDontMatchException.class, () -> barbershopService.signup(new CreateBarbershopDto("Barbearia Teste", "fulano_barber4@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "12321")));
 	}
 	
 	@Test
 	public void testSignin() {
 		// Arrange
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber3@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
-		SigninDto signinBarberMock = new SigninDto("fulano_barber3@email.com", "123321");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber4@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
+		SigninDto signinBarberMock = new SigninDto("fulano_barber4@email.com", "123321");
 
 		// Act
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
@@ -112,24 +112,24 @@ public class BarbershopServiceTest {
 		// Assert
 		assertNotNull(response2);
 		assertEquals("Barbearia logada com sucesso!", response2.getMessage());
-		assertEquals("fulano_barber3@email.com", response2.getData().getEmail());
+		assertEquals("fulano_barber4@email.com", response2.getData().getEmail());
    	}
 	
 	@Test
 	public void testSigninWithInvalidPassword() {
 		// Arrange
-		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber4@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber5@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
 
 		// Act
 		ApiTokenResponse<Barbershop> response = barbershopService.signup(createBarberMock);
 
-		assertThrows(InvalidDataException.class, () -> barbershopService.signin(new SigninDto("fulano_barber4@email.com", "123abc")));
+		assertThrows(InvalidDataException.class, () -> barbershopService.signin(new SigninDto("fulano_barber5@email.com", "123abc")));
 	}
 
 //	@Test
 //	public void testEditWithNoImage() throws SQLException, IOException {
 //		// Create
-//		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber5@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
+//		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber6@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
 //		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 //
 //		// Edit

@@ -21,6 +21,8 @@ public class Barbershop implements Serializable {
 	private Long id;
 	
 	private String name;
+
+	@Column(unique = true)
 	private String email;
 	private String password;
 	private String document;
@@ -46,7 +48,7 @@ public class Barbershop implements Serializable {
 	private Set<Subscription> subscriptions;
 	
 	// Relations
-	@ManyToMany(fetch = FetchType.LAZY) // Load all info in relation one to one
+	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
 	@JoinTable(
 			name = "user_barbershop",
 			inverseJoinColumns = @JoinColumn(name = "user_id")

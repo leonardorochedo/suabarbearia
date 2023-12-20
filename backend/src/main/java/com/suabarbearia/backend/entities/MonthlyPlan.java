@@ -27,11 +27,11 @@ public class MonthlyPlan implements Serializable {
     @JsonIgnore
     private Barbershop barbershop;
 
-    @OneToMany(mappedBy = "monthlyplan", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "monthlyplan", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Service> servicesAllowed;
 
-    @OneToMany(mappedBy = "monthlyplan", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "monthlyplan", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Subscription> clientsSubscription;
 
