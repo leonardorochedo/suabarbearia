@@ -5,13 +5,15 @@ public class SigninEmployeeDto {
    private String username;
    private String password;
 
-   public SigninEmployeeDto(String email, String password) {
+   public SigninEmployeeDto(String username, String password) {
       super();
-      this.username = email;
+      this.username = username;
       this.password = password;
    }
    
-   public String getUsername() {return username;}
+   public String getUsername() {
+      return username;
+   }
    public void setUsername(String email) {
       this.username = email;
    }
