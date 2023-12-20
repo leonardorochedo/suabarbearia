@@ -307,7 +307,9 @@ public class UserService {
 
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
-		return user.getSchedulings();
+		Set<Scheduling> schedulings = schedulingRepository.findAllByUser(user);
+
+		return schedulings;
 	}
 
 	public Set<Scheduling> getSchedulingsUserWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {

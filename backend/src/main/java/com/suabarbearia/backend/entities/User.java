@@ -20,6 +20,8 @@ public class User implements Serializable {
 	private Long id;
 	
 	private String name;
+
+	@Column(unique = true)
 	private String email;
 	private String password;
 	private String cpf;
@@ -30,7 +32,7 @@ public class User implements Serializable {
 	private Address address;
 	
 	// Relations
-	@ManyToMany(fetch = FetchType.LAZY) // Load all info in relation one to one
+	@ManyToMany(fetch = FetchType.EAGER) // Load all info in relation one to one
 	@JoinTable(
 			name = "user_barbershop",
 			joinColumns = @JoinColumn(name = "user_id"),

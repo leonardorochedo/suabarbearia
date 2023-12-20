@@ -13,8 +13,7 @@ import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
-import com.suabarbearia.backend.repositories.SchedulingRepository;
-import com.suabarbearia.backend.repositories.UserRepository;
+import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.EmailService;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.suabarbearia.backend.dtos.CreateBarbershopDto;
 import com.suabarbearia.backend.dtos.SigninDto;
-import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +38,12 @@ public class BarbershopService {
 
 	@Autowired
 	private SchedulingRepository schedulingRepository;
+
+	@Autowired
+	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private ServiceRepository serviceRepository;
 
 	@Autowired
 	private EmailService emailService;
@@ -275,7 +279,9 @@ public class BarbershopService {
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
-		return barbershop.getEmployees();
+		Set<Employee> employees = employeeRepository.findAllByBarbershop(barbershop);
+
+		return employees;
 	}
 
 	public Set<Service> getServicesBarbershop(String authorizationHeader) {
@@ -283,7 +289,9 @@ public class BarbershopService {
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
-		return barbershop.getServices();
+		Set<Service> services = serviceRepository.findAllByBarbershop(barbershop);
+
+		return services;
 	}
 
 	public Set<Scheduling> getSchedulingsBarbershop(String authorizationHeader) {
@@ -291,7 +299,9 @@ public class BarbershopService {
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
-		return barbershop.getSchedulings();
+		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+
+		return schedulings;
 	}
 
 	public Set<Scheduling> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
