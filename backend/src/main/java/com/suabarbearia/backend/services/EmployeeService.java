@@ -12,6 +12,7 @@ import com.suabarbearia.backend.repositories.EmployeeRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,8 +111,7 @@ public class EmployeeService {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
-        Employee editedEmployee = employeeRepository.findById(id).get();
-        Employee employeeNewUsername = employeeRepository.findByUsername(employee.getUsername());
+        Employee employeeId = employeeRepository.findById(id).get();
 
         if (barbershopToken == null) throw new NoPermissionException("Não autorizado!");
 
@@ -120,45 +120,125 @@ public class EmployeeService {
         Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershopToken);
 
         for(Employee employeeBarberShop : employeesBarbershop){
-            if (employeeBarberShop == editedEmployee) {
+            if (employeeBarberShop == employeeId) {
                 existEmployee = employeeBarberShop;
                 break;
             }
         }
-
         if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
-        /* Verify new data
-        if (employee.getUsername() == null | employee.getPassword() == null | employee.getPhone() == null | employee.getImage() == null | employee.get){
-            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+        // Verify new data
+        if (!existEmployee.getUsername().equals(employee.getUsername())) {
+            throw new ExistDataException("Usuário em uso!");
         }
 
-        if (!barbershopToken.getEmail().equals(barbershop.getEmail()) && barbershopNewEmail != null) {
-            throw new ExistDataException("E-mail em uso!");
-        }
-
-        if (!BCrypt.checkpw(barbershop.getPassword(), editedBarbershop.getPassword())) {
-            throw new PasswordDontMatchException("A senha não pode ser alterada aqui!");
-        }
-
-        if (!barbershop.getPassword().equals(barbershop.getConfirmpassword())) {
+        if (!employee.getPassword().equals(employee.getConfirmpassword())) {
             throw new PasswordDontMatchException("As senhas não batem!");
         }
 
         // Update barbershop
-        editedBarbershop.setImage(image.getBytes());
-        editedBarbershop.setName(barbershop.getName());
-        editedBarbershop.setEmail(barbershop.getEmail());
-        editedBarbershop.setDocument(barbershop.getDocument());
-        editedBarbershop.setBirth(barbershop.getBirth());
-        editedBarbershop.setPhone(barbershop.getPhone());
-        editedBarbershop.setAddress(barbershop.getAddress());
-        editedBarbershop.setOpenTime(barbershop.getOpenTime());
-        editedBarbershop.setCloseTime(barbershop.getCloseTime());
+        existEmployee.setImage(image.getBytes());
+        existEmployee.setName(employee.getName());
+        existEmployee.setPassword(employee.getPassword());
+        existEmployee.setUsername(employee.getUsername());
+        existEmployee.setPhone(employee.getPhone());
 
-        barbershopRepository.save(editedBarbershop);*/
+        employeeRepository.save(existEmployee);
 
-        ApiResponse<Employee> response = new ApiResponse<Employee>("Barbearia editada com sucesso!", editedEmployee);
+        ApiResponse<Employee> response = new ApiResponse<Employee>("Colaborador editado com sucesso!", existEmployee);
+
+        return response;
+    }
+
+    public ApiResponse<?> edit(String authorizationHeader, Long id, EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException, NoPermissionException, FieldsAreNullException {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+        Employee employeeId = employeeRepository.findById(id).get();
+
+        if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
+
+        if (employeeId == null) throw new FieldsAreNullException("Colaborador não encontrado!");
+
+        if (employeeToken != employeeId) throw new NoPermissionException("Não autorizado!");
+
+        // Verify new data
+        if (!employeeId.getUsername().equals(employee.getUsername())) {
+            throw new ExistDataException("Usuário em uso!");
+        }
+
+        if (!employee.getPassword().equals(employee.getConfirmpassword())) {
+            throw new PasswordDontMatchException("As senhas não batem!");
+        }
+
+        // Update barbershop
+        employeeId.setImage(image.getBytes());
+        employeeId.setName(employee.getName());
+        employeeId.setPassword(employee.getPassword());
+        employeeId.setUsername(employee.getUsername());
+        employeeId.setPhone(employee.getPhone());
+
+        employeeRepository.save(employeeId);
+
+        ApiResponse<Employee> response = new ApiResponse<Employee>("Colaborador editado com sucesso!", employeeId);
+
+        return response;
+    }
+
+    public TextResponse barbershopDelete(String authorizationHeader, Long id) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+        Employee employeeId = employeeRepository.findById(id).get();
+
+        if (barbershopToken == null) throw new NoPermissionException("Não autorizado!");
+
+        // checking if barbershop have this employee
+        Employee existEmployee = null;
+        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershopToken);
+
+        for(Employee employeeBarberShop : employeesBarbershop){
+            if (employeeBarberShop == employeeId) {
+                existEmployee = employeeBarberShop;
+                break;
+            }
+        }
+        if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
+
+        existEmployee.setName("Barbearia excluída!");
+        existEmployee.setUsername("");
+        existEmployee.setPhone("");
+        existEmployee.setImage(null);
+        existEmployee.setPassword("");
+
+        employeeRepository.save(existEmployee);
+
+        TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
+
+        return response;
+    }
+
+    public TextResponse delete(String authorizationHeader, Long id) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+        Employee employeeId = employeeRepository.findById(id).get();
+
+        if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
+
+        if (employeeId == null) throw new FieldsAreNullException("Colaborador não encontrado!");
+
+        if (employeeToken != employeeId) throw new NoPermissionException("Não autorizado!");
+
+        employeeId.setName("Barbearia excluída!");
+        employeeId.setUsername("");
+        employeeId.setPhone("");
+        employeeId.setImage(null);
+        employeeId.setPassword("");
+
+        employeeRepository.save(employeeId);
+
+        TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
 
         return response;
     }

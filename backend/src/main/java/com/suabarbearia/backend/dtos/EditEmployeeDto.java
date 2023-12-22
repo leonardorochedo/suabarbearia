@@ -1,23 +1,33 @@
 package com.suabarbearia.backend.dtos;
 
 public class EditEmployeeDto {
-   private String newUsername;
+   private String username;
    private String name;
    private String password;
+   private String confirmpassword;
    private String phone;
    private byte[] image;
 
    public EditEmployeeDto() {}
 
-   public EditEmployeeDto(String currentUsername, String username, String password, String phone, byte[] image) {
-      this.newUsername = username;
+   public EditEmployeeDto(String currentUsername, String username, String password, String confirmpassword, String phone, byte[] image) {
+      this.username = username;
       this.password = password;
+      this.confirmpassword = confirmpassword;
       this.phone = phone;
       this.image = image;
    }
 
+   public String getConfirmpassword() {
+      return confirmpassword;
+   }
+
+   public void setConfirmpassword(String confirmpassword) {
+      this.confirmpassword = confirmpassword;
+   }
+
    public String getUsername() {
-      return newUsername;
+      return username;
    }
 
    public String getName() {
@@ -29,7 +39,7 @@ public class EditEmployeeDto {
    }
 
    public void setUsername(String username) {
-      this.newUsername = username;
+      this.username = username;
    }
 
    public String getPassword() {
