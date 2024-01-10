@@ -333,10 +333,10 @@ public class BarbershopServiceTest {
 		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
 		TextResponse response6 = barbershopService.concludeScheduling(response1.getToken(), response5.getData().getId());
-		TextResponse response7 = barbershopService.getEarnings(response1.getToken());
+		double response7 = barbershopService.getEarnings(response1.getToken());
 
 		assertEquals("Agendamento concluído com sucesso!", response6.getMessage());
-		assertEquals("Total de faturamento: R$50,00", response7.getMessage());
+		assertEquals(50.00, response7);
 	}
 
 	@Test
@@ -364,10 +364,10 @@ public class BarbershopServiceTest {
 		LocalDate initialDay = LocalDate.now().plusDays(1);
 		LocalDate endDay = LocalDate.now().plusDays(5);
 
-		TextResponse response7 = barbershopService.getEarningsWithDate(response1.getToken(), initialDay, endDay);
+		double response7 = barbershopService.getEarningsWithDate(response1.getToken(), initialDay, endDay);
 
 		assertEquals("Agendamento concluído com sucesso!", response6.getMessage());
-		assertEquals("Total de faturamento deste intervalo de dias: R$50,00", response7.getMessage());
+		assertEquals(50.00, response7);
 	}
 
 	@Test

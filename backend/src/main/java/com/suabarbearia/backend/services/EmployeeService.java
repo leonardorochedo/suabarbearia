@@ -1,7 +1,6 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
-import com.suabarbearia.backend.dtos.EditBarbershopDto;
 import com.suabarbearia.backend.dtos.EditEmployeeDto;
 import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Barbershop;
@@ -14,18 +13,11 @@ import com.suabarbearia.backend.repositories.EmployeeRepository;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
-import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -123,19 +115,10 @@ public class EmployeeService {
         if (barbershopToken == null) throw new NoPermissionException("Não autorizado!");
 
         // checking if barbershop have this employee
-        Employee existEmployee = null;
-        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershopToken);
-
-        for(Employee employeeBarberShop : employeesBarbershop){
-            if (employeeBarberShop == employeeId) {
-                existEmployee = employeeBarberShop;
-                break;
-            }
-        }
-        if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
+        if (!employeeId.getBarbershop().equals(barbershopToken)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
         // Verify new data
-        if (!existEmployee.getUsername().equals(employee.getUsername())) {
+        if (!employeeId.getUsername().equals(employee.getUsername())) {
             throw new ExistDataException("Usuário em uso!");
         }
 
@@ -144,15 +127,15 @@ public class EmployeeService {
         }
 
         // Update barbershop
-        existEmployee.setImage(image.getBytes());
-        existEmployee.setName(employee.getName());
-        existEmployee.setPassword(employee.getPassword());
-        existEmployee.setUsername(employee.getUsername());
-        existEmployee.setPhone(employee.getPhone());
+        employeeId.setImage(image.getBytes());
+        employeeId.setName(employee.getName());
+        employeeId.setPassword(employee.getPassword());
+        employeeId.setUsername(employee.getUsername());
+        employeeId.setPhone(employee.getPhone());
 
-        employeeRepository.save(existEmployee);
+        employeeRepository.save(employeeId);
 
-        ApiResponse<Employee> response = new ApiResponse<Employee>("Colaborador editado com sucesso!", existEmployee);
+        ApiResponse<Employee> response = new ApiResponse<Employee>("Colaborador editado com sucesso!", employeeId);
 
         return response;
     }
@@ -160,7 +143,7 @@ public class EmployeeService {
     public ApiResponse<?> edit(String authorizationHeader, Long id, EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException, NoPermissionException, FieldsAreNullException {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
-        Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+        Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
         Employee employeeId = employeeRepository.findById(id).get();
 
         if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
@@ -201,41 +184,7 @@ public class EmployeeService {
         if (barbershopToken == null) throw new NoPermissionException("Não autorizado!");
 
         // checking if barbershop have this employee
-        Employee existEmployee = null;
-        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershopToken);
-
-        for(Employee employeeBarberShop : employeesBarbershop){
-            if (employeeBarberShop == employeeId) {
-                existEmployee = employeeBarberShop;
-                break;
-            }
-        }
-        if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
-
-        existEmployee.setName("Colaborador excluído!");
-        existEmployee.setUsername("");
-        existEmployee.setPhone("");
-        existEmployee.setImage(null);
-        existEmployee.setPassword("");
-
-        employeeRepository.save(existEmployee);
-
-        TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
-
-        return response;
-    }
-
-    public TextResponse delete(String authorizationHeader, Long id) {
-        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
-
-        Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
-        Employee employeeId = employeeRepository.findById(id).get();
-
-        if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
-
-        if (employeeId == null) throw new FieldsAreNullException("Colaborador não encontrado!");
-
-        if (employeeToken != employeeId) throw new NoPermissionException("Não autorizado!");
+        if (!employeeId.getBarbershop().equals(barbershopToken)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
         employeeId.setName("Colaborador excluído!");
         employeeId.setUsername("");
@@ -250,10 +199,30 @@ public class EmployeeService {
         return response;
     }
 
+    public TextResponse delete(String authorizationHeader) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
+
+        if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
+
+        employeeToken.setName("Colaborador excluído!");
+        employeeToken.setUsername("");
+        employeeToken.setPhone("");
+        employeeToken.setImage(null);
+        employeeToken.setPassword("");
+
+        employeeRepository.save(employeeToken);
+
+        TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
+
+        return response;
+    }
+
     public double getEarnings(String authorizationHeader) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
-        Employee employee = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+        Employee employee = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
 
         Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employee);
 
@@ -272,7 +241,7 @@ public class EmployeeService {
     public double getEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
-        Employee employee = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+        Employee employee = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
 
         Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employee);
 

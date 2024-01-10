@@ -66,7 +66,16 @@ public class JwtUtil {
     	
         return claims.getSubject();
     }
-    
+
+    public static String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
 
  	public static  String verifyTokenWithAuthorizationHeader(String authorizationHeader) {
  		String token = authorizationHeader.replace("Bearer ", "");
