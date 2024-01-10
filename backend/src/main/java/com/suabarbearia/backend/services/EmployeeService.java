@@ -205,7 +205,7 @@ public class EmployeeService {
         }
         if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
-        existEmployee.setName("Barbearia excluída!");
+        existEmployee.setName("Colaborador excluído!");
         existEmployee.setUsername("");
         existEmployee.setPhone("");
         existEmployee.setImage(null);
@@ -230,7 +230,7 @@ public class EmployeeService {
 
         if (employeeToken != employeeId) throw new NoPermissionException("Não autorizado!");
 
-        employeeId.setName("Barbearia excluída!");
+        employeeId.setName("Colaborador excluído!");
         employeeId.setUsername("");
         employeeId.setPhone("");
         employeeId.setImage(null);
