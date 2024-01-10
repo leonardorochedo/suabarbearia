@@ -6,9 +6,12 @@ import com.suabarbearia.backend.dtos.EditEmployeeDto;
 import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Employee;
+import com.suabarbearia.backend.entities.Scheduling;
+import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.repositories.BarbershopRepository;
 import com.suabarbearia.backend.repositories.EmployeeRepository;
+import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,6 +42,9 @@ public class EmployeeService {
 
     @Autowired
     private BarbershopRepository barbershopRepository;
+
+    @Autowired
+    private SchedulingRepository schedulingRepository;
 
     @Value("${fixedsalt}")
     private String fixedSalt;
@@ -239,6 +246,122 @@ public class EmployeeService {
         employeeRepository.save(employeeId);
 
         TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
+
+        return response;
+    }
+
+    public double getEarnings(String authorizationHeader) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employee = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+
+        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employee);
+
+        double totalEarnings = 0.0;
+
+        for (Scheduling scheduling : schedulings) {
+            if (scheduling.getStatus() == Status.FINISHED) { // only done schedulings
+                double servicePrice = scheduling.getService().getPrice();
+                totalEarnings += servicePrice;
+            }
+        }
+
+        return totalEarnings;
+    }
+
+    public double getEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employee = employeeRepository.findByUsername(JwtUtil.getEmailFromToken(token));
+
+        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employee);
+
+        double totalEarnings = 0.0;
+
+        for (Scheduling scheduling : schedulings) {
+            LocalDate schedulingDate = scheduling.getDate().toLocalDate();
+
+            if (scheduling.getStatus() == Status.FINISHED && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+                    (schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) { // only done schedulings and is btwn dates
+                double servicePrice = scheduling.getService().getPrice();
+                totalEarnings += servicePrice;
+            }
+        }
+
+        return totalEarnings;
+    }
+
+    public double barbershopGetEarnings(String authorizationHeader, Long id) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+        Employee employeeId = employeeRepository.findById(id).get();
+
+        if (barbershop == null) throw new NoPermissionException("Não autorizado!");
+
+        // checking if barbershop have this employee
+        Employee existEmployee = null;
+        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershop);
+
+        for(Employee employeeBarberShop : employeesBarbershop){
+            if (employeeBarberShop == employeeId) {
+                existEmployee = employeeBarberShop;
+                break;
+            }
+        }
+
+        if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
+
+        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(existEmployee);
+
+        double totalEarnings = 0.0;
+
+        for (Scheduling scheduling : schedulings) {
+            if (scheduling.getStatus() == Status.FINISHED) { // only done schedulings
+                double servicePrice = scheduling.getService().getPrice();
+                totalEarnings += servicePrice;
+            }
+        }
+
+        double response = totalEarnings;
+
+        return response;
+    }
+
+    public double barbershopGetEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate, Long id) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+        Employee employeeId = employeeRepository.findById(id).get();
+
+        if (barbershop == null) throw new NoPermissionException("Não autorizado!");
+
+        // checking if barbershop have this employee
+        Employee existEmployee = null;
+        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershop);
+
+        for(Employee employeeBarberShop : employeesBarbershop){
+            if (employeeBarberShop == employeeId) {
+                existEmployee = employeeBarberShop;
+                break;
+            }
+        }
+
+        Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+
+        double totalEarnings = 0.0;
+
+        for (Scheduling scheduling : schedulings) {
+            LocalDate schedulingDate = scheduling.getDate().toLocalDate();
+
+            if (scheduling.getStatus() == Status.FINISHED && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+                    (schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) { // only done schedulings and is btwn dates
+                double servicePrice = scheduling.getService().getPrice();
+                totalEarnings += servicePrice;
+            }
+        }
+
+        double response = totalEarnings;
 
         return response;
     }

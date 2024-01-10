@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping(value = "/employee")
 public class EmployeeResources {
@@ -65,6 +67,72 @@ public class EmployeeResources {
         }
     }
 
+    @GetMapping(value = "/employee/comission/total")
+    public ResponseEntity<?> getEarnings(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            double response = employeeService.getEarnings(authorizationHeader);
 
+            return ResponseEntity.ok().body(response);
+        } catch (NoPermissionException e){
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        }
+    }
+
+    @GetMapping(value = "/employee/comission/{initialDate}/{endDate}")
+    public ResponseEntity<?> getEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+        try {
+            double response = employeeService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
+
+            return ResponseEntity.ok().body(response);
+        } catch (NoPermissionException e){
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        }
+    }
+
+    @GetMapping(value = "/employee/barbershop/comission/total")
+    public ResponseEntity<?> barbershopGetEarnings(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            double response = employeeService.getEarnings(authorizationHeader);
+
+            return ResponseEntity.ok().body(response);
+        } catch (NoPermissionException e){
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        }
+    }
+
+    @GetMapping(value = "/employee/barbershop/comission/{initialDate}/{endDate}")
+    public ResponseEntity<?> barbershopGetEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+        try {
+            double response = employeeService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
+
+            return ResponseEntity.ok().body(response);
+        } catch (NoPermissionException e){
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        }
+    }
 
 }

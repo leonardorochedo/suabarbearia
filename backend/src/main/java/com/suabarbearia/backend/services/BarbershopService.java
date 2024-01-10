@@ -378,7 +378,7 @@ public class BarbershopService {
 		return response;
 	}
 
-	public TextResponse getEarnings(String authorizationHeader) {
+	public double getEarnings(String authorizationHeader) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -394,12 +394,10 @@ public class BarbershopService {
 			}
 		}
 
-		TextResponse response = new TextResponse(String.format("Total de faturamento: R$%.2f", totalEarnings));
-
-		return response;
+		return totalEarnings;
 	}
 
-	public TextResponse getEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+	public double getEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -418,9 +416,7 @@ public class BarbershopService {
 			}
 		}
 
-		TextResponse response = new TextResponse(String.format("Total de faturamento deste intervalo de dias: R$%.2f", totalEarnings));
-
-		return response;
+		return totalEarnings;
 	}
 
 }

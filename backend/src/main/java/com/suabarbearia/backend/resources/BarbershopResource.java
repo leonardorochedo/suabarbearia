@@ -260,10 +260,14 @@ public class BarbershopResource {
 	@GetMapping(value = "/earnings/total")
 	public ResponseEntity<?> getEarnings(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
-			TextResponse response = barbershopService.getEarnings(authorizationHeader);
+			double response = barbershopService.getEarnings(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (NoPermissionException e){
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		}catch (RuntimeException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
@@ -273,10 +277,14 @@ public class BarbershopResource {
 	@GetMapping(value = "/earnings/{initialDate}/{endDate}")
 	public ResponseEntity<?> getEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
 		try {
-			TextResponse response = barbershopService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
+			double response = barbershopService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
-		} catch (RuntimeException e) {
+		} catch (NoPermissionException e){
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+		}catch (RuntimeException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
