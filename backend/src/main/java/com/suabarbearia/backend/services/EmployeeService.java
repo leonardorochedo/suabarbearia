@@ -111,6 +111,7 @@ public class EmployeeService {
 
         Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
         Employee employeeId = employeeRepository.findById(id).get();
+        Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
         if (barbershopToken == null) throw new NoPermissionException("Não autorizado!");
 
@@ -118,7 +119,7 @@ public class EmployeeService {
         if (!employeeId.getBarbershop().equals(barbershopToken)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
         // Verify new data
-        if (!employeeId.getUsername().equals(employee.getUsername())) {
+        if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
             throw new ExistDataException("Usuário em uso!");
         }
 
@@ -145,6 +146,7 @@ public class EmployeeService {
 
         Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
         Employee employeeId = employeeRepository.findById(id).get();
+        Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
         if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
 
@@ -153,7 +155,7 @@ public class EmployeeService {
         if (employeeToken != employeeId) throw new NoPermissionException("Não autorizado!");
 
         // Verify new data
-        if (!employeeId.getUsername().equals(employee.getUsername())) {
+        if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
             throw new ExistDataException("Usuário em uso!");
         }
 
@@ -201,6 +203,8 @@ public class EmployeeService {
 
     public TextResponse delete(String authorizationHeader) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        System.out.println(JwtUtil.getUsernameFromToken(token));
 
         Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
 
@@ -269,19 +273,9 @@ public class EmployeeService {
         if (barbershop == null) throw new NoPermissionException("Não autorizado!");
 
         // checking if barbershop have this employee
-        Employee existEmployee = null;
-        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershop);
+        if (!employeeId.getBarbershop().equals(barbershop)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
-        for(Employee employeeBarberShop : employeesBarbershop){
-            if (employeeBarberShop == employeeId) {
-                existEmployee = employeeBarberShop;
-                break;
-            }
-        }
-
-        if (existEmployee == null) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
-
-        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(existEmployee);
+        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employeeId);
 
         double totalEarnings = 0.0;
 
@@ -292,9 +286,7 @@ public class EmployeeService {
             }
         }
 
-        double response = totalEarnings;
-
-        return response;
+        return totalEarnings;
     }
 
     public double barbershopGetEarningsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate, Long id) {
@@ -306,17 +298,9 @@ public class EmployeeService {
         if (barbershop == null) throw new NoPermissionException("Não autorizado!");
 
         // checking if barbershop have this employee
-        Employee existEmployee = null;
-        Set<Employee> employeesBarbershop = employeeRepository.findAllByBarbershop(barbershop);
+        if (!employeeId.getBarbershop().equals(barbershop)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
-        for(Employee employeeBarberShop : employeesBarbershop){
-            if (employeeBarberShop == employeeId) {
-                existEmployee = employeeBarberShop;
-                break;
-            }
-        }
-
-        Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employeeId);
 
         double totalEarnings = 0.0;
 
@@ -330,9 +314,7 @@ public class EmployeeService {
             }
         }
 
-        double response = totalEarnings;
-
-        return response;
+        return totalEarnings;
     }
 
 }

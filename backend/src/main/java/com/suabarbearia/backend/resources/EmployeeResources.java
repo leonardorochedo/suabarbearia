@@ -7,6 +7,7 @@ import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
+import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -64,6 +65,40 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        }
+    }
+
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+        try {
+            TextResponse response = employeeService.delete(authorizationHeader);
+
+            return ResponseEntity.ok().body(response);
+        } catch(NoPermissionException e){
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        } catch (InvalidTokenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        }
+    }
+
+    @DeleteMapping(value = "/barbershop/delete/{id}")
+    public ResponseEntity<?> barbershopDelete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+        try {
+            TextResponse response = employeeService.barbershopDelete(authorizationHeader, id);
+
+            return ResponseEntity.ok().body(response);
+        } catch(NoPermissionException e){
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(errorResponse);
+        } catch (InvalidTokenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
         }
     }
 
