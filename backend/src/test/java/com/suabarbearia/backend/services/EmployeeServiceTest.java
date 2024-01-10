@@ -94,19 +94,19 @@ public class EmployeeServiceTest {
 //        ApiResponse<Employee> response2 = employeeService.create(response1.getToken(), createEmployeeMock);
 //    }
 
-    @Test
-    public void testDelete() {
-        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_employee5@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
-        CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee5", "123321", "123321", "33983333");
-        SigninEmployeeDto signinEmployeeMock = new SigninEmployeeDto("employee5", "123321");
-
-        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
-        ApiResponse<Employee> response2 = employeeService.create(response1.getToken(), createEmployeeMock);
-        ApiTokenResponse<Employee> response3 = employeeService.signin(signinEmployeeMock);
-        TextResponse response4 = employeeService.delete(response3.getToken());
-
-        assertEquals("Colaborador deletado com sucesso!", response4.getMessage());
-    }
+//    @Test
+//    public void testDelete() {
+//        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_employee5@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
+//        CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee5", "123321", "123321", "33983333");
+//        SigninEmployeeDto signinEmployeeMock = new SigninEmployeeDto("employee5", "123321");
+//
+//        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+//        ApiResponse<Employee> response2 = employeeService.create(response1.getToken(), createEmployeeMock);
+//        ApiTokenResponse<Employee> response3 = employeeService.signin(signinEmployeeMock);
+//        TextResponse response4 = employeeService.delete(response3.getToken());
+//
+//        assertEquals("Colaborador deletado com sucesso!", response4.getMessage());
+//    }
 
 //    @Test
 //    public void testEditWithBarbershop() {

@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.dtos;
 
 public class EditEmployeeDto {
+
    private String username;
    private String name;
    private String password;
@@ -10,7 +11,7 @@ public class EditEmployeeDto {
 
    public EditEmployeeDto() {}
 
-   public EditEmployeeDto(String currentUsername, String username, String password, String confirmpassword, String phone, byte[] image) {
+   public EditEmployeeDto(String username, String password, String confirmpassword, String phone, byte[] image) {
       this.username = username;
       this.password = password;
       this.confirmpassword = confirmpassword;
@@ -18,16 +19,12 @@ public class EditEmployeeDto {
       this.image = image;
    }
 
-   public String getConfirmpassword() {
-      return confirmpassword;
-   }
-
-   public void setConfirmpassword(String confirmpassword) {
-      this.confirmpassword = confirmpassword;
-   }
-
    public String getUsername() {
       return username;
+   }
+
+   public void setUsername(String username) {
+      this.username = username;
    }
 
    public String getName() {
@@ -38,16 +35,20 @@ public class EditEmployeeDto {
       this.name = name;
    }
 
-   public void setUsername(String username) {
-      this.username = username;
-   }
-
    public String getPassword() {
       return password;
    }
 
    public void setPassword(String password) {
       this.password = password;
+   }
+
+   public String getConfirmpassword() {
+      return confirmpassword;
+   }
+
+   public void setConfirmpassword(String confirmpassword) {
+      this.confirmpassword = confirmpassword;
    }
 
    public String getPhone() {

@@ -1,6 +1,7 @@
 package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
+import com.suabarbearia.backend.dtos.EditEmployeeDto;
 import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Employee;
 import com.suabarbearia.backend.exceptions.*;
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 @RestController
@@ -69,7 +73,7 @@ public class EmployeeResources {
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             TextResponse response = employeeService.delete(authorizationHeader);
 
@@ -82,6 +86,48 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        }
+    }
+
+    @PatchMapping(value = "/edit/{id}")
+    public ResponseEntity<?> edit(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id, @ModelAttribute EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException {
+        try {
+            ApiResponse<Employee> response = employeeService.edit(authorizationHeader, id, employee, image);
+
+            return ResponseEntity.ok().body(response);
+        } catch (InvalidTokenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        } catch (FieldsAreNullException | PasswordDontMatchException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (ExistDataException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
+        }
+    }
+
+    @PatchMapping(value = "/barbershop/edit/{id}")
+    public ResponseEntity<?> barbershopEdit(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id, @ModelAttribute EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException {
+        try {
+            ApiResponse<Employee> response = employeeService.barbershopEdit(authorizationHeader, id, employee, image);
+
+            return ResponseEntity.ok().body(response);
+        } catch (NoPermissionException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        } catch (FieldsAreNullException | PasswordDontMatchException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (ExistDataException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
         }
     }
 
@@ -102,7 +148,7 @@ public class EmployeeResources {
         }
     }
 
-    @GetMapping(value = "/employee/comission/total")
+    @GetMapping(value = "/comission/total")
     public ResponseEntity<?> getEarnings(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             double response = employeeService.getEarnings(authorizationHeader);
@@ -119,7 +165,7 @@ public class EmployeeResources {
         }
     }
 
-    @GetMapping(value = "/employee/comission/{initialDate}/{endDate}")
+    @GetMapping(value = "/comission/{initialDate}/{endDate}")
     public ResponseEntity<?> getEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
         try {
             double response = employeeService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
@@ -136,10 +182,10 @@ public class EmployeeResources {
         }
     }
 
-    @GetMapping(value = "/employee/barbershop/comission/total")
-    public ResponseEntity<?> barbershopGetEarnings(@RequestHeader("Authorization") String authorizationHeader) {
+    @GetMapping(value = "/barbershop/comission/total/{id}")
+    public ResponseEntity<?> barbershopGetEarnings(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
         try {
-            double response = employeeService.getEarnings(authorizationHeader);
+            double response = employeeService.barbershopGetEarnings(authorizationHeader, id);
 
             return ResponseEntity.ok().body(response);
         } catch (NoPermissionException e){
@@ -153,10 +199,10 @@ public class EmployeeResources {
         }
     }
 
-    @GetMapping(value = "/employee/barbershop/comission/{initialDate}/{endDate}")
-    public ResponseEntity<?> barbershopGetEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+    @GetMapping(value = "/barbershop/comission/{initialDate}/{endDate}/{id}")
+    public ResponseEntity<?> barbershopGetEarningsWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate, @PathVariable Long id) {
         try {
-            double response = employeeService.getEarningsWithDate(authorizationHeader, initialDate, endDate);
+            double response = employeeService.barbershopGetEarningsWithDate(authorizationHeader, initialDate, endDate, id);
 
             return ResponseEntity.ok().body(response);
         } catch (NoPermissionException e){

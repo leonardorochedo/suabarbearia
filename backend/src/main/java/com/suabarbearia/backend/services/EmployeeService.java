@@ -106,19 +106,21 @@ public class EmployeeService {
         return response;
     };
 
-    public ApiResponse<?> barbershopEdit(String authorizationHeader, Long id, EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException, NoPermissionException, FieldsAreNullException {
+    public ApiResponse<Employee> barbershopEdit(String authorizationHeader, Long id, EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
         Employee employeeId = employeeRepository.findById(id).get();
         Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
-        if (barbershopToken == null) throw new NoPermissionException("Não autorizado!");
-
         // checking if barbershop have this employee
         if (!employeeId.getBarbershop().equals(barbershopToken)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
-        // Verify new data
+        // Verify data
+        if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
+            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+        }
+
         if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
             throw new ExistDataException("Usuário em uso!");
         }
@@ -128,7 +130,9 @@ public class EmployeeService {
         }
 
         // Update barbershop
-        employeeId.setImage(image.getBytes());
+        if(employee.getImage() != null) {
+            employeeId.setImage(image.getBytes());
+        }
         employeeId.setName(employee.getName());
         employeeId.setPassword(employee.getPassword());
         employeeId.setUsername(employee.getUsername());
@@ -141,20 +145,25 @@ public class EmployeeService {
         return response;
     }
 
-    public ApiResponse<?> edit(String authorizationHeader, Long id, EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException, NoPermissionException, FieldsAreNullException {
+    public ApiResponse<Employee> edit(String authorizationHeader, Long id, EditEmployeeDto employee, MultipartFile image) throws SQLException, IOException {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
         Employee employeeId = employeeRepository.findById(id).get();
         Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
-        if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
+        // Check employee
+        if (!employeeToken.equals(employeeId)) {
+            throw new InvalidTokenException("Token inválido para esta barbearia!");
+        }
+
+        // Verify data
+        if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
+            throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+        }
 
         if (employeeId == null) throw new FieldsAreNullException("Colaborador não encontrado!");
 
-        if (employeeToken != employeeId) throw new NoPermissionException("Não autorizado!");
-
-        // Verify new data
         if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
             throw new ExistDataException("Usuário em uso!");
         }
@@ -163,8 +172,10 @@ public class EmployeeService {
             throw new PasswordDontMatchException("As senhas não batem!");
         }
 
-        // Update barbershop
-        employeeId.setImage(image.getBytes());
+        // Update employee
+        if(employee.getImage() != null) {
+            employeeId.setImage(image.getBytes());
+        }
         employeeId.setName(employee.getName());
         employeeId.setPassword(employee.getPassword());
         employeeId.setUsername(employee.getUsername());
