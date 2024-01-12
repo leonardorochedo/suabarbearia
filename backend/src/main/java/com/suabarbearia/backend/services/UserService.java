@@ -151,6 +151,9 @@ public class UserService {
 		}
 
 		// Update user
+		if(!image.isEmpty()) {
+			editedUser.setImage(image.getBytes());
+		}
 		editedUser.setImage(image.getBytes());
 		editedUser.setName(user.getName());
 		editedUser.setEmail(user.getEmail());

@@ -93,7 +93,6 @@ public class EmployeeService {
             throw new ResourceNotFoundException("Funcionário não existente!");
         }
 
-
         if (!BCrypt.checkpw(employee.getPassword(), employeeFinded.getPassword())) {
             throw new InvalidDataException("Usuário ou senha inválidos!");
         }
@@ -114,7 +113,9 @@ public class EmployeeService {
         Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
         // checking if barbershop have this employee
-        if (!employeeId.getBarbershop().equals(barbershopToken)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
+        if (!employeeId.getBarbershop().equals(barbershopToken)) {
+            throw new NoPermissionException("Colaborador não encontrado para barbearia!");
+        }
 
         // Verify data
         if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
@@ -129,12 +130,15 @@ public class EmployeeService {
             throw new PasswordDontMatchException("As senhas não batem!");
         }
 
+        // Encypt and hash pass
+        String hashedPassword = BCrypt.hashpw(employee.getPassword(), fixedSalt);
+
         // Update barbershop
-        if(employee.getImage() != null) {
+        if(!image.isEmpty()) {
             employeeId.setImage(image.getBytes());
         }
         employeeId.setName(employee.getName());
-        employeeId.setPassword(employee.getPassword());
+        employee.setPassword(hashedPassword);
         employeeId.setUsername(employee.getUsername());
         employeeId.setPhone(employee.getPhone());
 
@@ -154,7 +158,7 @@ public class EmployeeService {
 
         // Check employee
         if (!employeeToken.equals(employeeId)) {
-            throw new InvalidTokenException("Token inválido para esta barbearia!");
+            throw new InvalidTokenException("Token inválido para este colaborador!");
         }
 
         // Verify data
@@ -162,7 +166,9 @@ public class EmployeeService {
             throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
-        if (employeeId == null) throw new FieldsAreNullException("Colaborador não encontrado!");
+        if (employeeId == null) {
+            throw new FieldsAreNullException("Colaborador não encontrado!");
+        }
 
         if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
             throw new ExistDataException("Usuário em uso!");
@@ -172,12 +178,15 @@ public class EmployeeService {
             throw new PasswordDontMatchException("As senhas não batem!");
         }
 
+        if (!BCrypt.checkpw(employee.getPassword(), employeeToken.getPassword())) {
+            throw new InvalidDataException("Senha inválida!");
+        }
+
         // Update employee
-        if(employee.getImage() != null) {
+        if (!image.isEmpty()) {
             employeeId.setImage(image.getBytes());
         }
         employeeId.setName(employee.getName());
-        employeeId.setPassword(employee.getPassword());
         employeeId.setUsername(employee.getUsername());
         employeeId.setPhone(employee.getPhone());
 

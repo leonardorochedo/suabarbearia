@@ -1,5 +1,7 @@
 package com.suabarbearia.backend.dtos;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class EditEmployeeDto {
 
    private String username;
@@ -7,11 +9,11 @@ public class EditEmployeeDto {
    private String password;
    private String confirmpassword;
    private String phone;
-   private byte[] image;
+   private MultipartFile image;
 
    public EditEmployeeDto() {}
 
-   public EditEmployeeDto(String username, String password, String confirmpassword, String phone, byte[] image) {
+   public EditEmployeeDto(String username, String password, String confirmpassword, String phone, MultipartFile image) {
       this.username = username;
       this.password = password;
       this.confirmpassword = confirmpassword;
@@ -59,11 +61,11 @@ public class EditEmployeeDto {
       this.phone = phone;
    }
 
-   public byte[] getImage() {
+   public MultipartFile getImage() {
       return image;
    }
 
-   public void setImage(byte[] image) {
+   public void setImage(MultipartFile image) {
       this.image = image;
    }
 }

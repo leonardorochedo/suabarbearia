@@ -160,7 +160,9 @@ public class BarbershopService {
 		}
 
 		// Update barbershop
-		editedBarbershop.setImage(image.getBytes());
+		if(!image.isEmpty()) {
+			editedBarbershop.setImage(image.getBytes());
+		}
 		editedBarbershop.setName(barbershop.getName());
 		editedBarbershop.setEmail(barbershop.getEmail());
         editedBarbershop.setDocument(barbershop.getDocument());
