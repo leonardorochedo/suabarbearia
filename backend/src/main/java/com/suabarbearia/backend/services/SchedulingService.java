@@ -24,6 +24,9 @@ public class SchedulingService {
     private SchedulingRepository schedulingRepository;
 
     @Autowired
+    private BlockScheduleRepository blockScheduleRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -195,6 +198,27 @@ public class SchedulingService {
 
             if (schedulingStartTime.isBefore(employeeSchedulingEndTime) && schedulingEndTime.isAfter(employeeSchedulingEndTime)) {
                 throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
+            }
+        }
+
+        // Check employee blockSchedule
+        Set<BlockSchedule> employeeBlockSchedules = blockScheduleRepository.findAllByEmployee(employee);
+
+        for (BlockSchedule employeeBlockSchedule : employeeBlockSchedules) {
+            LocalDateTime employeeScheduleStartTime = employeeBlockSchedule.getDate();
+            LocalDateTime employeeScheduleEndTime = employeeScheduleStartTime.plusMinutes(30);
+
+            LocalDateTime blockScheduleStartTime = scheduling.getDate();
+            LocalDateTime blockScheduleEndTime = blockScheduleStartTime.plusMinutes(30);
+
+            // Verificar se o novo agendamento começa dentro de 30 minutos após um agendamento existente
+            if ((blockScheduleStartTime.isEqual(employeeScheduleStartTime) || blockScheduleStartTime.isAfter(employeeScheduleStartTime)) &&
+                    blockScheduleStartTime.isBefore(employeeScheduleEndTime)) {
+                throw new AlreadySelectedDataException("O barbeiro selecionado já possui um bloqueio neste horário!");
+            }
+
+            if (blockScheduleStartTime.isBefore(employeeScheduleEndTime) && blockScheduleEndTime.isAfter(employeeScheduleEndTime)) {
+                throw new AlreadySelectedDataException("O barbeiro selecionado já possui um bloqueio neste horário!");
             }
         }
 
