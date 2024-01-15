@@ -40,6 +40,10 @@ public class Employee implements Serializable {
     @JsonIgnore
     private Set<Scheduling> schedulings;
 
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<BlockSchedule> blockSchedules;
+
     public Employee() {
 
     }
