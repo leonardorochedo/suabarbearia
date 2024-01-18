@@ -139,7 +139,7 @@ public class EfiPix {
     }
 
     // Webhook PIX
-    public JSONObject configureWebhook(Credentials credentials) throws Exception {
+    public JSONObject configureWebhook(Credentials credentials, String pixKey, String webhookUrl) throws Exception {
 
         // Get credentials set in options payment
         JSONObject options = buildOptions(credentials);
@@ -147,10 +147,10 @@ public class EfiPix {
 
         // Create a param and set chave (pixKey)
         HashMap<String, String> params = new HashMap<>();
-        params.put("chave", "c7a80bf8-c39e-4cad-8389-96142fca65a3");
+        params.put("chave", pixKey);
 
         JSONObject body = new JSONObject();
-        body.put("webhookUrl", "http://localhost:8080/payment/webhook/config");
+        body.put("webhookUrl", webhookUrl);
 
         try {
             EfiPay efi = new EfiPay(options);
