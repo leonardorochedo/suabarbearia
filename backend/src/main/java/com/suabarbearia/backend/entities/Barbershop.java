@@ -28,7 +28,7 @@ public class Barbershop implements Serializable {
 	private String document;
 	private String birth;
 	private String phone;
-	@Column(name = "image", columnDefinition = "BLOB")
+	@Column(name = "image", columnDefinition = "BYTEA")
 	private byte[] image;
 	private Address address;
 	private LocalTime openTime;

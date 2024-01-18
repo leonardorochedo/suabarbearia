@@ -27,7 +27,7 @@ public class User implements Serializable {
 	private String cpf;
 	private String birth;
 	private String phone;
-	@Column(name = "image", columnDefinition = "BLOB")
+	@Column(name = "image", columnDefinition = "BYTEA")
 	private byte[] image;
 	private Address address;
 	

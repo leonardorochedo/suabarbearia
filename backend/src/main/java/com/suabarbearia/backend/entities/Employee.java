@@ -26,7 +26,7 @@ public class Employee implements Serializable {
 
     private String name;
 
-    @Column(name = "image", columnDefinition = "BLOB")
+    @Column(name = "image", columnDefinition = "BYTEA")
     private byte[] image;
 
     private String phone;

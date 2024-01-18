@@ -37,12 +37,12 @@
 			<scope>runtime</scope>
 		</dependency>
 		
-		<!--JDBC MYSQL-->
+		<!--POSTGRES-->
 		<dependency>
-	        <groupId>mysql</groupId>
-	        <artifactId>mysql-connector-java</artifactId>
-	        <version>8.0.33</version>
-	    </dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	    
 	    <!--JAVA JWT-->
 		<dependency>
