@@ -26,14 +26,14 @@ public class WebhookResource {
 
     @PostMapping
     public ResponseEntity<?> recieveConfigWebhook(@RequestBody String body) {
-        System.out.println(body);
+        System.out.println("PIX Recebido:" + body);
 
         return ResponseEntity.ok().body(body);
     }
 
     @PostMapping(value = "/pix")
     public ResponseEntity<?> recieveConfirmationWebhook(@RequestBody String body) {
-        System.out.println(body);
+        System.out.println("PIX Recebido:" + body);
 
         return ResponseEntity.ok().body(body);
     }
