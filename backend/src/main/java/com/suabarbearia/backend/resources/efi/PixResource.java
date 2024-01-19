@@ -1,5 +1,6 @@
 package com.suabarbearia.backend.resources.efi;
 
+import br.com.efi.efisdk.exceptions.EfiPayException;
 import com.suabarbearia.backend.dtos.efi.GeneratePixBody;
 import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.responses.ErrorResponse;
@@ -21,9 +22,13 @@ public class PixResource {
     @PostMapping(value = "/generate-pix")
     public ResponseEntity<?> generatePix(@RequestBody GeneratePixBody body) {
         try {
-            JSONObject response = pixService.generatePix(body.getDebtorName(), body.getDebtorCPF(), body.getChargeAmount(), body.getDescription());
+            JSONObject response = pixService.generatePix(body);
 
             return ResponseEntity.ok().body(response.toString());
+        } catch (EfiPayException  e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -35,6 +40,10 @@ public class PixResource {
             JSONObject response = pixService.detailPix(id);
 
             return ResponseEntity.ok().body(response.toString());
+        } catch (EfiPayException  e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -43,13 +52,17 @@ public class PixResource {
     @PostMapping(value = "/refund-pix")
     public ResponseEntity<?> refundPix(@RequestBody RefundPixBody body) {
         try {
-            JSONObject response = pixService.refundPix(body.getE2eId(), body.getId(), body.getChargeAmount());
+            JSONObject response = pixService.refundPix(body);
 
             return ResponseEntity.ok().body(response.toString());
         } catch (InsufficientMoneyException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (EfiPayException  e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

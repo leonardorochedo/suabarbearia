@@ -4,14 +4,16 @@ public class GeneratePixBody {
 
     private String debtorName;
     private String debtorCPF;
+    private String email;
     private String chargeAmount;
     private String description;
 
     public GeneratePixBody() {}
 
-    public GeneratePixBody(String debtorName, String debtorCPF, String chargeAmount, String description) {
+    public GeneratePixBody(String debtorName, String debtorCPF, String email, String chargeAmount, String description) {
         this.debtorName = debtorName;
         this.debtorCPF = debtorCPF;
+        this.email = email;
         this.chargeAmount = chargeAmount;
         this.description = description;
     }
@@ -30,6 +32,10 @@ public class GeneratePixBody {
 
     public void setDebtorCPF(String debtorCPF) {
         this.debtorCPF = debtorCPF;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getChargeAmount() {
