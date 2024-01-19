@@ -16,11 +16,11 @@ public class WebhookService {
     @Value("${pix.key}")
     private String pixKey;
 
-    public JSONObject configureWebhook(String webhookUrl) throws Exception {
+    public JSONObject configureWebhook() throws Exception {
 
         EfiPix efiPix = new EfiPix();
 
-        JSONObject response = efiPix.configureWebhook(credentials, pixKey, webhookUrl);
+        JSONObject response = efiPix.configureWebhook(credentials, pixKey, "https://suabarbearia-render.onrender.com/webhook");
 
         System.out.println(response);
 

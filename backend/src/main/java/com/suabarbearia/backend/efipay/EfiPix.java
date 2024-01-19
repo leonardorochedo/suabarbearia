@@ -141,6 +141,8 @@ public class EfiPix {
     // Webhook PIX
     public JSONObject configureWebhook(Credentials credentials, String pixKey, String webhookUrl) throws Exception {
 
+        System.out.println(webhookUrl);
+
         // Get credentials set in options payment
         JSONObject options = buildOptions(credentials);
         options.put("x-skip-mtls-checking", "true");
