@@ -25,17 +25,25 @@ public class WebhookResource {
     }
 
     @PostMapping
-    public ResponseEntity<?> recieveConfigWebhook(@RequestBody String body) {
-        System.out.println("PIX Recebido:" + body);
+    public ResponseEntity<?> recieveConfirmationWebhook(@RequestBody String body) {
+        try {
+            JSONObject response = webhookService.webhookRecieved(body);
 
-        return ResponseEntity.ok().body(body);
+            return ResponseEntity.ok().body(response.toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping(value = "/pix")
-    public ResponseEntity<?> recieveConfirmationWebhook(@RequestBody String body) {
-        System.out.println("PIX Recebido:" + body);
+    public ResponseEntity<?> recieveConfirmationWebhookPix(@RequestBody String body) {
+        try {
+            JSONObject response = webhookService.webhookRecieved(body);
 
-        return ResponseEntity.ok().body(body);
+            return ResponseEntity.ok().body(response.toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

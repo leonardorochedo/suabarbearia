@@ -1,13 +1,17 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.SchedulingDto;
+import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
+import com.suabarbearia.backend.exceptions.efi.InsufficientMoneyException;
 import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
+import com.suabarbearia.backend.services.efi.PixService;
 import com.suabarbearia.backend.utils.JwtUtil;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -37,6 +41,9 @@ public class SchedulingService {
 
     @Autowired
     private ServiceRepository serviceRepository;
+
+    @Autowired
+    private PixService pixService;
 
     public Scheduling findById(Long id) {
         Optional<Scheduling> scheduling = schedulingRepository.findById(id);
@@ -133,16 +140,27 @@ public class SchedulingService {
             throw new AlreadySelectedDataException("Agendamento já está cancelado!");
         }
 
-        /* Some logic here to repayment user with mult */
+        // Update / proccess data
+        try {
+            // Lógica para reembolso
+            JSONObject refundResponse = pixService.refundPix(new RefundPixBody(
+                    schedulingFinded.getPaymentE2eId(),
+                    schedulingFinded.getPaymentId(),
+                    schedulingFinded.getPaymentCharge(),
+                    userFinded.getName(),
+                    userFinded.getEmail()
+            ));
 
-        // Update data
-        schedulingFinded.setStatus(Status.CANCELED);
-
-        schedulingRepository.save(schedulingFinded);
-
-        TextResponse response = new TextResponse("Agendamento cancelado com sucesso!");
-
-        return response;
+            if (refundResponse.get("status") == "EM_PROCESSAMENTO") {
+                schedulingFinded.setStatus(Status.CANCELED);
+                schedulingRepository.save(schedulingFinded);
+                return new TextResponse("Agendamento cancelado com sucesso!");
+            } else {
+                throw new InsufficientMoneyException("Falha ao processar o reembolso.");
+            }
+        } catch (Exception e) {
+            throw new InsufficientMoneyException("Falha ao processar o reembolso: " + e.getMessage());
+        }
     }
 
     // Helper

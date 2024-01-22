@@ -52,7 +52,12 @@ public class Scheduling implements Serializable {
 	private LocalDateTime date;
 
 	private Status status;
-	
+
+	// Efi
+	private String paymentE2eId;
+	private String paymentId;
+	private String paymentCharge;
+
 	public Scheduling() {}
 
 	public Scheduling(User user, Barbershop barbershop, Employee employee, Service service, LocalDateTime date, Status status) {
@@ -127,6 +132,30 @@ public class Scheduling implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getPaymentE2eId() {
+		return paymentE2eId;
+	}
+
+	public void setPaymentE2eId(String paymentE2eId) {
+		this.paymentE2eId = paymentE2eId;
+	}
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
+	public String getPaymentCharge() {
+		return paymentCharge;
+	}
+
+	public void setPaymentCharge(String paymentCharge) {
+		this.paymentCharge = paymentCharge;
 	}
 
 	@Override
