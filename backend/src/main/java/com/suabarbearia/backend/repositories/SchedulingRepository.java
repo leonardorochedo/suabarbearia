@@ -19,4 +19,7 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
     Set<Scheduling> findAllByEmployee(Employee employee);
 
     List<Scheduling> findTopByUserAndBarbershopOrderByDateDesc(User user, Barbershop barbershop);
+
+    Scheduling findByPaymentTXID(String paymentTXID);
+
 }

@@ -7,15 +7,17 @@ public class GeneratePixBody {
     private String email;
     private String chargeAmount;
     private String description;
+    private Long schedulingId;
 
     public GeneratePixBody() {}
 
-    public GeneratePixBody(String debtorName, String debtorCPF, String email, String chargeAmount, String description) {
+    public GeneratePixBody(String debtorName, String debtorCPF, String email, String chargeAmount, String description, Long schedulingId) {
         this.debtorName = debtorName;
         this.debtorCPF = debtorCPF;
         this.email = email;
         this.chargeAmount = chargeAmount;
         this.description = description;
+        this.schedulingId = schedulingId;
     }
 
     public String getDebtorName() {
@@ -38,6 +40,10 @@ public class GeneratePixBody {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getChargeAmount() {
         return chargeAmount;
     }
@@ -54,4 +60,11 @@ public class GeneratePixBody {
         this.description = description;
     }
 
+    public Long getSchedulingId() {
+        return schedulingId;
+    }
+
+    public void setSchedulingId(Long schedulingId) {
+        this.schedulingId = schedulingId;
+    }
 }

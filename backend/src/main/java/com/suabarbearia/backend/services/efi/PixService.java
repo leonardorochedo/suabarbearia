@@ -4,7 +4,9 @@ import com.suabarbearia.backend.config.Credentials;
 import com.suabarbearia.backend.dtos.efi.GeneratePixBody;
 import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.efipay.EfiPix;
+import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.efi.InsufficientMoneyException;
+import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.utils.EmailService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class PixService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private SchedulingRepository schedulingRepository;
+
     @Value("${pix.key}")
     private String pixKey;
 
@@ -29,9 +34,22 @@ public class PixService {
         // Generate PIX
         JSONObject pix = payment.generatePix(credentials, body.getDebtorName(), body.getDebtorCPF(), pixKey, body.getChargeAmount(), body.getDescription());
 
+        // Get attributes
+        String paymentId = pix.getJSONObject("loc").get("id").toString();
+        String paymentTXID = pix.get("txid").toString();
+        String paymentCharge = pix.getJSONObject("valor").get("original").toString();
+
         // Generate QRCode
-        JSONObject getLoc = pix.getJSONObject("loc");
-        JSONObject qrcode = payment.generateQRCode(credentials, getLoc.get("id").toString());
+        JSONObject qrcode = payment.generateQRCode(credentials, paymentId);
+
+        // Add in scheduling
+        Scheduling scheduling = schedulingRepository.findById(body.getSchedulingId()).get();
+
+        scheduling.setPaymentTXID(paymentTXID);
+        scheduling.setPaymentId(paymentId);
+        scheduling.setPaymentCharge(paymentCharge);
+
+        schedulingRepository.save(scheduling);
 
         // Juntando os dois JSON
         JSONObject response = new JSONObject();

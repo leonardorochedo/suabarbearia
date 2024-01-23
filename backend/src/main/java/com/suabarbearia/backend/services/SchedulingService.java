@@ -77,15 +77,15 @@ public class SchedulingService {
                 if (daysBetween <= 2) {
                     throw new LastSchedulingNotDoneException("O usuário faltou em seu último agendamento, será liberado em 2 dias!");
                 }
-            } else if (lastScheduling.getStatus() == Status.WAITING) {
+            } else if (lastScheduling.getStatus() == Status.PENDING) {
                 throw new LastSchedulingNotDoneException("O último agendamento do usuário ainda não foi concluído!");
             }
         }
 
         // Create scheduling
-        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, employeeFinded, serviceFinded, scheduling.getDate(), Status.WAITING));
+        Scheduling newScheduling = schedulingRepository.save(new Scheduling(userFinded, barbershopFinded, employeeFinded, serviceFinded, scheduling.getDate(), Status.WAITING_PAYMENT));
 
-        ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento realizado com sucesso!", newScheduling);
+        ApiResponse<Scheduling> response = new ApiResponse<Scheduling>("Agendamento solicitado com sucesso!", newScheduling);
 
         return response;
     }

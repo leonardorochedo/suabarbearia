@@ -56,6 +56,7 @@ public class Scheduling implements Serializable {
 	// Efi
 	private String paymentE2eId;
 	private String paymentId;
+	private String paymentTXID;
 	private String paymentCharge;
 
 	public Scheduling() {}
@@ -148,6 +149,14 @@ public class Scheduling implements Serializable {
 
 	public void setPaymentId(String paymentId) {
 		this.paymentId = paymentId;
+	}
+
+	public String getPaymentTXID() {
+		return paymentTXID;
+	}
+
+	public void setPaymentTXID(String paymentTXID) {
+		this.paymentTXID = paymentTXID;
 	}
 
 	public String getPaymentCharge() {

@@ -4,5 +4,6 @@ public enum Status {
     FINISHED,
     CANCELED,
     FOUL,
-    WAITING
+    PENDING,
+    WAITING_PAYMENT
 }
