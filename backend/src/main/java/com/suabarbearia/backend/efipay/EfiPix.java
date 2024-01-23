@@ -144,6 +144,8 @@ public class EfiPix {
         // Get credentials set in options payment
         JSONObject options = buildOptions(credentials);
 
+        options.put("x-skip-mtls-checking", "true");
+
         // Create a param and set chave (pixKey)
         HashMap<String, String> params = new HashMap<>();
         params.put("chave", pixKey);
@@ -203,7 +205,6 @@ public class EfiPix {
         options.put("client_secret", credentials.getClientSecret());
         options.put("certificate", credentials.getCertificate());
         options.put("sandbox", credentials.isSandbox());
-        options.put("x-skip-mtls-checking", "true");
         return options;
     }
 
