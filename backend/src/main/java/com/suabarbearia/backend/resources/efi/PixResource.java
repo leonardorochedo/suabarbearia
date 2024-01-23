@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
+
 @RestController
 @RequestMapping(value = "/pix")
 public class PixResource {
@@ -25,6 +27,10 @@ public class PixResource {
             JSONObject response = pixService.generatePix(body);
 
             return ResponseEntity.ok().body(response.toString());
+        } catch (NoSuchElementException e) {
+            ErrorResponse errorResponse = new ErrorResponse("Agendamento não localizado!");
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
         } catch (EfiPayException  e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 

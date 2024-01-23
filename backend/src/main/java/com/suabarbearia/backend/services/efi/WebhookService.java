@@ -4,6 +4,7 @@ import com.suabarbearia.backend.config.Credentials;
 import com.suabarbearia.backend.efipay.EfiPix;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.enums.Status;
+import com.suabarbearia.backend.exceptions.InvalidDataException;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.utils.EmailService;
 import org.json.JSONObject;
@@ -73,7 +74,7 @@ public class WebhookService {
 
             emailService.sendEmail(scheduling.getUser().getEmail(), subject, bodyEmail);
         } else {
-            System.out.println("Agendamento não encontrado ou já foi processado para o paymentId: " + paymentTXID);
+            System.out.println("Agendamento já foi processado para o paymentId: " + paymentTXID);
         }
 
         return response;
