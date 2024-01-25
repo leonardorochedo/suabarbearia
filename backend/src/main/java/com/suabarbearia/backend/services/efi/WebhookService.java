@@ -45,19 +45,11 @@ public class WebhookService {
 
         JSONObject response = new JSONObject(body);
 
-        System.out.println(response);
-
+        // Proccess JSON
         JSONArray pixArray = response.getJSONArray("pix");
-
-        System.out.println(pixArray);
-
         JSONObject pixObject = pixArray.getJSONObject(0);
 
-        System.out.println(pixObject);
-
         String paymentTXID = pixObject.getString("txid");
-
-        System.out.println(paymentTXID);
 
         // Att scheduling
         Scheduling scheduling = schedulingRepository.findByPaymentTXID(paymentTXID);
