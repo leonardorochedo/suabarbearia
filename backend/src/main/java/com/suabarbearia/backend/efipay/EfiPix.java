@@ -205,6 +205,7 @@ public class EfiPix {
         options.put("client_secret", credentials.getClientSecret());
         options.put("certificate", credentials.getCertificate());
         options.put("sandbox", credentials.isSandbox());
+        System.out.println(credentials.getCertificate());
         return options;
     }
 
