@@ -7,6 +7,7 @@ import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.InvalidDataException;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.utils.EmailService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,14 +45,24 @@ public class WebhookService {
 
         JSONObject response = new JSONObject(body);
 
-        String paymentTXID = response.getJSONObject("pix").get("txid").toString();
+        JSONArray pixArray = response.getJSONArray("pix");
+
+        System.out.println(pixArray);
+
+        JSONObject pixObject = pixArray.getJSONObject(0);
+
+        System.out.println(pixObject);
+
+        String paymentTXID = pixObject.getString("txid");
+
+        System.out.println(paymentTXID);
 
         // Att scheduling
         Scheduling scheduling = schedulingRepository.findByPaymentTXID(paymentTXID);
 
         if (scheduling != null && scheduling.getStatus() == Status.WAITING_PAYMENT) {
             scheduling.setStatus(Status.PENDING);
-            scheduling.setPaymentE2eId(response.getJSONObject("pix").get("endToEndId").toString());
+            scheduling.setPaymentE2eId(pixObject.getString("endToEndId"));
             schedulingRepository.save(scheduling);
             System.out.println("Pagamento recebido com sucesso para o agendamento com ID: " + scheduling.getId());
 
