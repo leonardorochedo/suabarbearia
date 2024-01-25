@@ -45,6 +45,8 @@ public class WebhookService {
 
         JSONObject response = new JSONObject(body);
 
+        System.out.println(response);
+
         JSONArray pixArray = response.getJSONArray("pix");
 
         System.out.println(pixArray);
