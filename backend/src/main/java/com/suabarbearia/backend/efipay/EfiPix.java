@@ -5,7 +5,10 @@ import br.com.efi.efisdk.exceptions.EfiPayException;
 import com.suabarbearia.backend.config.Credentials;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,12 +30,17 @@ public class EfiPix {
         HashMap<String, String> params = new HashMap<>();
         params.put("txid", txId.substring(0, 32).toString());
 
+        // Format number
+        DecimalFormat df = new DecimalFormat("#.00", DecimalFormatSymbols.getInstance(Locale.US));
+        String chargeAmountFormatted = df.format(Double.parseDouble(chargeAmount));
+
+        // Generate body
         JSONObject body = new JSONObject();
         body.put("calendario", new JSONObject().put("expiracao", 3600)); // 1 hour to expire
         body.put("devedor", new JSONObject()
                 .put("cpf", debtorCPF)
                 .put("nome", debtorName));
-        body.put("valor", new JSONObject().put("original", chargeAmount));
+        body.put("valor", new JSONObject().put("original", chargeAmountFormatted));
         body.put("chave", receiverPixKey); // Changed to receiverPixKey
         body.put("solicitacaoPagador", description);
 

@@ -1,7 +1,6 @@
 package com.suabarbearia.backend.resources.efi;
 
 import br.com.efi.efisdk.exceptions.EfiPayException;
-import com.suabarbearia.backend.dtos.efi.GeneratePixBody;
 import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.exceptions.efi.InsufficientMoneyException;
@@ -21,10 +20,10 @@ public class PixResource {
     @Autowired
     private PixService pixService;
 
-    @PostMapping(value = "/generate-pix")
-    public ResponseEntity<?> generatePix(@RequestBody GeneratePixBody body) {
+    @PostMapping(value = "/generate-pix/{id}")
+    public ResponseEntity<?> generatePix(@PathVariable Long id) {
         try {
-            JSONObject response = pixService.generatePix(body);
+            JSONObject response = pixService.generatePix(id);
 
             return ResponseEntity.ok().body(response.toString());
         } catch (NoSuchElementException e) {

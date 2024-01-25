@@ -1,10 +1,10 @@
 package com.suabarbearia.backend.services.efi;
 
 import com.suabarbearia.backend.config.Credentials;
-import com.suabarbearia.backend.dtos.efi.GeneratePixBody;
 import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.efipay.EfiPix;
 import com.suabarbearia.backend.entities.Scheduling;
+import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.exceptions.efi.InsufficientMoneyException;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.utils.EmailService;
@@ -28,11 +28,15 @@ public class PixService {
     @Value("${pix.key}")
     private String pixKey;
 
-    public JSONObject generatePix(GeneratePixBody body) throws Exception {
+    public JSONObject generatePix(Long id) throws Exception {
+
         EfiPix payment = new EfiPix();
 
+        Scheduling scheduling = schedulingRepository.findById(id).get();
+        User user = scheduling.getUser();
+
         // Generate PIX
-        JSONObject pix = payment.generatePix(credentials, body.getDebtorName(), body.getDebtorCPF(), pixKey, body.getChargeAmount(), body.getDescription());
+        JSONObject pix = payment.generatePix(credentials, user.getName(), user.getCpf(), pixKey, scheduling.getService().getPrice().toString(), scheduling.getService().getTitle());
 
         // Get attributes
         String paymentId = pix.getJSONObject("loc").get("id").toString();
@@ -43,8 +47,6 @@ public class PixService {
         JSONObject qrcode = payment.generateQRCode(credentials, paymentId);
 
         // Add in scheduling
-        Scheduling scheduling = schedulingRepository.findById(body.getSchedulingId()).get();
-
         scheduling.setPaymentTXID(paymentTXID);
         scheduling.setPaymentId(paymentId);
         scheduling.setPaymentCharge(paymentCharge);
@@ -69,9 +71,9 @@ public class PixService {
                         + "Este link é válido por 1 hora.\n\n"
                         + "Atenciosamente,\n"
                         + "Equipe Sua Barbearia",
-                body.getDebtorName(), linkPayment);
+                user.getName(), linkPayment);
 
-        emailService.sendEmail(body.getEmail(), subject, bodyEmail);
+        emailService.sendEmail(user.getEmail(), subject, bodyEmail);
 
         return response;
     }
