@@ -11,6 +11,8 @@ FROM openjdk:17-jdk-slim
 
 EXPOSE 8080
 
+COPY ./certs/producionCertificate.p12 /app/certs/producionCertificate.p12
+
 COPY --from=build /target/backend-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
