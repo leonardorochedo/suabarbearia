@@ -4,6 +4,7 @@ import com.suabarbearia.backend.dtos.SchedulingDto;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.exceptions.efi.InsufficientMoneyException;
+import com.suabarbearia.backend.exceptions.efi.InvalidStatusException;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.responses.TextResponse;
@@ -75,7 +76,7 @@ public class SchedulingResource {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-        } catch (FieldsAreNullException | InsufficientMoneyException e) {
+        } catch (FieldsAreNullException | InsufficientMoneyException | InvalidStatusException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);

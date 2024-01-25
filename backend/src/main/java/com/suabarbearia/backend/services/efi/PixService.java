@@ -1,11 +1,12 @@
 package com.suabarbearia.backend.services.efi;
 
 import com.suabarbearia.backend.config.Credentials;
-import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.efipay.EfiPix;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.entities.User;
+import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.efi.InsufficientMoneyException;
+import com.suabarbearia.backend.exceptions.efi.InvalidStatusException;
 import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.utils.EmailService;
 import org.json.JSONObject;
@@ -34,6 +35,10 @@ public class PixService {
 
         Scheduling scheduling = schedulingRepository.findById(id).get();
         User user = scheduling.getUser();
+
+        if (scheduling.getStatus() == Status.PENDING || scheduling.getStatus() == Status.FOUL || scheduling.getStatus() == Status.CANCELED || scheduling.getStatus() == Status.FINISHED) {
+            throw new InvalidStatusException("O agendamento está em outros processos!");
+        }
 
         // Generate PIX
         JSONObject pix = payment.generatePix(credentials, user.getName(), user.getCpf(), pixKey, scheduling.getService().getPrice().toString(), scheduling.getService().getTitle());
@@ -84,20 +89,28 @@ public class PixService {
         return payment.detailPix(credentials, txid);
     }
 
-    public JSONObject refundPix(RefundPixBody body) throws Exception {
+    public JSONObject refundPix(Long id) throws Exception {
+
         EfiPix payment = new EfiPix();
 
-        // Validation money
-        if (Double.parseDouble(body.getChargeAmount()) < 5.00) {
+        Scheduling scheduling = schedulingRepository.findById(id).get();
+        User user = scheduling.getUser();
+
+        // Validations
+        if (scheduling.getStatus() == Status.WAITING_PAYMENT) {
+            throw new InvalidStatusException("O valor do agendamento ainda não foi debitado!");
+        }
+
+        if (Double.parseDouble(scheduling.getPaymentCharge()) < 5.00) {
             throw new InsufficientMoneyException("O valor do reembolso é menor do que a multa!");
         }
 
-        Double chargeFinalValue = Double.parseDouble(body.getChargeAmount()) - 5.00;
+         Double chargeFinalValue = Double.parseDouble(scheduling.getPaymentCharge()) - 5.00;
 
-        JSONObject response = payment.refundPix(credentials, body.getE2eId(), body.getId(), chargeFinalValue.toString());
+        JSONObject response = payment.refundPix(credentials, scheduling.getPaymentE2eId(), scheduling.getPaymentId(), chargeFinalValue.toString());
 
         // Send email
-        String subject = "Pagamento Gerado - Sua Barbearia";
+        String subject = "Pagamento Reembolsado - Sua Barbearia";
         String bodyEmail = String.format(
                 "Olá %s,\n\n"
                         + "Reembolsamos o valor solicitado para a sua conta bancária.\n"
@@ -105,9 +118,9 @@ public class PixService {
                         + "não reconhecer essa transação, entre em contato conosco imediatamente.\n\n"
                         + "Atenciosamente,\n"
                         + "Equipe Sua Barbearia",
-                body.getName());
+                user.getName());
 
-        emailService.sendEmail(body.getEmail(), subject, bodyEmail);
+        emailService.sendEmail(user.getEmail(), subject, bodyEmail);
 
         return response;
     }

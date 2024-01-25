@@ -1,7 +1,6 @@
 package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.SchedulingDto;
-import com.suabarbearia.backend.dtos.efi.RefundPixBody;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
@@ -143,21 +142,14 @@ public class SchedulingService {
         // Update / proccess data
         try {
             // Lógica para reembolso
-            JSONObject refundResponse = pixService.refundPix(new RefundPixBody(
-                    schedulingFinded.getPaymentE2eId(),
-                    schedulingFinded.getPaymentId(),
-                    schedulingFinded.getPaymentCharge(),
-                    userFinded.getName(),
-                    userFinded.getEmail()
-            ));
+            JSONObject refundResponse = pixService.refundPix(id);
 
-            if (refundResponse.get("status") == "EM_PROCESSAMENTO") {
+            if (refundResponse.getString("status").equals("EM_PROCESSAMENTO")) {
                 schedulingFinded.setStatus(Status.CANCELED);
                 schedulingRepository.save(schedulingFinded);
-                return new TextResponse("Agendamento cancelado com sucesso!");
-            } else {
-                throw new InsufficientMoneyException("Falha ao processar o reembolso.");
             }
+
+            return new TextResponse("Agendamento cancelado com sucesso!");
         } catch (Exception e) {
             throw new InsufficientMoneyException("Falha ao processar o reembolso: " + e.getMessage());
         }
