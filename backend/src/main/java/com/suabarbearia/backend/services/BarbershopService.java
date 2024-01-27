@@ -2,7 +2,9 @@ package com.suabarbearia.backend.services;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -419,6 +421,34 @@ public class BarbershopService {
 		}
 
 		return totalEarnings;
+	}
+
+	public String clear(Long id) {
+
+		Barbershop barbershop = barbershopRepository.findById(id).get();
+
+		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
+
+		LocalDateTime currentDateTime = LocalDateTime.now();
+
+		for (Scheduling scheduling : schedulings) {
+			if (scheduling.getStatus() == Status.WAITING_PAYMENT) {
+				LocalDateTime creationDateTime = scheduling.getDateGeneratePayment();
+				Duration duration = Duration.between(creationDateTime, currentDateTime);
+
+				System.out.println(duration.toMinutes());
+
+				// Verifica se passou mais de uma hora desde a criação
+				if (duration.toMinutes() > 60) {
+					// Altera o status para CANCELED
+					scheduling.setStatus(Status.CANCELED);
+					schedulingRepository.save(scheduling);
+					System.out.println("Agendamento do ID: " + scheduling.getId() + " cancelado por falta de pagamento.");
+				}
+			}
+		}
+
+		return "Agendamentos atualizados!";
 	}
 
 }

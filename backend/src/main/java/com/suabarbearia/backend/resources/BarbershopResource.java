@@ -291,4 +291,11 @@ public class BarbershopResource {
 		}
 	}
 
+	@PostMapping(value = "/schedulings/clear/{id}")
+	public ResponseEntity<?> clear(@PathVariable Long id) {
+		String response = barbershopService.clear(id);
+
+		return ResponseEntity.ok().body(response);
+	}
+
 }

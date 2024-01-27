@@ -45,6 +45,8 @@ public class Scheduling implements Serializable {
 
 	private LocalDateTime date;
 
+	private LocalDateTime dateGeneratePayment;
+
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
@@ -120,6 +122,14 @@ public class Scheduling implements Serializable {
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+
+	public LocalDateTime getDateGeneratePayment() {
+		return dateGeneratePayment;
+	}
+
+	public void setDateGeneratePayment(LocalDateTime dateGeneratePayment) {
+		this.dateGeneratePayment = dateGeneratePayment;
 	}
 
 	public Status getStatus() {
