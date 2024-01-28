@@ -194,20 +194,22 @@ public class SchedulingService {
         Set<Scheduling> employeeSchedulings = schedulingRepository.findAllByEmployee(employee);
 
         for (Scheduling employeeScheduling : employeeSchedulings) {
-            LocalDateTime employeeSchedulingStartTime = employeeScheduling.getDate();
-            LocalDateTime employeeSchedulingEndTime = employeeSchedulingStartTime.plusMinutes(30);
+            if (employeeScheduling.getStatus() != Status.CANCELED) {
+                LocalDateTime employeeSchedulingStartTime = employeeScheduling.getDate();
+                LocalDateTime employeeSchedulingEndTime = employeeSchedulingStartTime.plusMinutes(30);
 
-            LocalDateTime schedulingStartTime = scheduling.getDate();
-            LocalDateTime schedulingEndTime = schedulingStartTime.plusMinutes(30);
+                LocalDateTime schedulingStartTime = scheduling.getDate();
+                LocalDateTime schedulingEndTime = schedulingStartTime.plusMinutes(30);
 
-            // Verificar se o novo agendamento começa dentro de 30 minutos após um agendamento existente
-            if ((schedulingStartTime.isEqual(employeeSchedulingStartTime) || schedulingStartTime.isAfter(employeeSchedulingStartTime)) &&
-                    schedulingStartTime.isBefore(employeeSchedulingEndTime)) {
-                throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
-            }
+                // Verificar se o novo agendamento começa dentro de 30 minutos após um agendamento existente
+                if ((schedulingStartTime.isEqual(employeeSchedulingStartTime) || schedulingStartTime.isAfter(employeeSchedulingStartTime)) &&
+                        schedulingStartTime.isBefore(employeeSchedulingEndTime)) {
+                    throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
+                }
 
-            if (schedulingStartTime.isBefore(employeeSchedulingEndTime) && schedulingEndTime.isAfter(employeeSchedulingEndTime)) {
-                throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
+                if (schedulingStartTime.isBefore(employeeSchedulingEndTime) && schedulingEndTime.isAfter(employeeSchedulingEndTime)) {
+                    throw new AlreadySelectedDataException("O barbeiro selecionado já possui um agendamento neste horário!");
+                }
             }
         }
 
