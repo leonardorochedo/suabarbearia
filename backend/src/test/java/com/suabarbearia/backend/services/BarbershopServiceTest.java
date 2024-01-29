@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.suabarbearia.backend.repositories.BarbershopRepository;
@@ -126,26 +127,26 @@ public class BarbershopServiceTest {
 		assertThrows(InvalidDataException.class, () -> barbershopService.signin(new SigninDto("fulano_barber5@email.com", "123abc")));
 	}
 
-//	@Test
-//	public void testEditWithNoImage() throws SQLException, IOException {
-//		// Create
-//		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber6@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
-//		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
-//
-//		// Edit
-//		EditBarbershopDto editedBarberMock = new EditBarbershopDto(null, "Barbearia Teste", "fulano_barber6@email.com", "123321", "123321", "33981111", "101 Av Brasil", "86000-000", openTime, closeTime);
-//
-//		// Image
-//		MultipartFile image = Mockito.mock(MultipartFile.class);
-//
-//		ApiResponse<Barbershop> response2 = barbershopService.edit(response1.getToken(), response1.getData().getId(), editedBarberMock, image);
-//
-//		// Assert
-//		assertNotNull(response2);
-//		assertEquals("Barbearia editada com sucesso!", response2.getMessage());
-//		assertEquals("fulano_barber6@email.com", response2.getData().getEmail());
-//		assertEquals("101 Av Brasil", response2.getData().getAddress());
-//	}
+	@Test
+	public void testEditWithNoImage() throws SQLException, IOException {
+		// Create
+		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber6@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
+		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
+
+		// Image
+		MultipartFile image = new MockMultipartFile("arquivo", new byte[0]);
+
+		// Edit
+		EditBarbershopDto editedBarberMock = new EditBarbershopDto("Barbearia Teste", "fulano_barber6@email.com", "17820849000104", "1998-09-12", "33981111", image, mockAddress, openTime, closeTime, "123321", "123321");
+
+
+		ApiResponse<Barbershop> response2 = barbershopService.edit(response1.getToken(), response1.getData().getId(), editedBarberMock, image);
+
+		// Assert
+		assertNotNull(response2);
+		assertEquals("Barbearia editada com sucesso!", response2.getMessage());
+		assertEquals("fulano_barber6@email.com", response2.getData().getEmail());
+	}
 
 	@Test
 	public void testDelete() {

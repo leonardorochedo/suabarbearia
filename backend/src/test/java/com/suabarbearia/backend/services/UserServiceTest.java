@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.suabarbearia.backend.repositories.UserRepository;
@@ -120,25 +121,25 @@ public class UserServiceTest {
 		assertEquals("fulano_client4@email.com", response2.getData().getEmail());
 	}
 
-//	@Test
-//	public void testEditWithNoImage() throws SQLException, IOException {
-//		// Create
-//		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client5@email.com", "11122233345", "2000-01-13", "33981111", mockAddress, "123321", "123321");
-//		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
-//
-//		// Edit
-//		EditUserDto editedUserMock = new EditUserDto("Moreira Fulano", "fulano_client5@email.com", "123321", "123321", "33981111", "Av. Brasil 111", "86000-000", null);
-//
-//		// Image
-//		MultipartFile image = Mockito.mock(MultipartFile.class);
-//
-//		ApiResponse<User> response2 = userService.edit(response1.getToken(), response1.getData().getId(), editedUserMock, image);
-//
-//		// Assert
-//		assertNotNull(response2);
-//		assertEquals("Usuário editado com sucesso!", response2.getMessage());
-//		assertEquals("fulano_client5@email.com", response2.getData().getEmail());
-//	}
+	@Test
+	public void testEditWithNoImage() throws SQLException, IOException {
+		// Create
+		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client5@email.com", "11122233345", "2000-01-13", "33981111", mockAddress, "123321", "123321");
+		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
+
+		// Image
+		MultipartFile image = new MockMultipartFile("arquivo", new byte[0]);
+
+		// Edit
+		EditUserDto editedUserMock = new EditUserDto("Moreira Fulano", "fulano_client5@email.com", "11122233345", "2000-01-13","33981111", mockAddress, image, "123321", "123321");
+
+		ApiResponse<User> response2 = userService.edit(response1.getToken(), response1.getData().getId(), editedUserMock, image);
+
+		// Assert
+		assertNotNull(response2);
+		assertEquals("Usuário editado com sucesso!", response2.getMessage());
+		assertEquals("Moreira Fulano", response2.getData().getName());
+	}
 
 	@Test
 	public void testDelete() {

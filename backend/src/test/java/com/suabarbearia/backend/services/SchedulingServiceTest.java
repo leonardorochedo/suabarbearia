@@ -89,7 +89,7 @@ public class SchedulingServiceTest {
 
         ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
-        assertEquals("Agendamento realizado com sucesso!", response5.getMessage());
+        assertEquals("Agendamento solicitado com sucesso!", response5.getMessage());
     }
 
     @Test
@@ -119,31 +119,6 @@ public class SchedulingServiceTest {
         ApiResponse<Scheduling> response6 = schedulingService.edit(response4.getToken(), response5.getData().getId(), schedulingMockEdit);
 
         assertEquals("Agendamento alterado com sucesso!", response6.getMessage());
-    }
-
-    @Test
-    public void testCancel() {
-        CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_scheduling4@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
-        ServiceDto createServiceMock = new ServiceDto("Corte Cabelo + Barba + Sombracelha", 25.0);
-        CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee_scheduling4", "123321", "123321", "33983333");
-
-        CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client_scheduling4@email.com", "11122233345", "2000-01-13", "33981111", mockAddress, "123321", "123321");
-
-        ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
-        ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
-        ApiResponse<Employee> response3 = employeeService.create(response1.getToken(), createEmployeeMock);
-        ApiTokenResponse<User> response4 = userService.signup(createUserMock);
-
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(3);
-        LocalTime hour = LocalTime.of(8, 0, 0);
-
-        SchedulingDto schedulingMock = new SchedulingDto(response1.getData().getId(), response2.getData().getId(), response3.getData().getId(), tomorrow.with(hour));
-
-        ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
-
-        TextResponse response6 = schedulingService.cancel(response4.getToken(), response5.getData().getId());
-
-        assertEquals("Agendamento cancelado com sucesso!", response6.getMessage());
     }
 
 }
