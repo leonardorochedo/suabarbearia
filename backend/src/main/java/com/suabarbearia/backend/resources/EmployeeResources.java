@@ -116,7 +116,7 @@ public class EmployeeResources {
             ApiResponse<Employee> response = employeeService.barbershopEdit(authorizationHeader, id, employee, image);
 
             return ResponseEntity.ok().body(response);
-        } catch (NoPermissionException e) {
+        } catch (NoPermissionException | InvalidTokenException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);

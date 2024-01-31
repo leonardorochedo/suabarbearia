@@ -116,7 +116,11 @@ public class EmployeeService {
         Employee employeeId = employeeRepository.findById(id).get();
         Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
-        // checking if barbershop have this employee
+        // Checking if barbershop have this employee
+        if (barbershopToken == null) {
+            throw new InvalidTokenException("Token inválido!");
+        }
+
         if (!employeeId.getBarbershop().equals(barbershopToken)) {
             throw new NoPermissionException("Colaborador não encontrado para barbearia!");
         }
@@ -162,6 +166,10 @@ public class EmployeeService {
         Employee employeeNewName = employeeRepository.findByUsername(employee.getUsername());
 
         // Check employee
+        if (employeeToken == null) {
+            throw new InvalidTokenException("Token inválido!");
+        }
+
         if (!employeeToken.equals(employeeId)) {
             throw new InvalidTokenException("Token inválido para este colaborador!");
         }
