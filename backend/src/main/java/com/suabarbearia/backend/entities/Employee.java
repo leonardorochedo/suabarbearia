@@ -23,12 +23,8 @@ public class Employee implements Serializable {
     private String username;
 
     private String password;
-
     private String name;
-
-    @Column(name = "image", columnDefinition = "BYTEA")
-    private byte[] image;
-
+    private String image;
     private String phone;
 
     @ManyToOne
@@ -48,7 +44,7 @@ public class Employee implements Serializable {
 
     }
 
-    public Employee(Long id, String username, String password, String name, byte[] image, String phone, Barbershop barbershop) {
+    public Employee(Long id, String username, String password, String name, String image, String phone, Barbershop barbershop) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -90,11 +86,11 @@ public class Employee implements Serializable {
         this.name = name;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -122,6 +118,14 @@ public class Employee implements Serializable {
         this.schedulings = schedulings;
     }
 
+    public Set<BlockSchedule> getBlockSchedules() {
+        return blockSchedules;
+    }
+
+    public void setBlockSchedules(Set<BlockSchedule> blockSchedules) {
+        this.blockSchedules = blockSchedules;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -142,7 +146,7 @@ public class Employee implements Serializable {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-                ", image=" + Arrays.toString(image) +
+                ", image=" + image +
                 ", phone='" + phone + '\'' +
                 ", barbershop=" + barbershop +
                 ", schedulings=" + schedulings +

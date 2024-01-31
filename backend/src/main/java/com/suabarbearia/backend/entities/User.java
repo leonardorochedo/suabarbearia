@@ -27,8 +27,7 @@ public class User implements Serializable {
 	private String cpf;
 	private String birth;
 	private String phone;
-	@Column(name = "image", columnDefinition = "BYTEA")
-	private byte[] image;
+	private String image;
 	private Address address;
 	
 	// Relations
@@ -51,7 +50,7 @@ public class User implements Serializable {
 	
 	public User() {}
 	
-	public User(Long id, String name, String email, String cpf, String birth, String phone, byte[] image, Address address, String password) {
+	public User(Long id, String name, String email, String cpf, String birth, String phone, String image, Address address, String password) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -112,11 +111,11 @@ public class User implements Serializable {
 		this.phone = phone;
 	}
 
-	public byte[] getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
@@ -187,7 +186,7 @@ public class User implements Serializable {
 				", cpf='" + cpf + '\'' +
 				", birth='" + birth + '\'' +
 				", phone='" + phone + '\'' +
-				", image=" + Arrays.toString(image) +
+				", image=" + image +
 				", address=" + address +
 				'}';
 	}

@@ -28,8 +28,7 @@ public class Barbershop implements Serializable {
 	private String document;
 	private String birth;
 	private String phone;
-	@Column(name = "image", columnDefinition = "BYTEA")
-	private byte[] image;
+	private String image;
 	private Address address;
 	private LocalTime openTime;
 	private LocalTime closeTime;
@@ -70,7 +69,7 @@ public class Barbershop implements Serializable {
 	
 	public Barbershop() {}
 
-	public Barbershop(Long id, String name, String email, String document, String birth, String phone, byte[] image, Address address, LocalTime openTime, LocalTime closeTime, String password) {
+	public Barbershop(Long id, String name, String email, String document, String birth, String phone, String image, Address address, LocalTime openTime, LocalTime closeTime, String password) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -142,11 +141,11 @@ public class Barbershop implements Serializable {
 		this.phone = phone;
 	}
 
-	public byte[] getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
@@ -261,7 +260,7 @@ public class Barbershop implements Serializable {
 				", document='" + document + '\'' +
 				", birth='" + birth + '\'' +
 				", phone='" + phone + '\'' +
-				", image=" + Arrays.toString(image) +
+				", image=" + image +
 				", address=" + address +
 				", openTime=" + openTime +
 				", closeTime=" + closeTime +

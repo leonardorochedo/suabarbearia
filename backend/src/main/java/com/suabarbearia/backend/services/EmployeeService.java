@@ -14,6 +14,7 @@ import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.TextResponse;
+import com.suabarbearia.backend.utils.ImageUploader;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class EmployeeService {
 
     @Autowired
     private SchedulingRepository schedulingRepository;
+
+    @Autowired
+    private ImageUploader imageUploader;
 
     @Value("${fixedsalt}")
     private String fixedSalt;
@@ -135,7 +139,8 @@ public class EmployeeService {
 
         // Update barbershop
         if(!image.isEmpty()) {
-            employeeId.setImage(image.getBytes());
+            String imageUrl = imageUploader.uploadFile(image, id.toString(), "employees");
+            System.out.println(imageUrl);
         }
         employeeId.setName(employee.getName());
         employee.setPassword(hashedPassword);
@@ -183,8 +188,9 @@ public class EmployeeService {
         }
 
         // Update employee
-        if (!image.isEmpty()) {
-            employeeId.setImage(image.getBytes());
+        if(!image.isEmpty()) {
+            String imageUrl = imageUploader.uploadFile(image, id.toString(), "employees");
+            employeeId.setImage(imageUrl);
         }
         employeeId.setName(employee.getName());
         employeeId.setUsername(employee.getUsername());

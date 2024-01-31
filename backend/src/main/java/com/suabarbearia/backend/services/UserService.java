@@ -18,6 +18,7 @@ import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.EmailService;
+import com.suabarbearia.backend.utils.ImageUploader;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +45,9 @@ public class UserService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private ImageUploader imageUploader;
 
 	@Value("${fixedsalt}")
 	private String fixedSalt;
@@ -152,9 +156,9 @@ public class UserService {
 
 		// Update user
 		if(!image.isEmpty()) {
-			editedUser.setImage(image.getBytes());
+			String imageUrl = imageUploader.uploadFile(image, id.toString(), "users");
+			editedUser.setImage(imageUrl);
 		}
-		editedUser.setImage(image.getBytes());
 		editedUser.setName(user.getName());
 		editedUser.setEmail(user.getEmail());
         editedUser.setCpf(user.getCpf());
