@@ -19,6 +19,7 @@ import com.suabarbearia.backend.repositories.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.TextResponse;
 import com.suabarbearia.backend.utils.EmailService;
+import com.suabarbearia.backend.utils.ImageUploader;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,9 @@ public class BarbershopService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private ImageUploader imageUploader;
 
 	@Value("${fixedsalt}")
 	private String fixedSalt;
@@ -163,7 +167,8 @@ public class BarbershopService {
 
 		// Update barbershop
 		if(!image.isEmpty()) {
-			editedBarbershop.setImage(image.getBytes());
+			String imageUrl = imageUploader.uploadFile(image, id.toString(), "barbershops");
+			editedBarbershop.setImage(imageUrl);
 		}
 		editedBarbershop.setName(barbershop.getName());
 		editedBarbershop.setEmail(barbershop.getEmail());
