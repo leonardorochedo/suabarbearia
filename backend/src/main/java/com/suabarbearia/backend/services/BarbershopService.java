@@ -350,13 +350,15 @@ public class BarbershopService {
 			throw new InvalidTokenException("Token inválido!");
 		}
 
-		if (scheduling.getStatus() == Status.FINISHED || scheduling.getStatus() == Status.CANCELED || scheduling.getStatus() == Status.FOUL) {
+		if (scheduling.getStatus() == Status.FINISHED || scheduling.getStatus() == Status.CANCELED || scheduling.getStatus() == Status.FOUL || scheduling.getStatus() == Status.WAITING_PAYMENT) {
 			throw new SchedulingAlreadyDoneException("Não foi possível realizar esta operação!");
 		}
 
 		scheduling.setStatus(Status.FINISHED);
+		barbershop.increaseChargeAmount(scheduling.getService().getPrice());
 
 		schedulingRepository.save(scheduling);
+		barbershopRepository.save(barbershop);
 
 		TextResponse response = new TextResponse("Agendamento concluído com sucesso!");
 

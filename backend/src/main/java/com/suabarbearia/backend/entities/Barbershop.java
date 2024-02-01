@@ -181,7 +181,7 @@ public class Barbershop implements Serializable {
 		this.chargeAmount += chargeAmount;
 	}
 
-	public void removeChargeAmount(Double chargeAmount) {
+	public void decreaseChargeAmount(Double chargeAmount) {
 		this.chargeAmount -= chargeAmount;
 	}
 
