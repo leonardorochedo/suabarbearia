@@ -104,7 +104,7 @@ public class UserService {
 
 		// Check data
 		if (user.getEmail() == null || user.getPassword() == null) {
-			throw new FieldsAreNullException("E-mail ou senha não existente!");
+			throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
 		}
 
 		User userFinded = userRepository.findByEmail(user.getEmail());
