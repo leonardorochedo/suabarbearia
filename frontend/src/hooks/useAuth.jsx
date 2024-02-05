@@ -43,8 +43,7 @@ export function useAuth() {
         let msgText = ''
 
         try {
-            // registrando o user e mandando o token para setar no localStorage
-            const data = await api.post('/users/signout', user).then((response) => {
+            const data = await api.post('/users/signup', user).then((response) => {
                 msgText = response.data.message
                 return response.data
             })

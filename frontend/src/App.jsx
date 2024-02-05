@@ -1,5 +1,6 @@
 // USER
 import { UserLogin } from "./pages/User/UserLogin/UserLogin";
+import { UserRegister } from "./pages/User/UserRegister/UserRegister";
 
 // CONTEXTS
 import { UserProvider } from "./context/UserContext";
@@ -33,6 +34,7 @@ function App() {
         <UserProvider>
           <Routes>
             <Route path="/user/login" element={<UserLogin />} />
+            <Route path="/user/register" element={<UserRegister />} />
           </Routes>
         </UserProvider>
       </BrowserRouter>

@@ -15,13 +15,13 @@ export function UserLogin() {
 
     function handleChangeInput(e) {
         setUser({...user, [e.target.name]: e.target.value});
-    }
+    };
 
     function handleSubmit(e) {
         e.preventDefault();
 
         UserLogin(user);
-    }
+    };
 
     return (
         <section className="container container-form">
@@ -36,7 +36,7 @@ export function UserLogin() {
                     <h1 className="title">Entre com sua conta!</h1>
                     <form onSubmit={handleSubmit} className="form-container">
                         <Input type="email" name="email" id="email" handleChangeInput={handleChangeInput} text="E-mail" placeholder="Digite seu e-mail" />
-                        <Input type="password" name="password" id="password" handleChangeInput={handleChangeInput} text="Senha" placeholder="Digite sua senha" />
+                        <Input type="password" name="password" id="password" minLength={8} handleChangeInput={handleChangeInput} text="Senha" placeholder="Digite sua senha" />
                         <div className="form-buttons">
                             <input type="submit" value="Entrar" />
                             <p>Não tem uma conta? <Link to="/user/register" className='link'><span>Clique aqui.</span></Link></p>
