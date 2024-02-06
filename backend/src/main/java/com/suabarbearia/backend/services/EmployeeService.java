@@ -142,7 +142,7 @@ public class EmployeeService {
         String hashedPassword = BCrypt.hashpw(employee.getPassword(), fixedSalt);
 
         // Update barbershop
-        if(!image.isEmpty()) {
+        if(image != null && !image.isEmpty()) {
             String imageUrl = imageUploader.uploadFile(image, id.toString(), "employees");
             System.out.println(imageUrl);
         }

@@ -166,7 +166,7 @@ public class BarbershopService {
 		}
 
 		// Update barbershop
-		if(!image.isEmpty()) {
+		if(image != null && !image.isEmpty()) {
 			String imageUrl = imageUploader.uploadFile(image, id.toString(), "barbershops");
 			editedBarbershop.setImage(imageUrl);
 		}

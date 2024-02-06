@@ -155,7 +155,7 @@ public class UserService {
 		}
 
 		// Update user
-		if(!image.isEmpty()) {
+		if(image != null && !image.isEmpty()) {
 			String imageUrl = imageUploader.uploadFile(image, id.toString(), "users");
 			editedUser.setImage(imageUrl);
 		}

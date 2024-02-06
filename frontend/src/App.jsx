@@ -1,9 +1,15 @@
 // USER
 import { UserLogin } from "./pages/User/UserLogin/UserLogin";
 import { UserRegister } from "./pages/User/UserRegister/UserRegister";
+import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 
 // CONTEXTS
 import { UserProvider } from "./context/UserContext";
+
+// QUERY CLIENT
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 // LIB'S
 import { 
@@ -16,7 +22,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   
-
   return (
     <BrowserRouter>
       <ToastContainer
@@ -31,12 +36,15 @@ function App() {
           pauseOnHover
           theme="light"
         />
-        <UserProvider>
-          <Routes>
-            <Route path="/user/login" element={<UserLogin />} />
-            <Route path="/user/register" element={<UserRegister />} />
-          </Routes>
-        </UserProvider>
+        <QueryClientProvider client={queryClient}>
+          <UserProvider>
+            <Routes>
+              <Route path="/user/login" element={<UserLogin />} />
+              <Route path="/user/register" element={<UserRegister />} />
+              <Route path="/user/edit" element={<UserEdit />} />
+            </Routes>
+          </UserProvider>
+        </QueryClientProvider>
       </BrowserRouter>
   )
 }

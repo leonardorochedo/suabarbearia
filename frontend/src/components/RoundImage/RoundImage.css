@@ -1,0 +1,30 @@
+img.round-image {
+  border-radius: 100%;
+  border: 2px solid var(--primary-color);
+
+  margin: 1rem 0;
+  box-shadow: 0px 0px 5px black;
+}
+
+/* SIZES */
+img.round-image.rem12 {
+  width: 12rem;
+  height: auto;
+}
+
+img.round-image.rem5 {
+  width: 5rem;
+  height: auto;
+}
+
+img.round-image.rem3 {
+  width: 3rem;
+  height: auto;
+}
+
+@media (min-width: 1000px) {
+  img.round-image.rem3 {
+    width: 4rem;
+    height: auto;
+  }
+}

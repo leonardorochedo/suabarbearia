@@ -155,10 +155,31 @@ export function useAuth() {
     async function UserEdit(user, id) {
         let msgText = ''
 
+        const userFormData = new FormData();
+
+        userFormData.append('name', user.name);
+        userFormData.append('email', user.email);
+        userFormData.append('cpf', user.cpf);
+        userFormData.append('birth', user.birth);
+        userFormData.append('phone', user.phone);
+        
+        // Adicionar o objeto address ao FormData
+        Object.entries(user.address).forEach(([key, value]) => {
+            userFormData.append(`address.${key}`, value);
+        });
+
+        // Adicione a imagem ao FormData (se necessário)
+        if (user.image) {
+            userFormData.append('image', user.image);
+        }
+
+        userFormData.append('password', user.password);
+        userFormData.append('confirmpassword', user.confirmpassword);
+
         try {
-            const data = await api.patch(`/users/edit/${id}`, user, {
+            const data = await api.patch(`/users/edit/${id}`, userFormData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data' // backend entender que esta indo uma imagem
+                    'Content-Type': 'multipart/form-data',
                 }
             }).then((response) => {
                 msgText = response.data.message

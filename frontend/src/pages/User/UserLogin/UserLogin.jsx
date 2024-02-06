@@ -17,8 +17,33 @@ export function UserLogin() {
         setUser({...user, [e.target.name]: e.target.value});
     };
 
+    function verifyData() {
+
+        // Valid email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(user.email)) {
+            toast.error("E-mail inválido!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+
+            return false;
+        };
+
+        return true;
+    };
+
     function handleSubmit(e) {
         e.preventDefault();
+
+        verifyData();
 
         UserLogin(user);
     };
