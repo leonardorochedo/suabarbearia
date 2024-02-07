@@ -227,7 +227,7 @@ export function UserEdit() {
             ) : (
                 <>
                     <h1 className="title">Você não está autenticado!</h1>
-                    <Link to="/" className="link comeback">Voltar para a página inicial.</Link>
+                    <Link to="/user/login" className="link comeback">Voltar para a página inicial.</Link>
                 </>
             )}
         </section>
