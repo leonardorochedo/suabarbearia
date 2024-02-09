@@ -52,7 +52,7 @@ export function UserRegister() {
         if (!emailRegex.test(user.email)) {
             toast.error("E-mail inválido!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 3500,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -68,7 +68,7 @@ export function UserRegister() {
         if (!cpf.isValid(user.cpf)) {
             toast.error("CPF inválido!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 3500,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -103,7 +103,7 @@ export function UserRegister() {
         } catch (error) {
             return toast.error("CEP inválido!", {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 3500,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,

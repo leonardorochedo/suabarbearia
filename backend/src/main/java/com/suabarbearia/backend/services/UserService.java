@@ -1,6 +1,9 @@
 package com.suabarbearia.backend.services;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -173,7 +176,7 @@ public class UserService {
 		return response;
 	}
 
-	public TextResponse sendEmailPassword(String email) {
+	public TextResponse sendEmailPassword(String email) throws UnsupportedEncodingException {
 
 		// Get user and token
 		User recipient = userRepository.findByEmail(email);
@@ -183,6 +186,7 @@ public class UserService {
 		}
 
 		String token = JwtUtil.generateTokenWhenForgotPassword(recipient.getEmail());
+		String tokenFormatted = URLEncoder.encode(token, StandardCharsets.UTF_8.toString());
 
 		// Send email
 		String subject = "Recuperação de Senha - Sua Barbearia";
@@ -191,11 +195,11 @@ public class UserService {
 				+ "Recebemos uma solicitação de recuperação de senha para a sua conta na Sua Barbearia. "
 				+ "Se você não fez essa solicitação, ignore este e-mail. Caso contrário, clique no link abaixo para "
 				+ "redefinir sua senha:\n\n"
-				+ "Link para recuperação de senha: https://www.suabarbearia.com.br/users/forgotpassword?token=%s\n\n"
+				+ "Link para recuperação de senha: https://www.suabarbearia.com.br/user/forgotpassword?token=%s\n\n"
 				+ "Este link é válido por 1 hora.\n\n"
 				+ "Atenciosamente,\n"
 				+ "Equipe Sua Barbearia",
-				recipient.getName(), token);
+				recipient.getName(), tokenFormatted);
 
 		String emailResponse = emailService.sendEmail(email, subject, body);
 

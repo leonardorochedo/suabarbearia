@@ -22,6 +22,7 @@ import com.suabarbearia.backend.services.UserService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Set;
@@ -115,7 +116,7 @@ public class UserResource {
 			TextResponse response = userService.sendEmailPassword(email);
 
 			return ResponseEntity.ok().body(response);
-		} catch (MailException e) {
+		} catch (MailException | UnsupportedEncodingException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
@@ -132,6 +133,10 @@ public class UserResource {
 			TextResponse response = userService.changePassword(authorizationHeader, passwords);
 
 			return ResponseEntity.ok().body(response);
+		} catch (InvalidTokenException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
 		} catch (FieldsAreNullException | PasswordDontMatchException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 

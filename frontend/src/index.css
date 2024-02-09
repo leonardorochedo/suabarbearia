@@ -63,15 +63,12 @@ section.container-form {
 
 .form-container {
   width: 75vw;
-  margin-bottom: 1rem;
 }
 
 .form-buttons {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-
-  margin-top: 2rem;
 }
 
 .form-buttons p span {
@@ -131,4 +128,26 @@ button.delete-button {
 button.delete-button:hover {
   background-color: #eb0c0c;
   color: #fff;
+}
+
+.container-forgot-password {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 0.75rem;
+}
+
+.forgot-password {
+  cursor: pointer;
+  margin-right: auto;
+
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--second-color);
+
+  transition: 0.3s;
+}
+
+.forgot-password:hover {
+  opacity: 0.65;
 }

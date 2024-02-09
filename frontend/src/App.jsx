@@ -3,6 +3,7 @@ import { UserLogin } from "./pages/User/UserLogin/UserLogin";
 import { UserRegister } from "./pages/User/UserRegister/UserRegister";
 import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 import { UserDelete } from "./pages/User/UserDelete/UserDelete";
+import { UserChangePassword } from "./pages/User/UserChangePassword/UserChangePassword";
 
 // CONTEXTS
 import { UserProvider } from "./context/UserContext";
@@ -44,6 +45,7 @@ function App() {
               <Route path="/user/register" element={<UserRegister />} />
               <Route path="/user/edit" element={<UserEdit />} />
               <Route path="/user/delete/:id" element={<UserDelete />} />
+              <Route path="/user/changepassword" element={<UserChangePassword />} />
             </Routes>
           </UserProvider>
         </QueryClientProvider>
