@@ -1,6 +1,6 @@
 // CONTEXT
 import { useState, useContext } from 'react';
-import { Context } from "../../../context/UserContext";
+import { Context } from "../../../context/AppContext";
 
 // RRD
 import { Link } from "react-router-dom";

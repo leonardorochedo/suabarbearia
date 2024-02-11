@@ -5,8 +5,11 @@ import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 import { UserDelete } from "./pages/User/UserDelete/UserDelete";
 import { UserChangePassword } from "./pages/User/UserChangePassword/UserChangePassword";
 
+// BARBERSHOP
+import { BarbershopLogin } from "./pages/Barbershop/BarbershopLogin/BarbershopLogin";
+
 // CONTEXTS
-import { UserProvider } from "./context/UserContext";
+import { AppProvider } from "./context/AppContext";
 
 // QUERY CLIENT
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -39,15 +42,18 @@ function App() {
           theme="light"
         />
         <QueryClientProvider client={queryClient}>
-          <UserProvider>
+          <AppProvider>
             <Routes>
+              {/* USER */}
               <Route path="/user/login" element={<UserLogin />} />
               <Route path="/user/register" element={<UserRegister />} />
               <Route path="/user/edit" element={<UserEdit />} />
               <Route path="/user/delete/:id" element={<UserDelete />} />
               <Route path="/user/changepassword" element={<UserChangePassword />} />
+              {/* BARBERSHOP */}
+              <Route path="/barbershop/login" element={<BarbershopLogin />} />
             </Routes>
-          </UserProvider>
+          </AppProvider>
         </QueryClientProvider>
       </BrowserRouter>
   )

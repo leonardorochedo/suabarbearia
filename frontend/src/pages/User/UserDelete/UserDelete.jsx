@@ -1,9 +1,10 @@
 // CONTEXT
 import { useContext } from "react";
-import { Context } from "../../../context/UserContext";
+import { Context } from "../../../context/AppContext";
+import { RedirectAuth } from '../../../components/RedirectAuth/RedirectAuth';
 
 // RRD
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export function UserDelete() {
 
@@ -25,8 +26,7 @@ export function UserDelete() {
                 </>
             ) : (
                 <>
-                    <h1 className="title">Você não está autenticado!</h1>
-                    <Link to="/user/login" className="link comeback" >Entre com sua conta.</Link>
+                    <RedirectAuth title="Você não está autenticado!" comebackText="Entre com sua conta." toURL="/user/login" />
                 </>
             )}
         </section>

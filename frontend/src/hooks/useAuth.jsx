@@ -32,7 +32,7 @@ export function useAuth() {
     }, []);
 
     // AuthData
-    async function authUser(token) {
+    async function authAccount(token) {
         const expirationTimestamp = Date.now() + 24 * 60 * 60 * 1000; // 24 horas de exp pro token
 
         setAuthenticate(true);
@@ -43,6 +43,8 @@ export function useAuth() {
     };
 
     // API's Methods
+
+    // User
     async function UserRegister(user) {
 
         let msgText = '';
@@ -55,7 +57,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            await authUser(data.token);
+            await authAccount(data.token);
         } catch (err) {
             msgText = err.response.data.message // pegando o error message mandado da API
             toast.error(msgText, {
@@ -82,7 +84,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            await authUser(data.token);
+            await authAccount(data.token);
         } catch (err) {
             msgText = err.response.data.message
             toast.error(msgText, {
@@ -196,7 +198,7 @@ export function useAuth() {
             
             await SuccesNotification(msgText);
 
-            await authUser(token);
+            await authAccount(token);
         } catch (err) {
             msgText = err.response.data.message;
             toast.error(msgText, {
@@ -212,7 +214,35 @@ export function useAuth() {
         };
     };
 
-    async function UserLogout() {
+    // Barbershop
+    async function BarbershopLogin(user) {
+        let msgText = '';
+
+        try {
+            const data = await api.post('/barbershops/signin', user).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+
+            await SuccesNotification(msgText);
+
+            await authAccount(data.token);
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
+    async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
         await SuccesNotification(msgText);
@@ -226,5 +256,5 @@ export function useAuth() {
         window.location.reload(true);
     };
 
-    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, UserLogout }
+    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopLogin, Logout }
 }

@@ -1,12 +1,13 @@
 // CONTEXT
 import { useState, useContext } from 'react';
-import { Context } from "../../../context/UserContext";
+import { Context } from "../../../context/AppContext";
 
 // RRD
 import { Link } from "react-router-dom";
 
 // COMPONENT
 import { Input } from "../../../components/Input/Input";
+import { RedirectAuth } from '../../../components/RedirectAuth/RedirectAuth';
 
 // MASK
 import { cpf } from 'cpf-cnpj-validator'; 
@@ -148,12 +149,11 @@ export function UserRegister() {
             {authenticated
             ? (
                 <>
-                    <h1 className="title">Você já está autenticado!</h1>
-                    <Link to="/" className="link comeback">Voltar para a página inicial.</Link>
+                    <RedirectAuth title="Você já está autenticado." comebackText="Voltar para a página inicial." toURL="/" />
                 </>
             ) : (
                 <>
-                    <h1 className="title">Registre sua conta!</h1>
+                    <h1 className="title">Registrar como Cliente!</h1>
                     <form onSubmit={handleSubmit} className="form-container">
                         <Input type="name" name="name" id="name" minLength={10} handleChangeInput={handleChangeInput} text="Nome" placeholder="Digite seu nome" />
                         <Input type="email" name="email" id="email" handleChangeInput={handleChangeInput} text="E-mail" placeholder="Digite seu e-mail" />

@@ -1,14 +1,12 @@
 // CONTEXT
 import { useState, useContext } from 'react';
 import { useQuery } from 'react-query';
-import { Context } from "../../../context/UserContext";
-
-// RRD
-import { Link } from "react-router-dom";
+import { Context } from "../../../context/AppContext";
 
 // COMPONENT
 import { Input } from "../../../components/Input/Input";
 import { RoundImage } from "../../../components/RoundImage/RoundImage";
+import { RedirectAuth } from '../../../components/RedirectAuth/RedirectAuth';
 
 // MASK
 import { cpf } from 'cpf-cnpj-validator'; 
@@ -226,8 +224,7 @@ export function UserEdit() {
                 </>
             ) : (
                 <>
-                    <h1 className="title">Você não está autenticado!</h1>
-                    <Link to="/user/login" className="link comeback">Voltar para a página inicial.</Link>
+                    <RedirectAuth title="Você não está autenticado!" comebackText="Entre com sua conta." toURL="/user/login" />
                 </>
             )}
         </section>

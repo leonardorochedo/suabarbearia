@@ -16,13 +16,13 @@ import { toast } from "react-toastify";
 // API
 import api from '../../../utils/api';
 
-export function UserLogin() {
+export function BarbershopLogin() {
 
-    const [user, setUser] = useState({});
-    const { authenticated, UserLogin } = useContext(Context);
+    const [barbershop, setBarbershop] = useState({});
+    const { authenticated, BarbershopLogin } = useContext(Context);
 
     function handleChangeInput(e) {
-        setUser({...user, [e.target.name]: e.target.value});
+        setBarbershop({...barbershop, [e.target.name]: e.target.value});
     };
 
     function verifyData() {
@@ -30,7 +30,7 @@ export function UserLogin() {
         // Valid email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!emailRegex.test(user.email)) {
+        if (!emailRegex.test(barbershop.email)) {
             toast.error("E-mail inválido!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -53,11 +53,11 @@ export function UserLogin() {
 
         verifyData();
 
-        UserLogin(user);
+        BarbershopLogin(barbershop);
     };
 
     async function forgotPassword() {
-        if (!user.email) {
+        if (!barbershop.email) {
             toast.error("E-mail inválido", {
                 position: "top-right",
                 autoClose: 3500,
@@ -83,7 +83,7 @@ export function UserLogin() {
             theme: "light",
         });
 
-        api.post(`/users/sendemailpassword/${user.email}`).then(async (response) => {
+        api.post(`/barbershop/sendemailpassword/${barbershop.email}`).then(async (response) => {
             await SuccesNotification(response.data.message);
         })
     };
@@ -97,7 +97,7 @@ export function UserLogin() {
                 </>
             ) : (
                 <>
-                    <h1 className="title">Entrar como Cliente!</h1>
+                    <h1 className="title">Entrar como Barbearia!</h1>
                     <form onSubmit={handleSubmit} className="form-container">
                         <Input type="email" name="email" id="email" handleChangeInput={handleChangeInput} text="E-mail" placeholder="Digite seu e-mail" />
                         <Input type="password" name="password" id="password" minLength={8} handleChangeInput={handleChangeInput} text="Senha" placeholder="Digite sua senha" />
@@ -106,7 +106,7 @@ export function UserLogin() {
                         </div>
                         <div className="form-buttons">
                             <input type="submit" value="Entrar" />
-                            <p>Não tem uma conta? <Link to="/user/register" className='link'><span>Clique aqui.</span></Link></p>
+                            <p>Não tem uma conta? <Link to="/barbershop/register" className='link'><span>Clique aqui.</span></Link></p>
                         </div>
                     </form>
                 </>
