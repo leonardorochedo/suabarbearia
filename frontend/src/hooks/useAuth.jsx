@@ -270,6 +270,38 @@ export function useAuth() {
         };
     };
 
+    async function BarbershopDelete(id) {
+        let msgText = '';
+
+        try {
+            const data = await api.delete(`/barbershops/delete/${id}`).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            })
+
+            await SuccesNotification(msgText);
+
+            setAuthenticate(false);
+            localStorage.removeItem('token');
+            localStorage.removeItem('tokenExpiration');
+            api.defaults.headers.Authorization = undefined;
+            navigate('/');
+            window.location.reload(true);
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
@@ -284,5 +316,5 @@ export function useAuth() {
         window.location.reload(true);
     };
 
-    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, Logout }
+    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, BarbershopDelete, Logout }
 }

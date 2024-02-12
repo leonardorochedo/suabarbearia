@@ -8,6 +8,7 @@ import { UserChangePassword } from "./pages/User/UserChangePassword/UserChangePa
 // BARBERSHOP
 import { BarbershopLogin } from "./pages/Barbershop/BarbershopLogin/BarbershopLogin";
 import { BarbershopRegister } from "./pages/Barbershop/BarbershopRegister/BarbershopRegister";
+import { BarbershopDelete } from "./pages/Barbershop/BarbershopDelete/BarbershopDelete";
 
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
@@ -54,6 +55,7 @@ function App() {
               {/* BARBERSHOP */}
               <Route path="/barbershop/login" element={<BarbershopLogin />} />
               <Route path="/barbershop/register" element={<BarbershopRegister />} />
+              <Route path="/barbershop/delete/:id" element={<BarbershopDelete />} />
             </Routes>
           </AppProvider>
         </QueryClientProvider>
