@@ -151,3 +151,19 @@ button.delete-button:hover {
 .forgot-password:hover {
   opacity: 0.65;
 }
+
+.form-select-document {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.form-select-document input {
+  margin: 0;
+  width: 1rem;
+  margin-right: -2rem;
+}

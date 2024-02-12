@@ -215,11 +215,39 @@ export function useAuth() {
     };
 
     // Barbershop
-    async function BarbershopLogin(user) {
+    async function BarbershopRegister(barbershop) {
+
         let msgText = '';
 
         try {
-            const data = await api.post('/barbershops/signin', user).then((response) => {
+            const data = await api.post('/barbershops/signup', barbershop).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            })
+
+            await SuccesNotification(msgText);
+
+            await authAccount(data.token);
+        } catch (err) {
+            msgText = err.response.data.message // pegando o error message mandado da API
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
+    async function BarbershopLogin(barbershop) {
+        let msgText = '';
+
+        try {
+            const data = await api.post('/barbershops/signin', barbershop).then((response) => {
                 msgText = response.data.message;
                 return response.data;
             });
@@ -256,5 +284,5 @@ export function useAuth() {
         window.location.reload(true);
     };
 
-    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopLogin, Logout }
+    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, Logout }
 }
