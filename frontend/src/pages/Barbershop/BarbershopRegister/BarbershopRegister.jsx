@@ -70,7 +70,7 @@ export function BarbershopRegister() {
             return false;
         };
 
-        // Valid CPF
+        // Valid Document
         if (documentType === 'cpf' && !cpf.isValid(barbershop.document)) {
             toast.error("CPF inválido!", {
                 position: "top-right",

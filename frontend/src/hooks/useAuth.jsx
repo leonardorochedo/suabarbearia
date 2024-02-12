@@ -302,6 +302,61 @@ export function useAuth() {
         };
     };
 
+    async function BarbershopEdit(barbershop, id) {
+        let msgText = '';
+
+        const barbershopFormData = new FormData();
+
+        barbershopFormData.append('name', barbershop.name);
+        barbershopFormData.append('email', barbershop.email);
+        barbershopFormData.append('document', barbershop.document);
+        barbershopFormData.append('birth', barbershop.birth);
+        barbershopFormData.append('phone', barbershop.phone);
+        
+        // Adicionar o objeto address ao FormData
+        Object.entries(barbershop.address).forEach(([key, value]) => {
+            barbershopFormData.append(`address.${key}`, value);
+        });
+
+        // Adicione a imagem ao FormData (se necessário)
+        if (barbershop.image) {
+            barbershopFormData.append('image', barbershop.image);
+        };
+
+        barbershopFormData.append('openTime', barbershop.openTime);
+        barbershopFormData.append('closeTime', barbershop.closeTime);
+        barbershopFormData.append('password', barbershop.password);
+        barbershopFormData.append('confirmpassword', barbershop.confirmpassword);
+
+        try {
+            const data = await api.patch(`/barbershops/edit/${id}`, barbershopFormData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            }).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+            
+            await SuccesNotification(msgText);
+
+            navigate('/');
+            window.location.reload(true);
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
@@ -316,5 +371,5 @@ export function useAuth() {
         window.location.reload(true);
     };
 
-    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, BarbershopDelete, Logout }
+    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, BarbershopDelete, BarbershopEdit, Logout }
 }
