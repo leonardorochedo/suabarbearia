@@ -22,7 +22,6 @@ public class Barbershop implements Serializable {
 	
 	private String name;
 
-	@Column(unique = true)
 	private String email;
 	private String password;
 	private String document;

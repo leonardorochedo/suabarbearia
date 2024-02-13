@@ -102,6 +102,21 @@ public class UserService {
 
 		String token = JwtUtil.generateToken(newUser.getEmail());
 
+		// Send email
+		String subject = "Bem-vindo(a) á Sua Barbearia";
+		String body = String.format(
+				"Olá %s,\n\n"
+				+ "Bem-vindo à Sua Barbearia! Estamos empolgados por tê-lo(a) conosco. "
+				+ "Agora você faz parte da nossa comunidade de clientes satisfeitos.\n\n"
+				+ "Fique à vontade para explorar os serviços e recursos disponíveis em nosso site. "
+				+ "Se tiver alguma dúvida ou precisar de assistência, estamos aqui para ajudar.\n\n"
+				+ "Agradecemos por escolher a Sua Barbearia!\n\n"
+				+ "Atenciosamente,\n"
+				+ "Equipe Sua Barbearia",
+				user.getName());
+
+		emailService.sendEmail(user.getEmail(), subject, body);
+
 		ApiTokenResponse<User> response = new ApiTokenResponse<User>("Usuário criado com sucesso!", token, newUser);
 
 		return response;
@@ -180,7 +195,7 @@ public class UserService {
 		return response;
 	}
 
-	public TextResponse sendEmailPassword(String email) throws UnsupportedEncodingException {
+	public TextResponse sendEmailPassword(String email) {
 
 		// Get user and token
 		User recipient = userRepository.findByEmail(email);
@@ -190,7 +205,6 @@ public class UserService {
 		}
 
 		String token = JwtUtil.generateTokenWhenForgotPassword(recipient.getEmail());
-		String tokenFormatted = URLEncoder.encode(token, StandardCharsets.UTF_8.toString());
 
 		// Send email
 		String subject = "Recuperação de Senha - Sua Barbearia";
@@ -199,11 +213,11 @@ public class UserService {
 				+ "Recebemos uma solicitação de recuperação de senha para a sua conta na Sua Barbearia. "
 				+ "Se você não fez essa solicitação, ignore este e-mail. Caso contrário, clique no link abaixo para "
 				+ "redefinir sua senha:\n\n"
-				+ "Link para recuperação de senha: https://www.suabarbearia.com.br/user/forgotpassword?token=%s\n\n"
+				+ "Link para recuperação de senha: https://www.suabarbearia.com.br/user/changepassword?token=%s\n\n"
 				+ "Este link é válido por 1 hora.\n\n"
 				+ "Atenciosamente,\n"
 				+ "Equipe Sua Barbearia",
-				recipient.getName(), tokenFormatted);
+				recipient.getName(), token);
 
 		String emailResponse = emailService.sendEmail(email, subject, body);
 
@@ -247,10 +261,13 @@ public class UserService {
 		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 		User userId = userRepository.findById(id).get();
 
-		// Check barber
+		// Check users
 		if (!userToken.equals(userId)) {
 			throw new InvalidTokenException("Token inválido para este usuário!");
 		}
+
+		String userName = userId.getName();
+		String userEmail = userId.getEmail();
 
 		// Att data
 		userId.setName("Usuário excluído!");
@@ -263,6 +280,20 @@ public class UserService {
         userId.setPassword("");
 
 		userRepository.save(userId);
+
+		// Send email
+		String subject = "Conta Excluída - Sua Barbearia";
+		String body = String.format(
+				"Olá %s,\n\n"
+				+ "Lamentamos ver você partir da Sua Barbearia.\n\n"
+				+ "Confirmamos a exclusão da sua conta. Se você tiver alguma dúvida ou desejar fornecer feedback sobre "
+				+ "sua experiência conosco, não hesite em entrar em contato.\n\n"
+				+ "Agradecemos por ter sido parte da nossa comunidade. Esperamos vê-lo novamente no futuro.\n\n"
+				+ "Atenciosamente,\n"
+				+ "Equipe Sua Barbearia",
+				userName);
+
+		emailService.sendEmail(userEmail, subject, body);
 
 		TextResponse response = new TextResponse("Usuário deletado com sucesso!");
 

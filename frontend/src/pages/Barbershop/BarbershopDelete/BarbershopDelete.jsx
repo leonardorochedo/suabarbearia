@@ -6,15 +6,28 @@ import { RedirectAuth } from '../../../components/RedirectAuth/RedirectAuth';
 // RRD
 import { useParams } from "react-router-dom";
 
+import { toast } from "react-toastify";
+
 export function BarbershopDelete() {
 
     const { authenticated, BarbershopDelete } = useContext(Context)
     const { id } = useParams()
 
     function buttonSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
 
-        BarbershopDelete(id)
+        toast.info("Carregando...", {
+            position: "top-right",
+            autoClose: 3500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+
+        BarbershopDelete(id);
     }
 
     return (

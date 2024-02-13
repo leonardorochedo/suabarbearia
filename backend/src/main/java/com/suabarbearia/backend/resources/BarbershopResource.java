@@ -77,7 +77,11 @@ public class BarbershopResource {
 	        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 	        return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
-	    }
+	    } catch (MailException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
+		}
 	}
 
 	@PostMapping(value = "/signin")
@@ -159,6 +163,10 @@ public class BarbershopResource {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		} catch (MailException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
 		}
 	}
 

@@ -110,6 +110,21 @@ public class BarbershopService {
 
 		String token = JwtUtil.generateToken(newBarbershop.getEmail());
 
+		// Send email
+		String subject = "Bem-vindo(a) á Sua Barbearia";
+		String body = String.format(
+				"Olá %s,\n\n"
+				+ "Bem-vindo à Sua Barbearia! Estamos empolgados por tê-lo(a) conosco. "
+				+ "Agora você faz parte da nossa comunidade de clientes satisfeitos.\n\n"
+				+ "Fique à vontade para explorar os serviços e recursos disponíveis em nosso site. "
+				+ "Se tiver alguma dúvida ou precisar de assistência, estamos aqui para ajudar.\n\n"
+				+ "Agradecemos por escolher a Sua Barbearia!\n\n"
+				+ "Atenciosamente,\n"
+				+ "Equipe Sua Barbearia",
+				barbershop.getName());
+
+		emailService.sendEmail(barbershop.getEmail(), subject, body);
+
 		ApiTokenResponse<Barbershop> response = new ApiTokenResponse<Barbershop>("Barbearia criada com sucesso!", token, newBarbershop);
 
 		return response;
@@ -208,7 +223,7 @@ public class BarbershopService {
 						+ "Recebemos uma solicitação de recuperação de senha para a sua conta na Sua Barbearia. "
 						+ "Se você não fez essa solicitação, ignore este e-mail. Caso contrário, clique no link abaixo para "
 						+ "redefinir sua senha:\n\n"
-						+ "Link para recuperação de senha: https://www.suabarbearia.com.br/barbershops/forgotpassword?token=%s\n\n"
+						+ "Link para recuperação de senha: https://www.suabarbearia.com.br/barbershop/changepassword?token=%s\n\n"
 						+ "Este link é válido por 1 hora.\n\n"
 						+ "Atenciosamente,\n"
 						+ "Equipe Sua Barbearia",
@@ -261,6 +276,9 @@ public class BarbershopService {
 			throw new InvalidTokenException("Token inválido para esta barbearia!");
 		}
 
+		String barbershopName = barbershopId.getName();
+		String barbershopEmail = barbershopId.getEmail();
+
 		barbershopId.setName("Barbearia excluída!");
 		barbershopId.setEmail("");
 		barbershopId.setDocument("");
@@ -273,6 +291,20 @@ public class BarbershopService {
         barbershopId.setPassword("");
 
 		barbershopRepository.save(barbershopId);
+
+		// Send email
+		String subject = "Conta Excluída - Sua Barbearia";
+		String body = String.format(
+				"Olá %s,\n\n"
+						+ "Lamentamos ver você partir da Sua Barbearia.\n\n"
+						+ "Confirmamos a exclusão da sua conta. Se você tiver alguma dúvida ou desejar fornecer feedback sobre "
+						+ "sua experiência conosco, não hesite em entrar em contato.\n\n"
+						+ "Agradecemos por ter sido parte da nossa comunidade. Esperamos vê-lo novamente no futuro.\n\n"
+						+ "Atenciosamente,\n"
+						+ "Equipe Sua Barbearia",
+				barbershopName);
+
+		emailService.sendEmail(barbershopEmail, subject, body);
 
 		TextResponse response = new TextResponse("Barbearia deletada com sucesso!");
 
