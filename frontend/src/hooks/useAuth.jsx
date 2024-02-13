@@ -13,6 +13,28 @@ export function useAuth() {
     const navigate = useNavigate();
 
     // Token managment
+    async function checkTokenValidity() {
+        const tokenType = localStorage.getItem('tokenType');
+
+        if (tokenType) {
+            try {
+                const response = await api.get(`/${tokenType}/profile`);
+            
+                return;
+            } catch (err) {
+                if (err.response.status == 401) {
+                    setAuthenticate(false);
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('tokenType');
+                    localStorage.removeItem('tokenExpiration');
+                    api.defaults.headers.Authorization = undefined;
+                    navigate('/');
+                    window.location.reload(true);
+                };
+            }
+        }
+    };
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         const tokenExpiration = localStorage.getItem('tokenExpiration');
@@ -26,17 +48,27 @@ export function useAuth() {
             } else {
                 // O token expirou, limpar o localStorage
                 localStorage.removeItem('token');
+                localStorage.removeItem('tokenType');
                 localStorage.removeItem('tokenExpiration');
             }
         }
     }, []);
 
+    useEffect(() => {
+        checkTokenValidity();
+
+        const intervalId = setInterval(checkTokenValidity, 5 * 60 * 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
     // AuthData
-    async function authAccount(token) {
+    async function authAccount(token, tokenType) {
         const expirationTimestamp = Date.now() + 24 * 60 * 60 * 1000; // 24 horas de exp pro token
 
         setAuthenticate(true);
         localStorage.setItem('token', JSON.stringify(token));
+        localStorage.setItem('tokenType',tokenType);
         localStorage.setItem('tokenExpiration', expirationTimestamp.toString());
         navigate('/');
         window.location.reload(true); // dar um refresh quando redirecionar
@@ -57,7 +89,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            await authAccount(data.token);
+            await authAccount(data.token, "users");
         } catch (err) {
             msgText = err.response.data.message // pegando o error message mandado da API
             toast.error(msgText, {
@@ -84,7 +116,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            await authAccount(data.token);
+            await authAccount(data.token, "users");
         } catch (err) {
             msgText = err.response.data.message
             toast.error(msgText, {
@@ -113,6 +145,7 @@ export function useAuth() {
 
             setAuthenticate(false);
             localStorage.removeItem('token');
+            localStorage.removeItem('tokenType');
             localStorage.removeItem('tokenExpiration');
             api.defaults.headers.Authorization = undefined;
             navigate('/');
@@ -198,7 +231,7 @@ export function useAuth() {
             
             await SuccesNotification(msgText);
 
-            await authAccount(token);
+            await authAccount(token, "users");
         } catch (err) {
             msgText = err.response.data.message;
             toast.error(msgText, {
@@ -227,7 +260,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            await authAccount(data.token);
+            await authAccount(data.token, "barbershops");
         } catch (err) {
             msgText = err.response.data.message // pegando o error message mandado da API
             toast.error(msgText, {
@@ -254,7 +287,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            await authAccount(data.token);
+            await authAccount(data.token, "barbershops");
         } catch (err) {
             msgText = err.response.data.message
             toast.error(msgText, {
@@ -283,6 +316,7 @@ export function useAuth() {
 
             setAuthenticate(false);
             localStorage.removeItem('token');
+            localStorage.removeItem('tokenType');
             localStorage.removeItem('tokenExpiration');
             api.defaults.headers.Authorization = undefined;
             navigate('/');
@@ -357,6 +391,35 @@ export function useAuth() {
         };
     };
 
+    async function BarbershopChangePassword(barbershop, token) {
+        let msgText = '';
+
+        try {
+            api.defaults.headers.Authorization = `Bearer ${token}`;
+    
+            const data = await api.patch("/barbershops/changepassword", barbershop).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+            
+            await SuccesNotification(msgText);
+
+            await authAccount(token, "barbershops");
+        } catch (err) {
+            msgText = err.response.data.message;
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
@@ -365,11 +428,12 @@ export function useAuth() {
         // logout geral
         setAuthenticate(false);
         localStorage.removeItem('token');
+        localStorage.removeItem('tokenType');
         localStorage.removeItem('tokenExpiration');
         api.defaults.headers.Authorization = undefined;
         navigate('/');
         window.location.reload(true);
     };
 
-    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, BarbershopDelete, BarbershopEdit, Logout }
+    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, BarbershopDelete, BarbershopEdit, BarbershopChangePassword, Logout }
 }

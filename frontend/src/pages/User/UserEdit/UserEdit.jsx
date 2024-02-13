@@ -199,7 +199,7 @@ export function UserEdit() {
                     )}
                     <form onSubmit={handleSubmit} className="form-container">
                         <Input type="file" name="image" handleChangeInput={onFileChange} text="Imagem" />
-                        <Input type="name" name="name" id="name" minLength={10} handleChangeInput={handleChangeInput} value={user.name || ""} text="Nome" placeholder="Digite seu nome" />
+                        <Input type="name" name="name" id="name" minLength={5} handleChangeInput={handleChangeInput} value={user.name || ""} text="Nome" placeholder="Digite seu nome" />
                         <Input type="email" name="email" id="email" handleChangeInput={handleChangeInput} value={user.email || ""} text="E-mail" placeholder="Digite seu e-mail" />
                         <div className="form-input">
                             <label htmlFor="phone">Celular:</label>

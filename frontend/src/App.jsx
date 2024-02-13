@@ -1,8 +1,8 @@
 // USER
 import { UserLogin } from "./pages/User/UserLogin/UserLogin";
 import { UserRegister } from "./pages/User/UserRegister/UserRegister";
-import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 import { UserDelete } from "./pages/User/UserDelete/UserDelete";
+import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 import { UserChangePassword } from "./pages/User/UserChangePassword/UserChangePassword";
 
 // BARBERSHOP
@@ -10,6 +10,7 @@ import { BarbershopLogin } from "./pages/Barbershop/BarbershopLogin/BarbershopLo
 import { BarbershopRegister } from "./pages/Barbershop/BarbershopRegister/BarbershopRegister";
 import { BarbershopDelete } from "./pages/Barbershop/BarbershopDelete/BarbershopDelete";
 import { BarbershopEdit } from "./pages/Barbershop/BarbershopEdit/BarbershopEdit";
+import { BarbershopChangePassword } from "./pages/Barbershop/BarbershopChangePassword/BarbershopChangePassword";
 
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
@@ -58,6 +59,7 @@ function App() {
               <Route path="/barbershop/register" element={<BarbershopRegister />} />
               <Route path="/barbershop/delete/:id" element={<BarbershopDelete />} />
               <Route path="/barbershop/edit" element={<BarbershopEdit />} />
+              <Route path="/barbershop/changepassword" element={<BarbershopChangePassword />} />
             </Routes>
           </AppProvider>
         </QueryClientProvider>

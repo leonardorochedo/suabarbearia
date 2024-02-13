@@ -66,6 +66,10 @@ public class UserService {
 
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
+		if (user == null) {
+			throw new InvalidTokenException("Token inválido!");
+		}
+
 		ApiResponse<User> response = new ApiResponse<User>("Perfil carregado!", user);
 
 		return response;

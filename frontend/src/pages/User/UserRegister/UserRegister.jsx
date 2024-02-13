@@ -155,7 +155,7 @@ export function UserRegister() {
                 <>
                     <h1 className="title">Registrar como Cliente!</h1>
                     <form onSubmit={handleSubmit} className="form-container">
-                        <Input type="name" name="name" id="name" minLength={10} handleChangeInput={handleChangeInput} text="Nome" placeholder="Digite seu nome" />
+                        <Input type="name" name="name" id="name" minLength={5} handleChangeInput={handleChangeInput} text="Nome" placeholder="Digite seu nome" />
                         <Input type="email" name="email" id="email" handleChangeInput={handleChangeInput} text="E-mail" placeholder="Digite seu e-mail" />
                         <div className="form-input">
                             <label htmlFor="cpf">CPF:</label>

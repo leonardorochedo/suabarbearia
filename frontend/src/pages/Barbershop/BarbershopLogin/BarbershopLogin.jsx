@@ -83,7 +83,7 @@ export function BarbershopLogin() {
             theme: "light",
         });
 
-        api.post(`/barbershop/sendemailpassword/${barbershop.email}`).then(async (response) => {
+        api.post(`/barbershops/sendemailpassword/${barbershop.email}`).then(async (response) => {
             await SuccesNotification(response.data.message);
         })
     };

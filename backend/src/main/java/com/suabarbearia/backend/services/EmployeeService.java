@@ -51,6 +51,20 @@ public class EmployeeService {
         return employee.get();
     }
 
+    public ApiResponse<Employee> profile(String authorizationHeader) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employee = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
+
+        if (employee == null) {
+            throw new InvalidTokenException("Token inválido!");
+        }
+
+        ApiResponse<Employee> response = new ApiResponse<Employee>("Perfil carregado!", employee);
+
+        return response;
+    }
+
     public ApiResponse<Employee> create(String authorizationHeader, CreateEmployeeDto employee) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 

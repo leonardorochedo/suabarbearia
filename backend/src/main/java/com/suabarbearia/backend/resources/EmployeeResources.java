@@ -4,6 +4,7 @@ import com.suabarbearia.backend.dtos.CreateEmployeeDto;
 import com.suabarbearia.backend.dtos.EditEmployeeDto;
 import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Employee;
+import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
@@ -21,7 +22,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping(value = "/employee")
+@RequestMapping(value = "/employees")
 public class EmployeeResources {
 
     @Autowired
@@ -32,6 +33,23 @@ public class EmployeeResources {
         Employee employee = employeeService.findById(id);
 
         return ResponseEntity.ok().body(employee);
+    }
+
+    @GetMapping(value = "/profile")
+    public ResponseEntity<?> profile(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            ApiResponse<Employee> employee = employeeService.profile(authorizationHeader);
+
+            return ResponseEntity.ok().body(employee);
+        } catch (InvalidTokenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        }
     }
 
     @PostMapping(value = "/create")

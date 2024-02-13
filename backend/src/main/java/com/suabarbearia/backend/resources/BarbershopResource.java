@@ -52,10 +52,14 @@ public class BarbershopResource {
 			ApiResponse<Barbershop> barbershop = barbershopService.profile(authorizationHeader);
 
 			return ResponseEntity.ok().body(barbershop);
-		} catch (RuntimeException e) {
+		} catch (InvalidTokenException e) {
 			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
 			return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+		} catch (RuntimeException e) {
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+			return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
 		}
 	}
 

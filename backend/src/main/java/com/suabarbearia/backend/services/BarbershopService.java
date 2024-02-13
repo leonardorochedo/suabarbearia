@@ -74,6 +74,10 @@ public class BarbershopService {
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
+		if (barbershop == null) {
+			throw new InvalidTokenException("Token inválido!");
+		}
+
 		ApiResponse<Barbershop> response = new ApiResponse<Barbershop>("Perfil carregado!", barbershop);
 
 		return response;
