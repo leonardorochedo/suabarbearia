@@ -28,7 +28,7 @@ export function UserRegister() {
 
     const [user, setUser] = useState({});
     const [selectedDate, setSelectedDate] = useState();
-    const { authenticated, UserRegister } = useContext(Context);
+    const { authenticatedUser, authenticatedBarbershop, authenticatedEmployee, UserRegister } = useContext(Context);
 
     function handleChangeInput(e) {
         if (e.target.name == "cpf") {
@@ -157,7 +157,7 @@ export function UserRegister() {
 
     return (
         <section className="container container-form">
-            {authenticated
+            {authenticatedUser || authenticatedBarbershop || authenticatedEmployee
             ? (
                 <>
                     <RedirectAuth title="Você já está autenticado." comebackText="Voltar para a página inicial." toURL="/" />

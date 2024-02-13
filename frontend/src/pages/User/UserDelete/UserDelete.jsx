@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 export function UserDelete() {
 
-    const { authenticated, UserDelete } = useContext(Context)
+    const { authenticatedUser, UserDelete } = useContext(Context)
     const { id } = useParams()
 
     function buttonSubmit(e) {
@@ -32,7 +32,7 @@ export function UserDelete() {
 
     return (
         <section className="container">
-            {authenticated ? (
+            {authenticatedUser ? (
                 <>
                     <h1 className="title">Tem certeza que deseja excluir sua conta?</h1>
                     <button className="delete-button" onClick={buttonSubmit}>Sim! Deletar</button>

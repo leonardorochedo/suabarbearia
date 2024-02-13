@@ -9,7 +9,9 @@ import api from "../utils/api";
 
 export function useAuth() {
 
-    const [authenticated, setAuthenticate] = useState(false);
+    const [authenticatedUser, setAuthenticateUser] = useState(false);
+    const [authenticatedBarbershop, setAuthenticateBarbershop] = useState(false);
+    const [authenticatedEmployee, setAuthenticateEmployee] = useState(false);
     const navigate = useNavigate();
 
     // Token managment
@@ -23,7 +25,9 @@ export function useAuth() {
                 return;
             } catch (err) {
                 if (err.response.status == 401) {
-                    setAuthenticate(false);
+                    setAuthenticateUser(false);
+                    setAuthenticateBarbershop(false);
+                    setAuthenticateEmployee(false);
                     localStorage.removeItem('token');
                     localStorage.removeItem('tokenType');
                     localStorage.removeItem('tokenExpiration');
@@ -44,7 +48,12 @@ export function useAuth() {
             if (Date.now() < expirationTimestamp) {
                 // O token está dentro do prazo de validade
                 api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-                setAuthenticate(true);
+
+                if (localStorage.getItem('tokenType') === 'users') { setAuthenticateUser(true); }
+
+                if (localStorage.getItem('tokenType') === 'barbershops') { setAuthenticateBarbershop(true); }
+
+                if (localStorage.getItem('tokenType') === 'employees') { setAuthenticateEmployee(true); }
             } else {
                 // O token expirou, limpar o localStorage
                 localStorage.removeItem('token');
@@ -66,12 +75,18 @@ export function useAuth() {
     async function authAccount(token, tokenType) {
         const expirationTimestamp = Date.now() + 24 * 60 * 60 * 1000; // 24 horas de exp pro token
 
-        setAuthenticate(true);
         localStorage.setItem('token', JSON.stringify(token));
         localStorage.setItem('tokenType',tokenType);
         localStorage.setItem('tokenExpiration', expirationTimestamp.toString());
+
+        if (localStorage.getItem('tokenType') === 'users') { setAuthenticateUser(true); }
+
+        if (localStorage.getItem('tokenType') === 'barbershops') { setAuthenticateBarbershop(true); }
+
+        if (localStorage.getItem('tokenType') === 'employees') { setAuthenticateEmployee(true); }
+
         navigate('/');
-        window.location.reload(true); // dar um refresh quando redirecionar
+        window.location.reload(true);
     };
 
     // API's Methods
@@ -143,7 +158,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            setAuthenticate(false);
+            setAuthenticateUser(false);
             localStorage.removeItem('token');
             localStorage.removeItem('tokenType');
             localStorage.removeItem('tokenExpiration');
@@ -314,7 +329,7 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            setAuthenticate(false);
+            setAuthenticateBarbershop(false);
             localStorage.removeItem('token');
             localStorage.removeItem('tokenType');
             localStorage.removeItem('tokenExpiration');
@@ -420,13 +435,45 @@ export function useAuth() {
         };
     };
 
+    // Employee
+    async function EmployeeCreate(employee) {
+
+        let msgText = '';
+
+        try {
+            const data = await api.post('/employees/create', employee).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            })
+
+            await SuccesNotification(msgText);
+
+            navigate('/');
+            window.location.reload(true);
+        } catch (err) {
+            msgText = err.response.data.message // pegando o error message mandado da API
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
         await SuccesNotification(msgText);
 
         // logout geral
-        setAuthenticate(false);
+        setAuthenticateUser(false);
+        setAuthenticateBarbershop(false);
+        setAuthenticateEmployee(false);
         localStorage.removeItem('token');
         localStorage.removeItem('tokenType');
         localStorage.removeItem('tokenExpiration');
@@ -435,5 +482,21 @@ export function useAuth() {
         window.location.reload(true);
     };
 
-    return { authenticated, UserRegister, UserLogin, UserDelete, UserEdit, UserChangePassword, BarbershopRegister, BarbershopLogin, BarbershopDelete, BarbershopEdit, BarbershopChangePassword, Logout }
+    return { 
+        authenticatedUser,
+        authenticatedBarbershop,
+        authenticatedEmployee,
+        UserRegister,
+        UserLogin,
+        UserDelete,
+        UserEdit,
+        UserChangePassword,
+        BarbershopRegister,
+        BarbershopLogin,
+        BarbershopDelete,
+        BarbershopEdit,
+        BarbershopChangePassword,
+        EmployeeCreate,
+        Logout
+    }
 }

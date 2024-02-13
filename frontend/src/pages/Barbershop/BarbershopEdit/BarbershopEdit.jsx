@@ -43,7 +43,7 @@ export function BarbershopEdit() {
         confirmpassword: "",
     });
     const [preview, setPreview] = useState();
-    const { authenticated, BarbershopEdit } = useContext(Context);
+    const { authenticatedBarbershop, BarbershopEdit } = useContext(Context);
 
     // Consulting API
     const { data, isLoading, isError } = useQuery(['barbershop'], () =>
@@ -177,7 +177,7 @@ export function BarbershopEdit() {
 
     return (
         <section className="container container-form">
-            {authenticated
+            {authenticatedBarbershop
             ? (
                 <>
                     <h1 className="title">Atualize seus dados!</h1>

@@ -41,7 +41,7 @@ export function UserEdit() {
         confirmpassword: "",
     });
     const [preview, setPreview] = useState()
-    const { authenticated, UserEdit } = useContext(Context);
+    const { authenticatedUser, UserEdit } = useContext(Context);
 
     // Consulting API
     const { data, isLoading, isError } = useQuery(['user'], () =>
@@ -185,7 +185,7 @@ export function UserEdit() {
 
     return (
         <section className="container container-form">
-            {authenticated
+            {authenticatedUser
             ? (
                 <>
                     <h1 className="title">Atualize seus dados!</h1>

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 export function BarbershopDelete() {
 
-    const { authenticated, BarbershopDelete } = useContext(Context)
+    const { authenticatedBarbershop, BarbershopDelete } = useContext(Context)
     const { id } = useParams()
 
     function buttonSubmit(e) {
@@ -32,7 +32,7 @@ export function BarbershopDelete() {
 
     return (
         <section className="container">
-            {authenticated ? (
+            {authenticatedBarbershop ? (
                 <>
                     <h1 className="title">Tem certeza que deseja excluir sua conta?</h1>
                     <button className="delete-button" onClick={buttonSubmit}>Sim! Deletar</button>

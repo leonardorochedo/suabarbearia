@@ -19,7 +19,7 @@ import api from '../../../utils/api';
 export function BarbershopLogin() {
 
     const [barbershop, setBarbershop] = useState({});
-    const { authenticated, BarbershopLogin } = useContext(Context);
+    const { authenticatedUser, authenticatedBarbershop, authenticatedEmployee, BarbershopLogin } = useContext(Context);
 
     function handleChangeInput(e) {
         setBarbershop({...barbershop, [e.target.name]: e.target.value});
@@ -90,7 +90,7 @@ export function BarbershopLogin() {
 
     return (
         <section className="container container-form">
-            {authenticated
+            {authenticatedUser || authenticatedBarbershop || authenticatedEmployee
             ? (
                 <>
                     <RedirectAuth title="Você já está autenticado." comebackText="Voltar para a página inicial." toURL="/" />
