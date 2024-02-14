@@ -492,6 +492,39 @@ export function useAuth() {
         };
     };
 
+    async function EmployeeDelete() {
+        let msgText = '';
+
+        try {
+            const data = await api.delete(`/employees/delete`).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            })
+
+            await SuccesNotification(msgText);
+
+            setAuthenticateEmployee(false);
+            localStorage.removeItem('token');
+            localStorage.removeItem('tokenType');
+            localStorage.removeItem('tokenExpiration');
+            api.defaults.headers.Authorization = undefined;
+            navigate('/');
+            window.location.reload(true);
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
@@ -525,6 +558,7 @@ export function useAuth() {
         BarbershopChangePassword,
         EmployeeCreate,
         EmployeeLogin,
+        EmployeeDelete,
         Logout
     }
 }
