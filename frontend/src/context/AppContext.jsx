@@ -21,6 +21,7 @@ function AppProvider({ children }) {
         BarbershopEdit,
         BarbershopChangePassword,
         EmployeeCreate,
+        EmployeeLogin,
         Logout
     } = useAuth()
 
@@ -40,6 +41,7 @@ function AppProvider({ children }) {
             BarbershopEdit,
             BarbershopChangePassword,
             EmployeeCreate,
+            EmployeeLogin,
             Logout
         }}>
             {children}

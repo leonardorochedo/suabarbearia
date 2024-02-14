@@ -14,6 +14,7 @@ import com.suabarbearia.backend.repositories.SchedulingRepository;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.TextResponse;
+import com.suabarbearia.backend.utils.EmailService;
 import com.suabarbearia.backend.utils.ImageUploader;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
@@ -38,6 +39,9 @@ public class EmployeeService {
 
     @Autowired
     private SchedulingRepository schedulingRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private ImageUploader imageUploader;
@@ -69,14 +73,13 @@ public class EmployeeService {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Employee employeeFinded = employeeRepository.findByUsername(employee.getUsername());
-
         Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
         if (barbershop == null) throw new NoPermissionException("Não autorizado! Precisa ser barbearia!");
 
         // Check data
-        if (employeeFinded != null && employeeFinded.getBarbershop().equals(barbershop)) {
-            throw new ExistDataException("Funcionário existente!");
+        if (employeeFinded != null) {
+            throw new ExistDataException("Usuário existente!");
         }
 
         if (employee.getName() == null || employee.getUsername() == null || employee.getPassword() == null || employee.getConfirmpassword() == null || employee.getPhone() == null) {
@@ -89,9 +92,25 @@ public class EmployeeService {
 
         // Encypt and hash pass
         String hashedPassword = BCrypt.hashpw(employee.getPassword(), fixedSalt);
-        employee.setPassword(hashedPassword);
 
-        Employee newEmployee = employeeRepository.save(new Employee(null, employee.getUsername(), employee.getPassword(), employee.getName(), null, employee.getPhone(), barbershop));
+        Employee newEmployee = employeeRepository.save(new Employee(null, employee.getUsername(), hashedPassword, employee.getName(), null, employee.getPhone(), barbershop));
+
+        // Send email
+        String subject = "Novo Funcionário - Sua Barbearia";
+        String body = String.format(
+                "Olá %s,\n\n"
+                + "Gostaríamos de informar que um novo funcionário foi adicionado à sua equipe:\n\n"
+                + "Nome: %s\n"
+                + "Usuário: %s\n"
+                + "Senha: %s\n\n"
+                + "O novo membro da equipe agora tem acesso ao sistema. Certifique-se de fornecer as informações necessárias "
+                + "e orientações para facilitar a integração.\n\n"
+                + "Se houver alguma dúvida ou necessidade de suporte, não hesite em entrar em contato.\n\n"
+                + "Atenciosamente,\n"
+                + "Equipe Sua Barbearia",
+                barbershop.getName(), employee.getName(), employee.getUsername(), employee.getPassword());
+
+        emailService.sendEmail(barbershop.getEmail(), subject, body);
 
         ApiResponse<Employee> response = new ApiResponse<Employee>("Funcionário criado com sucesso!", newEmployee);
 
@@ -236,6 +255,9 @@ public class EmployeeService {
         // checking if barbershop have this employee
         if (!employeeId.getBarbershop().equals(barbershopToken)) throw new NoPermissionException("Colaborador não encontrado para barbearia!");
 
+        String empName = employeeId.getName();
+        String empUsername = employeeId.getUsername();
+
         employeeId.setName("Colaborador excluído!");
         employeeId.setUsername("");
         employeeId.setPhone("");
@@ -243,6 +265,22 @@ public class EmployeeService {
         employeeId.setPassword("");
 
         employeeRepository.save(employeeId);
+
+        // Send email
+        String subject = "Funcionário Removido - Sua Barbearia";
+        String body = String.format(
+                "Olá %s,\n\n"
+                + "Gostaríamos de informar que um funcionário foi removido da sua equipe:\n\n"
+                + "Nome: %s\n"
+                + "Usuário: %s\n\n"
+                + "O funcionário não terá mais acesso ao sistema. Certifique-se de ajustar as responsabilidades e "
+                + "informações necessárias para manter a operação suave.\n\n"
+                + "Se houver alguma dúvida ou necessidade de suporte, não hesite em entrar em contato.\n\n"
+                + "Atenciosamente,\n"
+                + "Equipe Sua Barbearia",
+                barbershopToken.getName(), empName, empUsername);
+
+        emailService.sendEmail(barbershopToken.getEmail(), subject, body);
 
         TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
 
@@ -258,6 +296,11 @@ public class EmployeeService {
 
         if (employeeToken == null) throw new NoPermissionException("Não autorizado!");
 
+        String barName = employeeToken.getBarbershop().getName();
+        String empName = employeeToken.getName();
+        String empUsername = employeeToken.getUsername();
+        String barEmail = employeeToken.getBarbershop().getEmail();
+
         employeeToken.setName("Colaborador excluído!");
         employeeToken.setUsername("");
         employeeToken.setPhone("");
@@ -265,6 +308,22 @@ public class EmployeeService {
         employeeToken.setPassword("");
 
         employeeRepository.save(employeeToken);
+
+        // Send email
+        String subject = "Funcionário Removido - Sua Barbearia";
+        String body = String.format(
+                "Olá %s,\n\n"
+                + "Gostaríamos de informar que um funcionário foi removido da sua equipe:\n\n"
+                + "Nome: %s\n"
+                + "Usuário: %s\n\n"
+                + "O funcionário não terá mais acesso ao sistema. Certifique-se de ajustar as responsabilidades e "
+                + "informações necessárias para manter a operação suave.\n\n"
+                + "Se houver alguma dúvida ou necessidade de suporte, não hesite em entrar em contato.\n\n"
+                + "Atenciosamente,\n"
+                + "Equipe Sua Barbearia",
+                barName, empName, empUsername);
+
+        emailService.sendEmail(barEmail, subject, body);
 
         TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
 

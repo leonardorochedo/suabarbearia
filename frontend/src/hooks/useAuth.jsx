@@ -465,6 +465,33 @@ export function useAuth() {
         }
     };
 
+    async function EmployeeLogin(employee) {
+        let msgText = '';
+
+        try {
+            const data = await api.post('/employees/signin', employee).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+
+            await SuccesNotification(msgText);
+
+            await authAccount(data.token, "employees");
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
@@ -497,6 +524,7 @@ export function useAuth() {
         BarbershopEdit,
         BarbershopChangePassword,
         EmployeeCreate,
+        EmployeeLogin,
         Logout
     }
 }

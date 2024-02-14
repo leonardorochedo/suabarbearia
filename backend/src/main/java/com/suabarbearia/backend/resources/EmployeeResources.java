@@ -14,6 +14,7 @@ import com.suabarbearia.backend.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,6 +71,10 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
+        } catch (MailException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
         }
     }
 
@@ -104,6 +109,10 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        } catch (MailException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
         }
     }
 
@@ -163,6 +172,10 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
+        } catch (MailException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
         }
     }
 
