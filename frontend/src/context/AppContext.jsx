@@ -23,6 +23,7 @@ function AppProvider({ children }) {
         EmployeeCreate,
         EmployeeLogin,
         EmployeeDelete,
+        EmployeeEdit,
         Logout
     } = useAuth()
 
@@ -44,6 +45,7 @@ function AppProvider({ children }) {
             EmployeeCreate,
             EmployeeLogin,
             EmployeeDelete,
+            EmployeeEdit,
             Logout
         }}>
             {children}

@@ -16,6 +16,7 @@ import { BarbershopChangePassword } from "./pages/Barbershop/BarbershopChangePas
 import { EmployeeLogin } from "./pages/Employee/EmployeeLogin/EmployeeLogin";
 import { EmployeeCreate } from "./pages/Employee/EmployeeCreate/EmployeeCreate";
 import { EmployeeDelete } from "./pages/Employee/EmployeeDelete/EmployeeDelete";
+import { EmployeeEdit } from "./pages/Employee/EmployeeEdit/EmployeeEdit";
 
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
@@ -69,6 +70,7 @@ function App() {
               <Route path="/employee/login" element={<EmployeeLogin />} />
               <Route path="/employee/register" element={<EmployeeCreate />} />
               <Route path="/employee/delete" element={<EmployeeDelete />} />
+              <Route path="/employee/edit" element={<EmployeeEdit />} />
             </Routes>
           </AppProvider>
         </QueryClientProvider>
