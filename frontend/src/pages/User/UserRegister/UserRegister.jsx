@@ -193,7 +193,7 @@ export function UserRegister() {
                         <Input type="password" name="password" id="password" minLength={8} handleChangeInput={handleChangeInput} text="Senha" placeholder="Digite sua senha" />
                         <Input type="password" name="confirmpassword" id="confirmpassword" minLength={8} handleChangeInput={handleChangeInput} text="Confirme sua senha" placeholder="Confirme sua senha" />
                         <div className="form-buttons">
-                            <input type="submit" value="Entrar" />
+                            <input type="submit" value="Registrar" />
                             <p>Já possui uma conta? <Link to="/user/login" className='link'><span>Clique aqui.</span></Link></p>
                         </div>
                     </form>

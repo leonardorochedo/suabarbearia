@@ -20,6 +20,10 @@ import { EmployeeEdit } from "./pages/Employee/EmployeeEdit/EmployeeEdit";
 import { EmployeeBarbershopDelete } from "./pages/Employee/EmployeeBarbershopDelete/EmployeeBarbershopDelete";
 import { EmployeeBarbershopEdit } from "./pages/Employee/EmployeeBarbershopEdit/EmployeeBarbershopEdit";
 
+// SERVICE
+import { ServiceCreate } from "./pages/Service/ServiceCreate/ServiceCreate";
+
+
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
 
@@ -75,6 +79,8 @@ function App() {
               <Route path="/employee/edit" element={<EmployeeEdit />} />
               <Route path="/employee/barbershop/edit/:id" element={<EmployeeBarbershopEdit />} />
               <Route path="/employee/barbershop/delete/:id" element={<EmployeeBarbershopDelete />} />
+              {/* SERVICE */}
+              <Route path="/service/create" element={<ServiceCreate />} />
             </Routes>
           </AppProvider>
         </QueryClientProvider>
