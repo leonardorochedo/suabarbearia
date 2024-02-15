@@ -149,7 +149,7 @@ public class BarbershopServiceTest {
 	}
 
 	@Test
-	public void testDelete() {
+	public void testDelete() throws IOException {
 		CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber7@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 

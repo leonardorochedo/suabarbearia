@@ -265,7 +265,7 @@ public class BarbershopService {
 		return response;
 	}
 
-	public TextResponse delete(String authorizationHeader, Long id) {
+	public TextResponse delete(String authorizationHeader, Long id) throws IOException {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -278,6 +278,9 @@ public class BarbershopService {
 
 		String barbershopName = barbershopId.getName();
 		String barbershopEmail = barbershopId.getEmail();
+
+		// Att data
+		imageUploader.deleteFile(barbershopId.getId().toString(), "barbershops");
 
 		barbershopId.setName("Barbearia excluída!");
 		barbershopId.setEmail("");

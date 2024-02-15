@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.io.IOException;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -118,7 +119,7 @@ public class EmployeeServiceTest {
 //    }
 
     @Test
-    public void testDeleteWithBarbershop() {
+    public void testDeleteWithBarbershop() throws IOException {
         CreateBarbershopDto createBarberMock = new CreateBarbershopDto("Barbearia Teste", "fulano_barber_employee7@email.com", "17820849000104", "1998-09-12", "33981111", mockAddress, openTime, closeTime, "123321", "123321");
         CreateEmployeeDto createEmployeeMock = new CreateEmployeeDto("Funcionario Teste", "employee7", "123321", "123321", "33983333");
 

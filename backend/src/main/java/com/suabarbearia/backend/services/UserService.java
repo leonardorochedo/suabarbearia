@@ -255,7 +255,7 @@ public class UserService {
 		return response;
 	}
 
-	public TextResponse delete(String authorizationHeader, Long id) {
+	public TextResponse delete(String authorizationHeader, Long id) throws IOException {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		User userToken = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -270,6 +270,8 @@ public class UserService {
 		String userEmail = userId.getEmail();
 
 		// Att data
+		imageUploader.deleteFile(userId.getId().toString(), "users");
+
 		userId.setName("Usuário excluído!");
 		userId.setEmail("");
         userId.setCpf("");

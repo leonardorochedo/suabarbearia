@@ -244,7 +244,7 @@ public class EmployeeService {
         return response;
     }
 
-    public TextResponse barbershopDelete(String authorizationHeader, Long id) {
+    public TextResponse barbershopDelete(String authorizationHeader, Long id) throws IOException {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Barbershop barbershopToken = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -257,6 +257,9 @@ public class EmployeeService {
 
         String empName = employeeId.getName();
         String empUsername = employeeId.getUsername();
+
+        // Att data
+        imageUploader.deleteFile(employeeId.getId().toString(), "employees");
 
         employeeId.setName("Colaborador excluído!");
         employeeId.setUsername("");
@@ -287,7 +290,7 @@ public class EmployeeService {
         return response;
     }
 
-    public TextResponse delete(String authorizationHeader) {
+    public TextResponse delete(String authorizationHeader) throws IOException {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
         Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
@@ -298,6 +301,9 @@ public class EmployeeService {
         String empName = employeeToken.getName();
         String empUsername = employeeToken.getUsername();
         String barEmail = employeeToken.getBarbershop().getEmail();
+
+        // Att data
+        imageUploader.deleteFile(employeeToken.getId().toString(), "employees");
 
         employeeToken.setName("Colaborador excluído!");
         employeeToken.setUsername("");

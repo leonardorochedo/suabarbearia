@@ -96,7 +96,7 @@ public class EmployeeResources {
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader) throws IOException {
         try {
             TextResponse response = employeeService.delete(authorizationHeader);
 
@@ -159,7 +159,7 @@ public class EmployeeResources {
     }
 
     @DeleteMapping(value = "/barbershop/delete/{id}")
-    public ResponseEntity<?> barbershopDelete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+    public ResponseEntity<?> barbershopDelete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) throws IOException {
         try {
             TextResponse response = employeeService.barbershopDelete(authorizationHeader, id);
 

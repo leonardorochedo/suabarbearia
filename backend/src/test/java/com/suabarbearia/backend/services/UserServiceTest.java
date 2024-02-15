@@ -142,7 +142,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void testDelete() {
+	public void testDelete() throws IOException {
 		CreateUserDto createUserMock = new CreateUserDto("Fulano Moreira", "fulano_client6@email.com", "11122233345", "2000-01-13", "33981111", mockAddress, "123321", "123321");
 		ApiTokenResponse<User> response1 = userService.signup(createUserMock);
 

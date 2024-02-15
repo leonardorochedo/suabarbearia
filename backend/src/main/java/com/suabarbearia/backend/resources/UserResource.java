@@ -153,7 +153,7 @@ public class UserResource {
 	}
 
 	@DeleteMapping(value = "/delete/{id}")
-	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) {
+	public ResponseEntity<?> delete(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long id) throws IOException {
 		try {
 			TextResponse response = userService.delete(authorizationHeader, id);
 
