@@ -568,11 +568,38 @@ export function useAuth() {
 
             await SuccesNotification(msgText);
 
-            setAuthenticateEmployee(false);
-            localStorage.removeItem('token');
-            localStorage.removeItem('tokenType');
-            localStorage.removeItem('tokenExpiration');
-            api.defaults.headers.Authorization = undefined;
+            navigate('/');
+            window.location.reload(true);
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
+    async function EmployeeBarbershopEdit(employee, id) {
+        let msgText = '';
+
+        try {
+            const data = await api.patch(`/employees/barbershop/edit/${id}`, employee, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            }).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+            
+            await SuccesNotification(msgText);
+
             navigate('/');
             window.location.reload(true);
         } catch (err) {
@@ -626,6 +653,7 @@ export function useAuth() {
         EmployeeDelete,
         EmployeeEdit,
         EmployeeBarbershopDelete,
+        EmployeeBarbershopEdit,
         Logout
     }
 }

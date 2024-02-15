@@ -290,8 +290,6 @@ public class EmployeeService {
     public TextResponse delete(String authorizationHeader) {
         String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
-        System.out.println(JwtUtil.getUsernameFromToken(token));
-
         Employee employeeToken = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
 
         if (employeeToken == null) throw new NoPermissionException("Não autorizado!");

@@ -18,6 +18,7 @@ import { EmployeeCreate } from "./pages/Employee/EmployeeCreate/EmployeeCreate";
 import { EmployeeDelete } from "./pages/Employee/EmployeeDelete/EmployeeDelete";
 import { EmployeeEdit } from "./pages/Employee/EmployeeEdit/EmployeeEdit";
 import { EmployeeBarbershopDelete } from "./pages/Employee/EmployeeBarbershopDelete/EmployeeBarbershopDelete";
+import { EmployeeBarbershopEdit } from "./pages/Employee/EmployeeBarbershopEdit/EmployeeBarbershopEdit";
 
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
@@ -72,6 +73,7 @@ function App() {
               <Route path="/employee/register" element={<EmployeeCreate />} />
               <Route path="/employee/delete" element={<EmployeeDelete />} />
               <Route path="/employee/edit" element={<EmployeeEdit />} />
+              <Route path="/employee/barbershop/edit/:id" element={<EmployeeBarbershopEdit />} />
               <Route path="/employee/barbershop/delete/:id" element={<EmployeeBarbershopDelete />} />
             </Routes>
           </AppProvider>
