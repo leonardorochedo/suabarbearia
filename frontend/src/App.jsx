@@ -22,6 +22,7 @@ import { EmployeeBarbershopEdit } from "./pages/Employee/EmployeeBarbershopEdit/
 
 // SERVICE
 import { ServiceCreate } from "./pages/Service/ServiceCreate/ServiceCreate";
+import { ServiceEdit } from "./pages/Service/ServiceEdit/ServiceEdit";
 
 
 // CONTEXTS
@@ -81,6 +82,7 @@ function App() {
               <Route path="/employee/barbershop/delete/:id" element={<EmployeeBarbershopDelete />} />
               {/* SERVICE */}
               <Route path="/service/create" element={<ServiceCreate />} />
+              <Route path="/service/edit/:id" element={<ServiceEdit />} />
             </Routes>
           </AppProvider>
         </QueryClientProvider>
