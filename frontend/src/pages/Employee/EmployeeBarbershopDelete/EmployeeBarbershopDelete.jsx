@@ -8,9 +8,9 @@ import { useParams } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
-export function UserDelete() {
+export function EmployeeBarbershopDelete() {
 
-    const { authenticatedUser, UserDelete } = useContext(Context);
+    const { authenticatedBarbershop, EmployeeBarbershopDelete } = useContext(Context);
     const { id } = useParams();
 
     function buttonSubmit(e) {
@@ -27,19 +27,19 @@ export function UserDelete() {
             theme: "light",
         });
 
-        UserDelete(id);
+        EmployeeBarbershopDelete(id);
     }
 
     return (
         <section className="container">
-            {authenticatedUser ? (
+            {authenticatedBarbershop ? (
                 <>
-                    <h1 className="title">Tem certeza que deseja excluir sua conta?</h1>
+                    <h1 className="title">Tem certeza que deseja excluir este funcionário?</h1>
                     <button className="delete-button" onClick={buttonSubmit}>Sim! Deletar</button>
                 </>
             ) : (
                 <>
-                    <RedirectAuth title="Você não está autenticado!" comebackText="Entre com sua conta." toURL="/user/login" />
+                    <RedirectAuth title="Você não está autenticado!" comebackText="Entre com sua conta." toURL="/barbershop/login" />
                 </>
             )}
         </section>
