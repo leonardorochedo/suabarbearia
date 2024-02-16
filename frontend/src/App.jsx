@@ -24,6 +24,9 @@ import { EmployeeBarbershopEdit } from "./pages/Employee/EmployeeBarbershopEdit/
 import { ServiceCreate } from "./pages/Service/ServiceCreate/ServiceCreate";
 import { ServiceEdit } from "./pages/Service/ServiceEdit/ServiceEdit";
 
+// HEADER & FOOTER
+// import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
 
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
@@ -41,6 +44,7 @@ import {
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Container } from "./components/Container/Container";
 
 function App() {
   
@@ -60,30 +64,34 @@ function App() {
         />
         <QueryClientProvider client={queryClient}>
           <AppProvider>
-            <Routes>
-              {/* USER */}
-              <Route path="/user/login" element={<UserLogin />} />
-              <Route path="/user/register" element={<UserRegister />} />
-              <Route path="/user/delete/:id" element={<UserDelete />} />
-              <Route path="/user/edit" element={<UserEdit />} />
-              <Route path="/user/changepassword" element={<UserChangePassword />} />
-              {/* BARBERSHOP */}
-              <Route path="/barbershop/login" element={<BarbershopLogin />} />
-              <Route path="/barbershop/register" element={<BarbershopRegister />} />
-              <Route path="/barbershop/delete/:id" element={<BarbershopDelete />} />
-              <Route path="/barbershop/edit" element={<BarbershopEdit />} />
-              <Route path="/barbershop/changepassword" element={<BarbershopChangePassword />} />
-              {/* EMPLOYEE */}
-              <Route path="/employee/login" element={<EmployeeLogin />} />
-              <Route path="/employee/register" element={<EmployeeCreate />} />
-              <Route path="/employee/delete" element={<EmployeeDelete />} />
-              <Route path="/employee/edit" element={<EmployeeEdit />} />
-              <Route path="/employee/barbershop/edit/:id" element={<EmployeeBarbershopEdit />} />
-              <Route path="/employee/barbershop/delete/:id" element={<EmployeeBarbershopDelete />} />
-              {/* SERVICE */}
-              <Route path="/service/create" element={<ServiceCreate />} />
-              <Route path="/service/edit/:id" element={<ServiceEdit />} />
-            </Routes>
+            <Container>
+              {/* <Header /> */}
+                <Routes>
+                  {/* USER */}
+                  <Route path="/user/login" element={<UserLogin />} />
+                  <Route path="/user/register" element={<UserRegister />} />
+                  <Route path="/user/delete/:id" element={<UserDelete />} />
+                  <Route path="/user/edit" element={<UserEdit />} />
+                  <Route path="/user/changepassword" element={<UserChangePassword />} />
+                  {/* BARBERSHOP */}
+                  <Route path="/barbershop/login" element={<BarbershopLogin />} />
+                  <Route path="/barbershop/register" element={<BarbershopRegister />} />
+                  <Route path="/barbershop/delete/:id" element={<BarbershopDelete />} />
+                  <Route path="/barbershop/edit" element={<BarbershopEdit />} />
+                  <Route path="/barbershop/changepassword" element={<BarbershopChangePassword />} />
+                  {/* EMPLOYEE */}
+                  <Route path="/employee/login" element={<EmployeeLogin />} />
+                  <Route path="/employee/register" element={<EmployeeCreate />} />
+                  <Route path="/employee/delete" element={<EmployeeDelete />} />
+                  <Route path="/employee/edit" element={<EmployeeEdit />} />
+                  <Route path="/employee/barbershop/edit/:id" element={<EmployeeBarbershopEdit />} />
+                  <Route path="/employee/barbershop/delete/:id" element={<EmployeeBarbershopDelete />} />
+                  {/* SERVICE */}
+                  <Route path="/service/create" element={<ServiceCreate />} />
+                  <Route path="/service/edit/:id" element={<ServiceEdit />} />
+                </Routes>
+              <Footer />
+            </Container>
           </AppProvider>
         </QueryClientProvider>
       </BrowserRouter>

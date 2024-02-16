@@ -1,0 +1,28 @@
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  
+    background-color: grey;
+  
+    padding: 2rem;
+    width: 100%;
+    height: 16vh;
+  }
+  
+  footer img {
+    width: 7rem;
+  }
+  
+  .social-medias {
+    width: 10rem;
+  }
+  
+  .social-medias p {
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  
+  .social-medias cite {
+    color: #fff;
+  }
