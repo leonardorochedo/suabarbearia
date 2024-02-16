@@ -1,0 +1,55 @@
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  width: 100%;
+  height: 6rem;
+  background-color: var(--third-color);
+
+  -webkit-box-shadow: 0px 0px 23px -3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 23px -3px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 23px -3px rgba(0, 0, 0, 0.75);
+
+  position: fixed;
+  top: 0;
+}
+
+header img {
+  width: 7rem;
+}
+
+header button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+header .button-header {
+  cursor: pointer;
+  width: 5rem;
+}
+
+span.link {
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+}
+
+span.link p {
+  margin-left: 0.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.user-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-header p {
+  margin-top: -0.5rem;
+  font-size: 12px;
+  color: #fff;
+}

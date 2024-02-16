@@ -24,8 +24,13 @@ import { EmployeeBarbershopEdit } from "./pages/Employee/EmployeeBarbershopEdit/
 import { ServiceCreate } from "./pages/Service/ServiceCreate/ServiceCreate";
 import { ServiceEdit } from "./pages/Service/ServiceEdit/ServiceEdit";
 
+// OTHERS
+import { Home } from "./pages/Home/Home";
+import { RegisterOptions } from "./pages/Auth/RegisterOptions/RegisterOptions";
+import { LoginOptions } from "./pages/Auth/LoginOptions/LoginOptions";
+
 // HEADER & FOOTER
-// import { Header } from "./components/Header/Header";
+import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
 
 // CONTEXTS
@@ -65,7 +70,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <AppProvider>
             <Container>
-              {/* <Header /> */}
+              <Header />
                 <Routes>
                   {/* USER */}
                   <Route path="/user/login" element={<UserLogin />} />
@@ -89,6 +94,10 @@ function App() {
                   {/* SERVICE */}
                   <Route path="/service/create" element={<ServiceCreate />} />
                   <Route path="/service/edit/:id" element={<ServiceEdit />} />
+                  {/* OTHER */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/register" element={<RegisterOptions />} />
+                  <Route path="/login" element={<LoginOptions />} />
                 </Routes>
               <Footer />
             </Container>
