@@ -21,6 +21,9 @@ import { AiOutlineSchedule } from "react-icons/ai";
 import { SlMustache } from "react-icons/sl";
 import { CiCreditCard1 } from "react-icons/ci";
 import { GoPerson } from "react-icons/go";
+import { IoPeopleOutline, IoStatsChartOutline } from "react-icons/io5";
+import { MdOutlineDesignServices } from "react-icons/md";
+import { GiMoneyStack } from "react-icons/gi";
 
 import "./Header.css";
 
@@ -145,12 +148,20 @@ export function Header() {
                                 <p>Agendamentos</p>
                             </Link>
                             <Link to="/" className="button-sidebar">
-                                <CiCreditCard1 size={24} color="#FFF" />
-                                <p>Planos</p>
+                                <IoPeopleOutline size={24} color="#FFF" />
+                                <p>Funcionários</p>
                             </Link>
                             <Link to="/" className="button-sidebar">
-                                <SlMustache size={24} color="#FFF" />
-                                <p>Barbearias Favoritas</p>
+                                <MdOutlineDesignServices size={24} color="#FFF" />
+                                <p>Serviços</p>
+                            </Link>
+                            <Link to="/" className="button-sidebar">
+                                <IoStatsChartOutline size={24} color="#FFF" />
+                                <p>Estatísticas</p>
+                            </Link>
+                            <Link to="/" className="button-sidebar">
+                                <GiMoneyStack size={24} color="#FFF" />
+                                <p>Saque</p>
                             </Link>
                             <Link to="/" className="button-sidebar">
                                 <GoPerson size={24} color="#FFF" />
@@ -169,12 +180,8 @@ export function Header() {
                                 <p>Agendamentos</p>
                             </Link>
                             <Link to="/" className="button-sidebar">
-                                <CiCreditCard1 size={24} color="#FFF" />
-                                <p>Planos</p>
-                            </Link>
-                            <Link to="/" className="button-sidebar">
-                                <SlMustache size={24} color="#FFF" />
-                                <p>Barbearias Favoritas</p>
+                                <IoStatsChartOutline size={24} color="#FFF" />
+                                <p>Estatísticas</p>
                             </Link>
                             <Link to="/" className="button-sidebar">
                                 <GoPerson size={24} color="#FFF" />
