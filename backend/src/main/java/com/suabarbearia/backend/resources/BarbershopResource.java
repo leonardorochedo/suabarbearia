@@ -1,7 +1,6 @@
 package com.suabarbearia.backend.resources;
 
-import com.suabarbearia.backend.dtos.ChangePasswordDto;
-import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.dtos.*;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
@@ -12,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
-import com.suabarbearia.backend.dtos.CreateBarbershopDto;
-import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
 import com.suabarbearia.backend.services.BarbershopService;
@@ -212,7 +209,7 @@ public class BarbershopResource {
 	@GetMapping(value = "/schedulings")
 	public ResponseEntity<?> getSchedulingsBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
-			Set<Scheduling> response = barbershopService.getSchedulingsBarbershop(authorizationHeader);
+			Set<SchedulingReturnDto> response = barbershopService.getSchedulingsBarbershop(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
 		} catch (InvalidDataException e) {
@@ -225,7 +222,7 @@ public class BarbershopResource {
 	@GetMapping(value = "/schedulings/{initialDate}/{endDate}")
 	public ResponseEntity<?> getSchedulingsBarbershopWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
 		try {
-			Set<Scheduling> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, initialDate, endDate);
+			Set<SchedulingReturnDto> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
 		} catch (InvalidDataException e) {

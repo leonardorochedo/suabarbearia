@@ -2,6 +2,7 @@ package com.suabarbearia.backend.services;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
 import com.suabarbearia.backend.dtos.EditEmployeeDto;
+import com.suabarbearia.backend.dtos.SchedulingReturnDto;
 import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Employee;
@@ -25,8 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class EmployeeService {
@@ -332,6 +335,42 @@ public class EmployeeService {
         TextResponse response = new TextResponse("Colaborador deletado com sucesso!");
 
         return response;
+    }
+
+    public Set<SchedulingReturnDto> getSchedulingsWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+        String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+
+        Employee employee = employeeRepository.findByUsername(JwtUtil.getUsernameFromToken(token));
+
+        // Check date
+        if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
+            throw new InvalidDataException("Data inválida!");
+        }
+
+        Set<Scheduling> schedulings = schedulingRepository.findAllByEmployee(employee);
+
+        Set<Scheduling> schedulingsInRange = new HashSet<>();
+
+        for (Scheduling scheduling : schedulings) {
+            LocalDate schedulingDate = scheduling.getDate().toLocalDate();
+
+            if ((schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
+                    (schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) {
+                schedulingsInRange.add(scheduling);
+            }
+        }
+
+        Set<SchedulingReturnDto> schedulingDTOs = schedulingsInRange.stream()
+                .map(scheduling -> new SchedulingReturnDto(
+                        scheduling.getId(),
+                        scheduling.getService(),
+                        scheduling.getEmployee(),
+                        scheduling.getBarbershop(),
+                        scheduling.getDate(),
+                        scheduling.getStatus()))
+                .collect(Collectors.toSet());
+
+        return schedulingDTOs;
     }
 
     public double getEarnings(String authorizationHeader) {

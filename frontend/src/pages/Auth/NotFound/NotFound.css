@@ -1,0 +1,4 @@
+.notfound-container {
+  display: flex;
+  flex-direction: column;
+}

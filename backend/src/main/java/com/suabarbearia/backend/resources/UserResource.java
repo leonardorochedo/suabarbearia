@@ -1,8 +1,6 @@
 package com.suabarbearia.backend.resources;
 
-import com.suabarbearia.backend.dtos.ChangePasswordDto;
-import com.suabarbearia.backend.dtos.EditUserDto;
-import com.suabarbearia.backend.dtos.SigninDto;
+import com.suabarbearia.backend.dtos.*;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.*;
@@ -14,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
-import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.responses.ErrorResponse;
@@ -22,7 +19,6 @@ import com.suabarbearia.backend.services.UserService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Set;
@@ -198,7 +194,7 @@ public class UserResource {
 	@GetMapping(value = "/schedulings")
 	public ResponseEntity<?> getSchedulingsUser(@RequestHeader("Authorization") String authorizationHeader) {
 		try {
-			Set<Scheduling> response = userService.getSchedulingsUser(authorizationHeader);
+			Set<SchedulingReturnDto> response = userService.getSchedulingsUser(authorizationHeader);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {
@@ -211,7 +207,7 @@ public class UserResource {
 	@GetMapping(value = "/schedulings/{initialDate}/{endDate}")
 	public ResponseEntity<?> getSchedulingsUserWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
 		try {
-			Set<Scheduling> response = userService.getSchedulingsUserWithDate(authorizationHeader, initialDate, endDate);
+			Set<SchedulingReturnDto> response = userService.getSchedulingsUserWithDate(authorizationHeader, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
 		} catch (InvalidDataException e) {

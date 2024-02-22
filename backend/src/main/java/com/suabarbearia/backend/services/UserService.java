@@ -9,10 +9,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.suabarbearia.backend.dtos.ChangePasswordDto;
-import com.suabarbearia.backend.dtos.EditUserDto;
-import com.suabarbearia.backend.dtos.SigninDto;
+import com.suabarbearia.backend.dtos.*;
 import com.suabarbearia.backend.entities.Barbershop;
 import com.suabarbearia.backend.entities.Scheduling;
 import com.suabarbearia.backend.exceptions.*;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.suabarbearia.backend.dtos.CreateUserDto;
 import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.repositories.UserRepository;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
@@ -350,17 +348,27 @@ public class UserService {
 		return response;
 	}
 
-	public Set<Scheduling> getSchedulingsUser(String authorizationHeader) {
+	public Set<SchedulingReturnDto> getSchedulingsUser(String authorizationHeader) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		Set<Scheduling> schedulings = schedulingRepository.findAllByUser(user);
 
-		return schedulings;
+		Set<SchedulingReturnDto> schedulingDTOs = schedulings.stream()
+				.map(scheduling -> new SchedulingReturnDto(
+						scheduling.getId(),
+						scheduling.getService(),
+						scheduling.getEmployee(),
+						scheduling.getBarbershop(),
+						scheduling.getDate(),
+						scheduling.getStatus()))
+				.collect(Collectors.toSet());
+
+		return schedulingDTOs;
 	}
 
-	public Set<Scheduling> getSchedulingsUserWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+	public Set<SchedulingReturnDto> getSchedulingsUserWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		User user = userRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -383,7 +391,17 @@ public class UserService {
 			}
 		}
 
-		return schedulingsInRange;
+		Set<SchedulingReturnDto> schedulingDTOs = schedulings.stream()
+				.map(scheduling -> new SchedulingReturnDto(
+						scheduling.getId(),
+						scheduling.getService(),
+						scheduling.getEmployee(),
+						scheduling.getBarbershop(),
+						scheduling.getDate(),
+						scheduling.getStatus()))
+				.collect(Collectors.toSet());
+
+		return schedulingDTOs;
 	}
 
 	public Set<Barbershop> getBarbershopsUser(String authorizationHeader) {

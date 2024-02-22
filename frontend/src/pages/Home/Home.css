@@ -1,0 +1,42 @@
+.container-home {
+  display: flex;
+  flex-direction: column;
+}
+
+/* USER */
+.button-scheduling {
+  display: flex;
+  flex-direction: row;
+
+  cursor: pointer;
+
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: #fff;
+
+  width: 70vw;
+  height: 2.5rem;
+  margin: 1rem 0;
+
+  transition: 0.3s;
+}
+
+.button-scheduling:hover {
+  background-color: #fff;
+  color: var(--primary-color);
+}
+
+.button-scheduling p {
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+/* NO AUTH */
+.welcome-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-text p.welcome-p {
+  margin: 1rem 0;
+}

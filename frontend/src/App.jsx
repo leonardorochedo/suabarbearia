@@ -32,6 +32,7 @@ import { LoginOptions } from "./pages/Auth/LoginOptions/LoginOptions";
 // HEADER & FOOTER
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
+import { NotFound } from "./pages/Auth/NotFound/NotFound";
 
 // CONTEXTS
 import { AppProvider } from "./context/AppContext";
@@ -98,6 +99,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/register" element={<RegisterOptions />} />
                   <Route path="/login" element={<LoginOptions />} />
+                  <Route path="/*" element={<NotFound />} />
                 </Routes>
               <Footer />
             </Container>

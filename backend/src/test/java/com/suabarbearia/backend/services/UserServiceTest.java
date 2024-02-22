@@ -199,7 +199,7 @@ public class UserServiceTest {
 
 		ApiResponse<Scheduling> response5 = schedulingService.create(response4.getToken(), schedulingMock);
 
-		Set<Scheduling> response6 = userService.getSchedulingsUser(response4.getToken());
+		Set<SchedulingReturnDto> response6 = userService.getSchedulingsUser(response4.getToken());
 
 		assertEquals(1, response6.size());
 	}
@@ -227,7 +227,7 @@ public class UserServiceTest {
 		LocalDate initialDay = LocalDate.now().plusDays(1);
 		LocalDate endDay = LocalDate.now().plusDays(5);
 
-		Set<Scheduling> response6 = userService.getSchedulingsUserWithDate(response4.getToken(), initialDay, endDay);
+		Set<SchedulingReturnDto> response6 = userService.getSchedulingsUserWithDate(response4.getToken(), initialDay, endDay);
 
 		assertEquals(1, response6.size());
 	}

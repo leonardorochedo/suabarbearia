@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.suabarbearia.backend.dtos.ChangePasswordDto;
-import com.suabarbearia.backend.dtos.EditBarbershopDto;
+import com.suabarbearia.backend.dtos.*;
 import com.suabarbearia.backend.entities.*;
 import com.suabarbearia.backend.enums.Status;
 import com.suabarbearia.backend.exceptions.*;
@@ -24,8 +24,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.suabarbearia.backend.dtos.CreateBarbershopDto;
-import com.suabarbearia.backend.dtos.SigninDto;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
 import com.suabarbearia.backend.utils.JwtUtil;
 import org.springframework.web.multipart.MultipartFile;
@@ -342,17 +340,27 @@ public class BarbershopService {
 		return services;
 	}
 
-	public Set<Scheduling> getSchedulingsBarbershop(String authorizationHeader) {
+	public Set<SchedulingReturnDto> getSchedulingsBarbershop(String authorizationHeader) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
 
 		Set<Scheduling> schedulings = schedulingRepository.findAllByBarbershop(barbershop);
 
-		return schedulings;
+		Set<SchedulingReturnDto> schedulingDTOs = schedulings.stream()
+				.map(scheduling -> new SchedulingReturnDto(
+						scheduling.getId(),
+						scheduling.getService(),
+						scheduling.getEmployee(),
+						scheduling.getBarbershop(),
+						scheduling.getDate(),
+						scheduling.getStatus()))
+				.collect(Collectors.toSet());
+
+		return schedulingDTOs;
 	}
 
-	public Set<Scheduling> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
+	public Set<SchedulingReturnDto> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
 		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
 
 		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
@@ -375,7 +383,17 @@ public class BarbershopService {
 			}
 		}
 
-		return schedulingsInRange;
+		Set<SchedulingReturnDto> schedulingDTOs = schedulingsInRange.stream()
+				.map(scheduling -> new SchedulingReturnDto(
+						scheduling.getId(),
+						scheduling.getService(),
+						scheduling.getEmployee(),
+						scheduling.getBarbershop(),
+						scheduling.getDate(),
+						scheduling.getStatus()))
+				.collect(Collectors.toSet());
+
+		return schedulingDTOs;
 	}
 
 	public TextResponse concludeScheduling(String authorizationHeader, Long id) {

@@ -2,9 +2,9 @@ package com.suabarbearia.backend.resources;
 
 import com.suabarbearia.backend.dtos.CreateEmployeeDto;
 import com.suabarbearia.backend.dtos.EditEmployeeDto;
+import com.suabarbearia.backend.dtos.SchedulingReturnDto;
 import com.suabarbearia.backend.dtos.SigninEmployeeDto;
 import com.suabarbearia.backend.entities.Employee;
-import com.suabarbearia.backend.entities.User;
 import com.suabarbearia.backend.exceptions.*;
 import com.suabarbearia.backend.responses.ApiResponse;
 import com.suabarbearia.backend.responses.ApiTokenResponse;
@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/employees")
@@ -176,6 +177,19 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(500)).body(errorResponse);
+        }
+    }
+
+    @GetMapping(value = "/schedulings/{initialDate}/{endDate}")
+    public ResponseEntity<?> getSchedulingsBarbershopWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+        try {
+            Set<SchedulingReturnDto> response = employeeService.getSchedulingsWithDate(authorizationHeader, initialDate, endDate);
+
+            return ResponseEntity.ok().body(response);
+        } catch (InvalidDataException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);
         }
     }
 
