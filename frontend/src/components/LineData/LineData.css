@@ -1,0 +1,13 @@
+.linedata {
+  display: flex;
+  flex-direction: row;
+
+  margin: 1rem 0;
+
+  padding: 0.5rem 0;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.linedata p {
+  margin-left: 0.5rem;
+}

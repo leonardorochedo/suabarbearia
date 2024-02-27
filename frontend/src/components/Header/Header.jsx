@@ -95,8 +95,8 @@ export function Header() {
                 <img src={logo} alt="Logomarca" />
             </Link>
             <div className="button-header">
-                {authenticatedUser || authenticatedBarbershop || authenticatedEmployee ? (
-                    <Link to={`/users/${user.id}`} className="link">
+                {authenticatedUser && (
+                    <Link to={`/user/profile`} className="link">
                         <div className="user-header">
                             {user.image ? (
                                 <RoundImage src={user.image} alt={user.name} size="rem3" />
@@ -106,7 +106,32 @@ export function Header() {
                             <p>{user.name.split(" ")[0].toUpperCase()}</p>
                         </div>
                     </Link>
-                ) : ( 
+                )}
+                {authenticatedBarbershop && (
+                    <Link to={`/barbershop/profile`} className="link">
+                        <div className="user-header">
+                            {user.image ? (
+                                <RoundImage src={user.image} alt={user.name} size="rem3" />
+                            ) : (
+                                <RoundImage src={userNoImage} alt={user.name} size="rem3" />
+                            )}
+                            <p>{user.name.split(" ")[0].toUpperCase()}</p>
+                        </div>
+                    </Link>
+                )}
+                {authenticatedEmployee && (
+                    <Link to={`/employee/profile`} className="link">
+                        <div className="user-header">
+                            {user.image ? (
+                                <RoundImage src={user.image} alt={user.name} size="rem3" />
+                            ) : (
+                                <RoundImage src={userNoImage} alt={user.name} size="rem3" />
+                            )}
+                            <p>{user.name.split(" ")[0].toUpperCase()}</p>
+                        </div>
+                    </Link>
+                )}
+                {(!authenticatedUser && !authenticatedBarbershop && !authenticatedEmployee) && (
                     <Link to="/login" className="link">
                         <span className="link">
                             <FiLogIn size={24} color="#FFF" />
@@ -131,7 +156,7 @@ export function Header() {
                                 <SlMustache size={24} color="#FFF" />
                                 <p>Barbearias Favoritas</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/user/profile" className="button-sidebar">
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Perfil</p>
                             </Link>

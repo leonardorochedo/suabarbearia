@@ -4,6 +4,7 @@ import { UserRegister } from "./pages/User/UserRegister/UserRegister";
 import { UserDelete } from "./pages/User/UserDelete/UserDelete";
 import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 import { UserChangePassword } from "./pages/User/UserChangePassword/UserChangePassword";
+import { UserProfile } from "./pages/User/UserProfile/UserProfile";
 
 // BARBERSHOP
 import { BarbershopLogin } from "./pages/Barbershop/BarbershopLogin/BarbershopLogin";
@@ -11,6 +12,7 @@ import { BarbershopRegister } from "./pages/Barbershop/BarbershopRegister/Barber
 import { BarbershopDelete } from "./pages/Barbershop/BarbershopDelete/BarbershopDelete";
 import { BarbershopEdit } from "./pages/Barbershop/BarbershopEdit/BarbershopEdit";
 import { BarbershopChangePassword } from "./pages/Barbershop/BarbershopChangePassword/BarbershopChangePassword";
+import { BarbershopProfile } from "./pages/Barbershop/BarbershopProfile/BarbershopProfile";
 
 // EMPLOYEE
 import { EmployeeLogin } from "./pages/Employee/EmployeeLogin/EmployeeLogin";
@@ -19,6 +21,7 @@ import { EmployeeDelete } from "./pages/Employee/EmployeeDelete/EmployeeDelete";
 import { EmployeeEdit } from "./pages/Employee/EmployeeEdit/EmployeeEdit";
 import { EmployeeBarbershopDelete } from "./pages/Employee/EmployeeBarbershopDelete/EmployeeBarbershopDelete";
 import { EmployeeBarbershopEdit } from "./pages/Employee/EmployeeBarbershopEdit/EmployeeBarbershopEdit";
+import { EmployeeProfile } from "./pages/Employee/EmployeeProfile/EmployeeProfile";
 
 // SERVICE
 import { ServiceCreate } from "./pages/Service/ServiceCreate/ServiceCreate";
@@ -79,12 +82,14 @@ function App() {
                   <Route path="/user/delete/:id" element={<UserDelete />} />
                   <Route path="/user/edit" element={<UserEdit />} />
                   <Route path="/user/changepassword" element={<UserChangePassword />} />
+                  <Route path="/user/profile" element={<UserProfile />} />
                   {/* BARBERSHOP */}
                   <Route path="/barbershop/login" element={<BarbershopLogin />} />
                   <Route path="/barbershop/register" element={<BarbershopRegister />} />
                   <Route path="/barbershop/delete/:id" element={<BarbershopDelete />} />
                   <Route path="/barbershop/edit" element={<BarbershopEdit />} />
                   <Route path="/barbershop/changepassword" element={<BarbershopChangePassword />} />
+                  <Route path="/barbershop/profile" element={<BarbershopProfile />} />
                   {/* EMPLOYEE */}
                   <Route path="/employee/login" element={<EmployeeLogin />} />
                   <Route path="/employee/register" element={<EmployeeCreate />} />
@@ -92,6 +97,7 @@ function App() {
                   <Route path="/employee/edit" element={<EmployeeEdit />} />
                   <Route path="/employee/barbershop/edit/:id" element={<EmployeeBarbershopEdit />} />
                   <Route path="/employee/barbershop/delete/:id" element={<EmployeeBarbershopDelete />} />
+                  <Route path="/employee/profile" element={<EmployeeProfile />} />
                   {/* SERVICE */}
                   <Route path="/service/create" element={<ServiceCreate />} />
                   <Route path="/service/edit/:id" element={<ServiceEdit />} />

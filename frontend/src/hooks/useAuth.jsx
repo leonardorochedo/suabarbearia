@@ -262,6 +262,34 @@ export function useAuth() {
         };
     };
 
+    async function UserChangePasswordWithToken(user) {
+        let msgText = '';
+
+        try {
+            const data = await api.patch("/users/changepassword", user).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+            
+            await SuccesNotification(msgText);
+
+            navigate('/');
+            window.location.reload(true);
+        } catch (err) {
+            msgText = err.response.data.message;
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
     // Barbershop
     async function BarbershopRegister(barbershop) {
 
@@ -701,6 +729,7 @@ export function useAuth() {
         UserDelete,
         UserEdit,
         UserChangePassword,
+        UserChangePasswordWithToken,
         BarbershopRegister,
         BarbershopLogin,
         BarbershopDelete,
