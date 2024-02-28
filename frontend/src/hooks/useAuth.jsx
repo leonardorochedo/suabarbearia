@@ -66,7 +66,7 @@ export function useAuth() {
     useEffect(() => {
         checkTokenValidity();
 
-        const intervalId = setInterval(checkTokenValidity, 5 * 60 * 1000);
+        const intervalId = setInterval(checkTokenValidity, 3 * 60 * 1000);
 
         return () => clearInterval(intervalId);
     }, []);
@@ -219,6 +219,20 @@ export function useAuth() {
             navigate('/');
             window.location.reload(true);
         } catch (err) {
+            // Erro de imagem muito pesada
+            if (err.response.status == 500) {
+                return toast.error("Tamanho de imagem inválida!", {
+                    position: "top-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+
             msgText = err.response.data.message
             toast.error(msgText, {
                 position: "top-right",
@@ -420,6 +434,20 @@ export function useAuth() {
             navigate('/');
             window.location.reload(true);
         } catch (err) {
+            // Erro de imagem muito pesada
+            if (err.response.status == 500) {
+                return toast.error("Tamanho de imagem inválida!", {
+                    position: "top-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+
             msgText = err.response.data.message
             toast.error(msgText, {
                 position: "top-right",
@@ -448,6 +476,34 @@ export function useAuth() {
             await SuccesNotification(msgText);
 
             await authAccount(token, "barbershops");
+        } catch (err) {
+            msgText = err.response.data.message;
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        };
+    };
+
+    async function BarbershopChangePasswordWithToken(barbershop) {
+        let msgText = '';
+
+        try {
+            const data = await api.patch("/barbershops/changepassword", barbershop).then((response) => {
+                msgText = response.data.message;
+                return response.data;
+            });
+            
+            await SuccesNotification(msgText);
+
+            navigate('/');
+            window.location.reload(true);
         } catch (err) {
             msgText = err.response.data.message;
             toast.error(msgText, {
@@ -571,6 +627,20 @@ export function useAuth() {
             navigate('/');
             window.location.reload(true);
         } catch (err) {
+            // Erro de imagem muito pesada
+            if (err.response.status == 500) {
+                return toast.error("Tamanho de imagem inválida!", {
+                    position: "top-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+
             msgText = err.response.data.message
             toast.error(msgText, {
                 position: "top-right",
@@ -631,6 +701,20 @@ export function useAuth() {
             navigate('/');
             window.location.reload(true);
         } catch (err) {
+            // Erro de imagem muito pesada
+            if (err.response.status == 500) {
+                return toast.error("Tamanho de imagem inválida!", {
+                    position: "top-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+            
             msgText = err.response.data.message
             toast.error(msgText, {
                 position: "top-right",
@@ -735,6 +819,7 @@ export function useAuth() {
         BarbershopDelete,
         BarbershopEdit,
         BarbershopChangePassword,
+        BarbershopChangePasswordWithToken,
         EmployeeCreate,
         EmployeeLogin,
         EmployeeDelete,

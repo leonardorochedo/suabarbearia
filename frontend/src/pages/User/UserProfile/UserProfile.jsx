@@ -27,8 +27,6 @@ import { BiSolidCity } from "react-icons/bi";
 import { FaHouse } from "react-icons/fa6";
 import { PiGarageFill } from "react-icons/pi";
 
-import "./UserProfile.css";
-
 export function UserProfile() {
 
     const [user, setUser] = useState({
@@ -88,7 +86,7 @@ export function UserProfile() {
                         <ReactLoading type={"spin"} color="#2ab7eb" height={50} width={50} />
                     ) : (
                         <>
-                            <div className="user-profile">
+                            <div className="profile-profile">
                                 {user.image ? (
                                     <RoundImage src={user.image} alt={user.name} size="rem5" />
                                 ) : (
@@ -132,7 +130,7 @@ export function UserProfile() {
                                     <p>{user.complement || "Sem complemento"}</p>
                                 </LineData>
                             </div>
-                            <div className="user-button-options">
+                            <div className="profile-button-options">
                                 <Link to="/user/edit" className="button-option button-option-edit">Atualizar Dados</Link>
                                 <Link to="/user/changepassword" className="button-option button-option-password">Alterar Senha</Link>
                                 <Link to={`/user/delete/${user.id}`} className="button-option button-option-delete">Deletar Conta</Link>

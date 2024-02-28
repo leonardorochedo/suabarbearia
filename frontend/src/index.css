@@ -167,3 +167,25 @@ button.delete-button:hover {
   width: 1rem;
   margin-right: -2rem;
 }
+
+/* PROFILE */
+.profile-button-options {
+  display: flex;
+  flex-direction: column;
+  width: 70vw;
+}
+
+.profile-button-options .button-option-edit {
+  color: #e0b423;
+  border: 2px solid #e0b423;
+}
+
+.profile-button-options .button-option-password {
+  color: #e6890f;
+  border: 2px solid #e6890f;
+}
+
+.profile-button-options .button-option-delete {
+  color: #e43314;
+  border: 2px solid #e43314;
+}

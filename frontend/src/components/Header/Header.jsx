@@ -188,7 +188,7 @@ export function Header() {
                                 <GiMoneyStack size={24} color="#FFF" />
                                 <p>Saque</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/barbershop/profile" className="button-sidebar">
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Perfil</p>
                             </Link>

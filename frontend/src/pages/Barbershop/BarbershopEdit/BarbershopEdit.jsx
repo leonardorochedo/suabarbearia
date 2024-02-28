@@ -25,7 +25,7 @@ export function BarbershopEdit() {
         id: "",
         name: "",
         email: "",
-        cpf: "",
+        document: "",
         birth: "",
         phone: "",
         address: {
@@ -169,8 +169,6 @@ export function BarbershopEdit() {
             password: barbershop.password,
             confirmpassword: barbershop.confirmpassword
         };
-
-        console.log(formattedBarbershop)
 
         BarbershopEdit(formattedBarbershop, barbershop.id);
     };
