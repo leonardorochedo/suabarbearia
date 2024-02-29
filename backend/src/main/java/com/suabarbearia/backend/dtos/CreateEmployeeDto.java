@@ -7,15 +7,17 @@ public class CreateEmployeeDto {
     private String password;
     private String confirmpassword;
     private String phone;
+    private Double commission;
 
     public CreateEmployeeDto () {}
 
-    public CreateEmployeeDto(String name, String username, String password, String confirmpassword, String phone) {
+    public CreateEmployeeDto(String name, String username, String password, String confirmpassword, String phone, Double commission) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.confirmpassword = confirmpassword;
         this.phone = phone;
+        this.commission = commission;
     }
 
     public String getName() {
@@ -56,5 +58,13 @@ public class CreateEmployeeDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
     }
 }

@@ -85,8 +85,12 @@ public class EmployeeService {
             throw new ExistDataException("Usuário existente!");
         }
 
-        if (employee.getName() == null || employee.getUsername() == null || employee.getPassword() == null || employee.getConfirmpassword() == null || employee.getPhone() == null) {
+        if (employee.getName() == null || employee.getUsername() == null || employee.getPassword() == null || employee.getConfirmpassword() == null || employee.getPhone() == null || employee.getCommission() == null) {
             throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+        }
+
+        if (employee.getCommission() <= 0 || employee.getCommission() > 100) {
+            throw new InvalidDataException("Valor de comissão inválido!");
         }
 
         if (!employee.getPassword().equals(employee.getConfirmpassword())) {
@@ -96,7 +100,7 @@ public class EmployeeService {
         // Encypt and hash pass
         String hashedPassword = BCrypt.hashpw(employee.getPassword(), fixedSalt);
 
-        Employee newEmployee = employeeRepository.save(new Employee(null, employee.getUsername(), hashedPassword, employee.getName(), null, employee.getPhone(), barbershop));
+        Employee newEmployee = employeeRepository.save(new Employee(null, employee.getUsername(), hashedPassword, employee.getName(), null, employee.getPhone(), barbershop, employee.getCommission()));
 
         // Send email
         String subject = "Novo Funcionário - Sua Barbearia";
@@ -106,12 +110,13 @@ public class EmployeeService {
                 + "Nome: %s\n"
                 + "Usuário: %s\n"
                 + "Senha: %s\n\n"
+                + "Comissão: %.2f%%\n\n"
                 + "O novo membro da equipe agora tem acesso ao sistema. Certifique-se de fornecer as informações necessárias "
                 + "e orientações para facilitar a integração.\n\n"
                 + "Se houver alguma dúvida ou necessidade de suporte, não hesite em entrar em contato.\n\n"
                 + "Atenciosamente,\n"
                 + "Equipe Sua Barbearia",
-                barbershop.getName(), employee.getName(), employee.getUsername(), employee.getPassword());
+                barbershop.getName(), employee.getName(), employee.getUsername(), employee.getPassword(), employee.getCommission());
 
         emailService.sendEmail(barbershop.getEmail(), subject, body);
 
@@ -162,8 +167,12 @@ public class EmployeeService {
         }
 
         // Verify data
-        if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
+        if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getCommission() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
             throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
+        }
+
+        if (employee.getCommission() <= 0 || employee.getCommission() > 100) {
+            throw new InvalidDataException("Valor de comissão inválido!");
         }
 
         if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
@@ -186,6 +195,7 @@ public class EmployeeService {
         employee.setPassword(hashedPassword);
         employeeId.setUsername(employee.getUsername());
         employeeId.setPhone(employee.getPhone());
+        employeeId.setCommission(employee.getCommission());
 
         employeeRepository.save(employeeId);
 
@@ -211,7 +221,7 @@ public class EmployeeService {
         }
 
         // Verify data
-        if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
+        if (employee.getUsername() == null || employee.getName() == null || employee.getPhone() == null || employee.getCommission() == null || employee.getPassword() == null || employee.getConfirmpassword() == null) {
             throw new FieldsAreNullException("Um ou mais campos obrigatórios não estão preenchidos!");
         }
 
@@ -221,6 +231,10 @@ public class EmployeeService {
 
         if (!employeeId.getUsername().equals(employee.getUsername()) && employeeNewName != null) {
             throw new ExistDataException("Usuário em uso!");
+        }
+
+        if (employee.getCommission() != employeeId.getCommission()) {
+            throw new InvalidDataException("Apenas a barbearia pode alterar sua comissão!");
         }
 
         if (!employee.getPassword().equals(employee.getConfirmpassword())) {
@@ -385,7 +399,9 @@ public class EmployeeService {
         for (Scheduling scheduling : schedulings) {
             if (scheduling.getStatus() == Status.FINISHED) { // only done schedulings
                 double servicePrice = scheduling.getService().getPrice();
-                totalEarnings += servicePrice;
+                double commissionPercentage = employee.getCommission();
+                double earningsScheduling = servicePrice * (commissionPercentage / 100.0);
+                totalEarnings += earningsScheduling;
             }
         }
 
@@ -407,7 +423,9 @@ public class EmployeeService {
             if (scheduling.getStatus() == Status.FINISHED && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
                     (schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) { // only done schedulings and is btwn dates
                 double servicePrice = scheduling.getService().getPrice();
-                totalEarnings += servicePrice;
+                double commissionPercentage = employee.getCommission();
+                double earningsScheduling = servicePrice * (commissionPercentage / 100.0);
+                totalEarnings += earningsScheduling;
             }
         }
 
@@ -432,7 +450,9 @@ public class EmployeeService {
         for (Scheduling scheduling : schedulings) {
             if (scheduling.getStatus() == Status.FINISHED) { // only done schedulings
                 double servicePrice = scheduling.getService().getPrice();
-                totalEarnings += servicePrice;
+                double commissionPercentage = employeeId.getCommission();
+                double earningsScheduling = servicePrice * (commissionPercentage / 100.0);
+                totalEarnings += earningsScheduling;
             }
         }
 
@@ -460,7 +480,9 @@ public class EmployeeService {
             if (scheduling.getStatus() == Status.FINISHED && (schedulingDate.isEqual(initialDate) || schedulingDate.isAfter(initialDate)) &&
                     (schedulingDate.isEqual(endDate) || schedulingDate.isBefore(endDate.plusDays(1)))) { // only done schedulings and is btwn dates
                 double servicePrice = scheduling.getService().getPrice();
-                totalEarnings += servicePrice;
+                double commissionPercentage = employeeId.getCommission();
+                double earningsScheduling = servicePrice * (commissionPercentage / 100.0);
+                totalEarnings += earningsScheduling;
             }
         }
 

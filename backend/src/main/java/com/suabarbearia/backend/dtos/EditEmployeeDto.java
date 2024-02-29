@@ -9,15 +9,17 @@ public class EditEmployeeDto {
    private String password;
    private String confirmpassword;
    private String phone;
+   private Double commission;
    private MultipartFile image;
 
    public EditEmployeeDto() {}
 
-   public EditEmployeeDto(String username, String password, String confirmpassword, String phone, MultipartFile image) {
+   public EditEmployeeDto(String username, String password, String confirmpassword, String phone, Double commission, MultipartFile image) {
       this.username = username;
       this.password = password;
       this.confirmpassword = confirmpassword;
       this.phone = phone;
+      this.commission = commission;
       this.image = image;
    }
 
@@ -59,6 +61,14 @@ public class EditEmployeeDto {
 
    public void setPhone(String phone) {
       this.phone = phone;
+   }
+
+   public Double getCommission() {
+      return commission;
+   }
+
+   public void setCommission(Double commission) {
+      this.commission = commission;
    }
 
    public MultipartFile getImage() {

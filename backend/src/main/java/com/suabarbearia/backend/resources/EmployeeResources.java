@@ -64,7 +64,7 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-        } catch (ExistDataException e) {
+        } catch (ExistDataException | InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(409)).body(errorResponse);
@@ -148,7 +148,7 @@ public class EmployeeResources {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(errorResponse);
-        } catch (FieldsAreNullException | PasswordDontMatchException e) {
+        } catch (FieldsAreNullException | PasswordDontMatchException | InvalidDataException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
             return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(errorResponse);

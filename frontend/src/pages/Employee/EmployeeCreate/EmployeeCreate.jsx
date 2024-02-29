@@ -54,6 +54,7 @@ export function EmployeeCreate() {
                             <label htmlFor="phone">Celular:</label>
                             <IMaskInput mask={"(00) 000000000"} name="phone" id="phone" onChange={handleChangeInput} placeholder="Digite o celular" className="imask" />
                         </div>
+                        <Input type="number" name="commission" id="commission" min={0} max={100} handleChangeInput={handleChangeInput} text="Comissão (%)" placeholder="Digite a comissão" />
                         <Input type="password" name="password" id="password" minLength={8} handleChangeInput={handleChangeInput} text="Senha" placeholder="Digite a senha" />
                         <Input type="password" name="confirmpassword" id="confirmpassword" minLength={8} handleChangeInput={handleChangeInput} text="Confirme a senha" placeholder="Confirme a senha" />
                         <div className="form-buttons">

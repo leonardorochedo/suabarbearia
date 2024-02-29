@@ -208,7 +208,7 @@ export function Header() {
                                 <IoStatsChartOutline size={24} color="#FFF" />
                                 <p>Estatísticas</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/employee/profile" className="button-sidebar">
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Perfil</p>
                             </Link>

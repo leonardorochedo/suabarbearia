@@ -5,6 +5,8 @@ export function Input({
     text,
     name,
     minLength,
+    min,
+    max,
     placeholder,
     handleChangeInput,
     id,
@@ -19,6 +21,8 @@ export function Input({
                 type={type} 
                 name={name} 
                 minLength={minLength !== undefined ? minLength : null}
+                min={min !== undefined ? min : null}
+                max={max !== undefined ? max : null}
                 onChange={handleChangeInput} 
                 id={id} 
                 placeholder={placeholder} 

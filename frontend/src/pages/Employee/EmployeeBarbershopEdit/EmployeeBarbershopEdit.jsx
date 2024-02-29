@@ -24,6 +24,7 @@ export function EmployeeBarbershopEdit() {
         name: "",
         username: "",
         phone: "",
+        commission: "",
         password: "",
         confirmpassword: "",
     });
@@ -40,6 +41,7 @@ export function EmployeeBarbershopEdit() {
                     name: response.data.name,
                     username: response.data.username,
                     phone: response.data.phone,
+                    commission: response.data.commission,
                     password: "",
                     confirmpassword: "",
                 })
@@ -84,6 +86,7 @@ export function EmployeeBarbershopEdit() {
                             <label htmlFor="phone">Celular:</label>
                             <IMaskInput mask={"(00) 000000000"} name="phone" id="phone" onChange={handleChangeInput} value={employee.phone || ""} placeholder="Digite seu celular" className="imask" />
                         </div>
+                        <Input type="number" name="commission" id="commission" min={0} max={100} handleChangeInput={handleChangeInput} value={employee.commission || 0} text="Comissão (%)" placeholder="Digite a comissão" />
                         <Input type="password" name="password" id="password" minLength={8} handleChangeInput={handleChangeInput} text="Senha" placeholder="Digite sua senha" />
                         <Input type="password" name="confirmpassword" id="confirmpassword" minLength={8} handleChangeInput={handleChangeInput} text="Confirme sua senha" placeholder="Confirme sua senha" />
                         <div className="form-buttons">

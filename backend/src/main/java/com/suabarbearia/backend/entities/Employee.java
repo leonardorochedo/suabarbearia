@@ -24,6 +24,7 @@ public class Employee implements Serializable {
     private String name;
     private String image;
     private String phone;
+    private Double commission;
 
     @ManyToOne
     @JoinColumn(name="barbershop_id")
@@ -42,7 +43,7 @@ public class Employee implements Serializable {
 
     }
 
-    public Employee(Long id, String username, String password, String name, String image, String phone, Barbershop barbershop) {
+    public Employee(Long id, String username, String password, String name, String image, String phone, Barbershop barbershop, Double commission) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -50,6 +51,7 @@ public class Employee implements Serializable {
         this.image = image;
         this.phone = phone;
         this.barbershop = barbershop;
+        this.commission = commission;
     }
 
     public Long getId() {
@@ -104,6 +106,14 @@ public class Employee implements Serializable {
         return barbershop;
     }
 
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
+    }
+
     public void setBarbershop(Barbershop barbershop) {
         this.barbershop = barbershop;
     }
@@ -147,7 +157,7 @@ public class Employee implements Serializable {
                 ", image=" + image +
                 ", phone='" + phone + '\'' +
                 ", barbershop=" + barbershop +
-                ", schedulings=" + schedulings +
+                ", commission=" + commission +
                 '}';
     }
 
