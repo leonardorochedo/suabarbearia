@@ -152,9 +152,9 @@ export function Header() {
                                 <CiCreditCard1 size={24} color="#FFF" />
                                 <p>Planos</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/user/barbershops" className="button-sidebar">
                                 <SlMustache size={24} color="#FFF" />
-                                <p>Barbearias Favoritas</p>
+                                <p>Barbearias</p>
                             </Link>
                             <Link to="/user/profile" className="button-sidebar">
                                 <GoPerson size={24} color="#FFF" />

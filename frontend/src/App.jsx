@@ -54,6 +54,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Container } from "./components/Container/Container";
+import { UserBarbershops } from "./pages/User/UserBarbershops/UserBarbershops";
 
 function App() {
   
@@ -83,6 +84,7 @@ function App() {
                   <Route path="/user/edit" element={<UserEdit />} />
                   <Route path="/user/changepassword" element={<UserChangePassword />} />
                   <Route path="/user/profile" element={<UserProfile />} />
+                  <Route path="/user/barbershops" element={<UserBarbershops />} />
                   {/* BARBERSHOP */}
                   <Route path="/barbershop/login" element={<BarbershopLogin />} />
                   <Route path="/barbershop/register" element={<BarbershopRegister />} />
