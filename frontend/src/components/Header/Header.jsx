@@ -148,7 +148,7 @@ export function Header() {
                                 <AiOutlineSchedule size={24} color="#FFF" />
                                 <p>Agendamentos</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/user/plans" className="button-sidebar">
                                 <CiCreditCard1 size={24} color="#FFF" />
                                 <p>Planos</p>
                             </Link>

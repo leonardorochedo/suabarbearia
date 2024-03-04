@@ -35,12 +35,12 @@ export function BarbershopCard({ barbershop }) {
                     </div>
                     <div className="barbershop-infos">
                         <div className="barbershop-info">
-                            <FaPhoneAlt size={15} color="#2ab7eb" />
-                            <p>{barbershop.phone}</p>
-                        </div>
-                        <div className="barbershop-info">
                             <TbClockHour9 size={15} color="#2ab7eb" />
                             <p>{formatHour(barbershop.openTime)} até {formatHour(barbershop.closeTime)}</p>
+                        </div>
+                        <div className="barbershop-info">
+                            <FaPhoneAlt size={15} color="#2ab7eb" />
+                            <p>{barbershop.phone}</p>
                         </div>
                         <div className="barbershop-info">
                             <FaMapPin size={15} color="#2ab7eb" />
