@@ -80,6 +80,10 @@ export function Header() {
         Logout();
     };
 
+    const handleSidebarButtonClick = () => {
+        setSidebarVisible(false);
+    };
+
     return (
         <header>
             <div className="button-header">
@@ -144,19 +148,19 @@ export function Header() {
                 <div className="buttons-sidebar">
                     {authenticatedUser && (
                         <>
-                            <Link to="/user/schedulings" className="button-sidebar">
+                            <Link to="/user/schedulings" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <AiOutlineSchedule size={24} color="#FFF" />
                                 <p>Agendamentos</p>
                             </Link>
-                            <Link to="/user/plans" className="button-sidebar">
+                            <Link to="/user/plans" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <CiCreditCard1 size={24} color="#FFF" />
                                 <p>Planos</p>
                             </Link>
-                            <Link to="/user/barbershops" className="button-sidebar">
+                            <Link to="/user/barbershops" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <SlMustache size={24} color="#FFF" />
                                 <p>Barbearias</p>
                             </Link>
-                            <Link to="/user/profile" className="button-sidebar">
+                            <Link to="/user/profile" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Perfil</p>
                             </Link>
@@ -168,27 +172,27 @@ export function Header() {
                     )}
                     {authenticatedBarbershop && (
                         <>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <AiOutlineSchedule size={24} color="#FFF" />
                                 <p>Agendamentos</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <IoPeopleOutline size={24} color="#FFF" />
                                 <p>Funcionários</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <MdOutlineDesignServices size={24} color="#FFF" />
                                 <p>Serviços</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <IoStatsChartOutline size={24} color="#FFF" />
                                 <p>Estatísticas</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <GiMoneyStack size={24} color="#FFF" />
                                 <p>Saque</p>
                             </Link>
-                            <Link to="/barbershop/profile" className="button-sidebar">
+                            <Link to="/barbershop/profile" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Perfil</p>
                             </Link>
@@ -200,15 +204,15 @@ export function Header() {
                     )}
                     {authenticatedEmployee && (
                         <>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <AiOutlineSchedule size={24} color="#FFF" />
                                 <p>Agendamentos</p>
                             </Link>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <IoStatsChartOutline size={24} color="#FFF" />
                                 <p>Estatísticas</p>
                             </Link>
-                            <Link to="/employee/profile" className="button-sidebar">
+                            <Link to="/employee/profile" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Perfil</p>
                             </Link>
@@ -220,11 +224,11 @@ export function Header() {
                     )}
                     {(!authenticatedUser && !authenticatedBarbershop && !authenticatedEmployee) && (
                         <>
-                            <Link to="/login" className="button-sidebar">
+                            <Link to="/login" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <FiLogIn size={24} color="#FFF" />
                                 <p>Entrar</p>
                             </Link>
-                            <Link to="/register" className="button-sidebar">
+                            <Link to="/register" className="button-sidebar" onClick={handleSidebarButtonClick}>
                                 <GoPerson size={24} color="#FFF" />
                                 <p>Registrar</p>
                             </Link>
