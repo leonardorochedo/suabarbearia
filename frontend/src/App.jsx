@@ -5,6 +5,9 @@ import { UserDelete } from "./pages/User/UserDelete/UserDelete";
 import { UserEdit } from "./pages/User/UserEdit/UserEdit";
 import { UserChangePassword } from "./pages/User/UserChangePassword/UserChangePassword";
 import { UserProfile } from "./pages/User/UserProfile/UserProfile";
+import { UserBarbershops } from "./pages/User/UserBarbershops/UserBarbershops";
+import { UserPlans } from "./pages/User/UserPlans/UserPlans";
+import { UserSchedulings } from "./pages/User/UserSchedulings/UserSchedulings";
 
 // BARBERSHOP
 import { BarbershopLogin } from "./pages/Barbershop/BarbershopLogin/BarbershopLogin";
@@ -54,8 +57,6 @@ import {
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Container } from "./components/Container/Container";
-import { UserBarbershops } from "./pages/User/UserBarbershops/UserBarbershops";
-import { UserPlans } from "./pages/User/UserPlans/UserPlans";
 
 function App() {
   
@@ -87,6 +88,7 @@ function App() {
                   <Route path="/user/profile" element={<UserProfile />} />
                   <Route path="/user/barbershops" element={<UserBarbershops />} />
                   <Route path="/user/plans" element={<UserPlans />} />
+                  <Route path="/user/schedulings" element={<UserSchedulings />} />
                   {/* BARBERSHOP */}
                   <Route path="/barbershop/login" element={<BarbershopLogin />} />
                   <Route path="/barbershop/register" element={<BarbershopRegister />} />

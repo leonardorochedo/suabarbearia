@@ -391,7 +391,7 @@ public class UserService {
 			}
 		}
 
-		Set<SchedulingReturnDto> schedulingDTOs = schedulings.stream()
+		Set<SchedulingReturnDto> schedulingDTOs = schedulingsInRange.stream()
 				.map(scheduling -> new SchedulingReturnDto(
 						scheduling.getId(),
 						scheduling.getService(),

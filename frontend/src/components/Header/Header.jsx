@@ -144,7 +144,7 @@ export function Header() {
                 <div className="buttons-sidebar">
                     {authenticatedUser && (
                         <>
-                            <Link to="/" className="button-sidebar">
+                            <Link to="/user/schedulings" className="button-sidebar">
                                 <AiOutlineSchedule size={24} color="#FFF" />
                                 <p>Agendamentos</p>
                             </Link>
