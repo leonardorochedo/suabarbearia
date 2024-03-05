@@ -4,9 +4,11 @@ import api from "../../../utils/api";
 import { SchedulingCard } from "../../../components/SchedulingCard/SchedulingCard";
 
 // CONTEXT
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Context } from "../../../context/AppContext";
+import { RedirectAuth } from '../../../components/RedirectAuth/RedirectAuth';
+import ReactLoading from 'react-loading';
 
 // RRD
 import { Link } from "react-router-dom";
@@ -31,6 +33,8 @@ export function UserSchedulings() {
     const [finalDate, setFinalDate] = useState();
     const [initialDateFormatted, setInitialDateFormatted] = useState();
     const [finalDateFormatted, setFinalDateFormatted] = useState();
+
+    const { authenticatedUser } = useContext(Context);
 
     // Consulting API
     const { data, isLoading, isError } = useQuery(['scheduling'], () =>
@@ -103,27 +107,41 @@ export function UserSchedulings() {
 
     return (
         <section className="container container-home">
-            <h1>Realizar agendamento</h1>
-            <Link to="/" className="button-scheduling">
-                <FaRegPlusSquare size={20} color="#FFF" />
-                <p>Novo Agendamento</p>
-            </Link>
-            <h1>Seus agendamentos</h1>
-            <div className="date-schedulings">
-                <div className="date-scheduling">
-                    <DatePicker selected={initialDate} onChange={handleInitialDateChange} dateFormat="dd/MM/yyyy" placeholderText="Selecione a data" className="date-picker date-scheduling-input" />
-                    <p>até</p>
-                    <DatePicker selected={finalDate} onChange={handleFinalDateChange} dateFormat="dd/MM/yyyy" placeholderText="Selecione a data" className="date-picker date-scheduling-input" />
-                </div>
-                <button onClick={applyFilterSchedulings} className="date-scheduling-button">Aplicar Filtro</button>
-            </div>
-            {(schedulings.length > 0) ? (
-                schedulings.map((item, index) => (
-                    <SchedulingCard key={index} scheduling={item} />
-                ))
+            {authenticatedUser ? (
+                <>
+                    <h1>Realizar agendamento</h1>
+                    <Link to="/" className="button-scheduling">
+                        <FaRegPlusSquare size={20} color="#FFF" />
+                        <p>Novo Agendamento</p>
+                    </Link>
+                    <h1>Seus agendamentos</h1>
+                    <div className="date-schedulings">
+                        <div className="date-scheduling">
+                            <DatePicker selected={initialDate} onChange={handleInitialDateChange} dateFormat="dd/MM/yyyy" placeholderText="Selecione a data" className="date-picker date-scheduling-input" />
+                            <p>até</p>
+                            <DatePicker selected={finalDate} onChange={handleFinalDateChange} dateFormat="dd/MM/yyyy" placeholderText="Selecione a data" className="date-picker date-scheduling-input" />
+                        </div>
+                        <button onClick={applyFilterSchedulings} className="date-scheduling-button">Aplicar Filtro</button>
+                    </div>
+                    {isLoading ? (
+                        <ReactLoading type={"spin"} color="#2ab7eb" height={50} width={50} />
+                    ) : (
+                        <>
+                        {(schedulings.length > 0) ? (
+                            schedulings.map((item, index) => (
+                                <SchedulingCard key={index} scheduling={item} />
+                            ))
+                        ) : (
+                            <>
+                                <p style={{ marginTop: "2rem" }}>Sem agendamentos até o momento...</p>
+                            </>
+                        )}
+                        </>
+                    )}
+                </>
             ) : (
                 <>
-                    <p style={{ marginTop: "2rem" }}>Sem agendamentos até o momento...</p>
+                    <RedirectAuth title="Você não está autenticado!" comebackText="Entre com sua conta." toURL="/user/login" />
                 </>
             )}
         </section>
