@@ -787,6 +787,37 @@ export function useAuth() {
         };
     };
 
+    // Scheduling
+    async function SchedulingCreate(scheduling) {
+
+        let msgText = '';
+        let id = '';
+
+        try {
+            const data = await api.post('/schedulings/create', scheduling).then((response) => {
+                msgText = response.data.message;
+                id = response.data.data.id;
+                return response.data;
+            })
+
+            await SuccesNotification(msgText);
+
+            return id;
+        } catch (err) {
+            msgText = err.response.data.message
+            toast.error(msgText, {
+                position: "top-right",
+                autoClose: 3500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
     async function Logout() {
         const msgText = 'Logout realizado com sucesso!';
 
@@ -828,6 +859,7 @@ export function useAuth() {
         EmployeeBarbershopEdit,
         ServiceCreate,
         ServiceEdit,
+        SchedulingCreate,
         Logout
     }
 }

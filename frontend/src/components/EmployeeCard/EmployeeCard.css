@@ -1,0 +1,19 @@
+.employee-card {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--second-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+.employee-text {
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+}
+
+.employee-text p {
+  margin-left: 1rem;
+}

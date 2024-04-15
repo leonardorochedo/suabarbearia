@@ -110,7 +110,7 @@ export function UserSchedulings() {
             {authenticatedUser ? (
                 <>
                     <h1>Realizar agendamento</h1>
-                    <Link to="/" className="button-scheduling">
+                    <Link to="/scheduling/create" className="button-scheduling">
                         <FaRegPlusSquare size={20} color="#FFF" />
                         <p>Novo Agendamento</p>
                     </Link>

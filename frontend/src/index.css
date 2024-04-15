@@ -168,6 +168,13 @@ button.delete-button:hover {
   margin-right: -2rem;
 }
 
+.form-entry {
+  width: 75vw;
+  height: 2rem;
+  background: transparent;
+  border: 2px solid var(--second-color);
+}
+
 /* PROFILE */
 .profile-button-options {
   display: flex;

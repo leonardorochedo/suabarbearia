@@ -180,10 +180,10 @@ public class BarbershopResource {
 		}
 	}
 
-	@GetMapping(value = "/employees")
-	public ResponseEntity<?> getEmployeesBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
+	@GetMapping(value = "/employees/{id}")
+	public ResponseEntity<?> getEmployeesBarbershop(@PathVariable Long id) {
 		try {
-			Set<Employee> response = barbershopService.getEmployeesBarbershop(authorizationHeader);
+			Set<Employee> response = barbershopService.getEmployeesBarbershop(id);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {
@@ -193,10 +193,10 @@ public class BarbershopResource {
 		}
 	}
 
-	@GetMapping(value = "/services")
-	public ResponseEntity<?> getServicesBarbershop(@RequestHeader("Authorization") String authorizationHeader) {
+	@GetMapping(value = "/services/{id}")
+	public ResponseEntity<?> getServicesBarbershop(@PathVariable Long id) {
 		try {
-			Set<Service> response = barbershopService.getServicesBarbershop(authorizationHeader);
+			Set<Service> response = barbershopService.getServicesBarbershop(id);
 
 			return ResponseEntity.ok().body(response);
 		} catch (RuntimeException e) {
@@ -219,10 +219,10 @@ public class BarbershopResource {
 		}
 	}
 
-	@GetMapping(value = "/schedulings/{initialDate}/{endDate}")
-	public ResponseEntity<?> getSchedulingsBarbershopWithDate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
+	@GetMapping(value = "/schedulings/{id}/{initialDate}/{endDate}")
+	public ResponseEntity<?> getSchedulingsBarbershopWithDate(@PathVariable Long id, @PathVariable LocalDate initialDate, @PathVariable LocalDate endDate) {
 		try {
-			Set<SchedulingReturnDto> response = barbershopService.getSchedulingsBarbershopWithDate(authorizationHeader, initialDate, endDate);
+			Set<SchedulingReturnDto> response = barbershopService.getSchedulingsBarbershopWithDate(id, initialDate, endDate);
 
 			return ResponseEntity.ok().body(response);
 		} catch (InvalidDataException e) {

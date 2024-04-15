@@ -76,7 +76,7 @@ public class SchedulingService {
                 if (daysBetween <= 2) {
                     throw new LastSchedulingNotDoneException("O usuário faltou em seu último agendamento, será liberado em 2 dias!");
                 }
-            } else if (lastScheduling.getStatus() == Status.PENDING) {
+            } else if (lastScheduling.getStatus() == Status.PENDING || lastScheduling.getStatus() == Status.WAITING_PAYMENT) {
                 throw new LastSchedulingNotDoneException("O último agendamento do usuário ainda não foi concluído!");
             }
         }

@@ -192,7 +192,7 @@ public class BarbershopServiceTest {
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Employee> response2 = employeeService.create(response1.getToken(), createEmployeeMock);
 
-		Set<Employee> response3 = barbershopService.getEmployeesBarbershop(response1.getToken());
+		Set<Employee> response3 = barbershopService.getEmployeesBarbershop(response1.getData().getId());
 
 		assertEquals(1, response3.size());
 	}
@@ -205,7 +205,7 @@ public class BarbershopServiceTest {
 		ApiTokenResponse<Barbershop> response1 = barbershopService.signup(createBarberMock);
 		ApiResponse<Service> response2 = serviceService.create(response1.getToken(), createServiceMock);
 
-		Set<Service> response3 = barbershopService.getServicesBarbershop(response1.getToken());
+		Set<Service> response3 = barbershopService.getServicesBarbershop(response1.getData().getId());
 
 		assertEquals(1, response3.size());
 	}
@@ -258,7 +258,7 @@ public class BarbershopServiceTest {
 		LocalDate initialDay = LocalDate.now().plusDays(1);
 		LocalDate endDay = LocalDate.now().plusDays(5);
 
-		Set<SchedulingReturnDto> response6 = barbershopService.getSchedulingsBarbershopWithDate(response1.getToken(), initialDay, endDay);
+		Set<SchedulingReturnDto> response6 = barbershopService.getSchedulingsBarbershopWithDate(response1.getData().getId(), initialDay, endDay);
 
 		assertEquals(1, response6.size());
 	}

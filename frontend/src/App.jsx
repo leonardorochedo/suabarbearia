@@ -30,6 +30,9 @@ import { EmployeeProfile } from "./pages/Employee/EmployeeProfile/EmployeeProfil
 import { ServiceCreate } from "./pages/Service/ServiceCreate/ServiceCreate";
 import { ServiceEdit } from "./pages/Service/ServiceEdit/ServiceEdit";
 
+// SCHEDULING
+import { SchedulingCreate } from "./pages/Scheduling/SchedulingCreate/SchedulingCreate";
+
 // OTHERS
 import { Home } from "./pages/Home/Home";
 import { RegisterOptions } from "./pages/Auth/RegisterOptions/RegisterOptions";
@@ -107,6 +110,8 @@ function App() {
                   {/* SERVICE */}
                   <Route path="/service/create" element={<ServiceCreate />} />
                   <Route path="/service/edit/:id" element={<ServiceEdit />} />
+                  {/* SCHEDULING */}
+                  <Route path="/scheduling/create" element={<SchedulingCreate />} />
                   {/* OTHER */}
                   <Route path="/" element={<Home />} />
                   <Route path="/register" element={<RegisterOptions />} />

@@ -53,7 +53,6 @@ export function ServiceCreate() {
                         <Input type="number" step="0.01" min="0.01" name="price" id="price" handleChangeInput={handleChangeInput} text="Preço" placeholder="Exemplos: 50,00 109,90..." />
                         <div className="form-buttons">
                             <input type="submit" value="Criar" />
-                            <p>Já possui uma conta? <Link to="/employee/login" className='link'><span>Clique aqui.</span></Link></p>
                         </div>
                     </form>
                 </>

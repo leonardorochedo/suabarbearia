@@ -320,20 +320,18 @@ public class BarbershopService {
 		return barbershop.getClients();
 	}
 
-	public Set<Employee> getEmployeesBarbershop(String authorizationHeader) {
-		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+	public Set<Employee> getEmployeesBarbershop(Long id) {
 
-		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+		Barbershop barbershop = barbershopRepository.findById(id).get();
 
 		Set<Employee> employees = employeeRepository.findAllByBarbershop(barbershop);
 
 		return employees;
 	}
 
-	public Set<Service> getServicesBarbershop(String authorizationHeader) {
-		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+	public Set<Service> getServicesBarbershop(Long id) {
 
-		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+		Barbershop barbershop = barbershopRepository.findById(id).get();
 
 		Set<Service> services = serviceRepository.findAllByBarbershop(barbershop);
 
@@ -360,10 +358,9 @@ public class BarbershopService {
 		return schedulingDTOs;
 	}
 
-	public Set<SchedulingReturnDto> getSchedulingsBarbershopWithDate(String authorizationHeader, LocalDate initialDate, LocalDate endDate) {
-		String token = JwtUtil.verifyTokenWithAuthorizationHeader(authorizationHeader);
+	public Set<SchedulingReturnDto> getSchedulingsBarbershopWithDate(Long id, LocalDate initialDate, LocalDate endDate) {
 
-		Barbershop barbershop = barbershopRepository.findByEmail(JwtUtil.getEmailFromToken(token));
+		Barbershop barbershop = barbershopRepository.findById(id).get();
 
 		// Check date
 		if (initialDate.isAfter(endDate) || endDate.isBefore(initialDate)) {
